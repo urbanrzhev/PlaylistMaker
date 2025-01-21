@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/title_padding_size"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/settings_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/vector"
+            android:contentDescription="@string/default_image"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="@dimen/main_layout_padding"
+            android:paddingEnd="@dimen/main_layout_padding"
+            android:text="@string/settings"
+            android:textColor="@color/black"
+            android:textSize="@dimen/button_text"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_setting_menu"
+        android:padding="@dimen/main_layout_padding">
+
+        <Switch
+            android:layout_width="@dimen/switch_size"
+            android:layout_height="@dimen/switch_size"
+            android:layout_gravity="end|center_vertical"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:text="@string/night_theme"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_text_size" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_setting_menu"
+        android:padding="@dimen/main_layout_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:text="@string/share"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_text_size" />
+
+        <ImageView
+            android:layout_width="@dimen/setting_image_size"
+            android:layout_height="@dimen/setting_image_size"
+            android:layout_gravity="end|center_vertical"
+            android:contentDescription="@string/default_image"
+            android:src="@drawable/share" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_setting_menu"
+        android:padding="@dimen/main_layout_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:text="@string/support"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_text_size" />
+
+        <ImageView
+            android:layout_width="@dimen/setting_image_size"
+            android:layout_height="@dimen/setting_image_size"
+            android:layout_gravity="end|center_vertical"
+            android:contentDescription="@string/default_image"
+            android:src="@drawable/support" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_setting_menu"
+        android:padding="@dimen/main_layout_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:text="@string/forward"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_text_size" />
+
+        <ImageView
+            android:layout_width="@dimen/setting_image_size"
+            android:layout_height="@dimen/setting_image_size"
+            android:layout_gravity="end|center_vertical"
+            android:contentDescription="@string/default_image"
+            android:src="@drawable/forward" />
+
+    </FrameLayout>
+</LinearLayout>
