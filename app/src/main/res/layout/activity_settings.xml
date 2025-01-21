@@ -1,41 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingVertical="@dimen/main_layout_padding">
+    android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/settings_back"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawablePadding="@dimen/main_layout_padding"
-        android:gravity="center_vertical"
-        android:paddingBottom="@dimen/main_layout_padding"
-        android:text="@string/settings"
-        android:textColor="@color/black"
-        android:textSize="@dimen/button_text"
-        android:textStyle="bold"
-        app:drawableStartCompat="@drawable/vector" />
+        android:paddingBottom="@dimen/title_padding_size"
+        tools:ignore="UseCompoundDrawables">
 
+        <ImageView
+            android:id="@+id/settings_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/vector"
+            android:contentDescription="@string/default_image"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="@dimen/main_layout_padding"
+            android:paddingEnd="@dimen/main_layout_padding"
+            android:text="@string/settings"
+            android:textColor="@color/black"
+            android:textSize="@dimen/button_text"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/height_setting_menu"
         android:padding="@dimen/main_layout_padding">
 
         <Switch
-            android:id="@+id/switch1"
             android:layout_width="@dimen/switch_size"
             android:layout_height="@dimen/switch_size"
             android:layout_gravity="end|center_vertical"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <TextView
-            android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
@@ -46,7 +52,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/height_setting_menu"
         android:padding="@dimen/main_layout_padding">
 
         <TextView
@@ -60,15 +66,14 @@
         <ImageView
             android:layout_width="@dimen/setting_image_size"
             android:layout_height="@dimen/setting_image_size"
-
             android:layout_gravity="end|center_vertical"
             android:contentDescription="@string/default_image"
-            app:srcCompat="@drawable/share" />
+            android:src="@drawable/share" />
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/height_setting_menu"
         android:padding="@dimen/main_layout_padding">
 
         <TextView
@@ -84,12 +89,12 @@
             android:layout_height="@dimen/setting_image_size"
             android:layout_gravity="end|center_vertical"
             android:contentDescription="@string/default_image"
-            app:srcCompat="@drawable/support" />
+            android:src="@drawable/support" />
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/height_setting_menu"
         android:padding="@dimen/main_layout_padding">
 
         <TextView
@@ -105,7 +110,7 @@
             android:layout_height="@dimen/setting_image_size"
             android:layout_gravity="end|center_vertical"
             android:contentDescription="@string/default_image"
-            app:srcCompat="@drawable/forward" />
+            android:src="@drawable/forward" />
 
     </FrameLayout>
 </LinearLayout>
