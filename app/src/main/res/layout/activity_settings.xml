@@ -15,25 +15,21 @@
             android:id="@+id/settings_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/vector"
-            android:contentDescription="@string/default_image"/>
+            android:contentDescription="@string/default_image"
+            android:src="@drawable/vector" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/titleText"
             android:layout_gravity="center_vertical"
             android:paddingStart="@dimen/main_layout_padding"
             android:paddingEnd="@dimen/main_layout_padding"
             android:text="@string/settings"
             android:textColor="@color/black"
-            android:textSize="@dimen/button_text"
-            android:textStyle="bold" />
+
+             />
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_setting_menu"
-        android:padding="@dimen/main_layout_padding">
+    <FrameLayout style="@style/frameLayoutSettingActivity">
 
         <Switch
             android:layout_width="@dimen/switch_size"
@@ -42,73 +38,42 @@
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:text="@string/night_theme"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+            style="@style/textSettingActivity"
+            android:text="@string/night_theme" />
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_setting_menu"
-        android:padding="@dimen/main_layout_padding">
+    <FrameLayout style="@style/frameLayoutSettingActivity">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:text="@string/share"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+            style="@style/textSettingActivity"
+            android:text="@string/share" />
 
         <ImageView
-            android:layout_width="@dimen/setting_image_size"
-            android:layout_height="@dimen/setting_image_size"
-            android:layout_gravity="end|center_vertical"
+            style="@style/imageSettingActivity"
             android:contentDescription="@string/default_image"
             android:src="@drawable/share" />
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_setting_menu"
-        android:padding="@dimen/main_layout_padding">
+    <FrameLayout style="@style/frameLayoutSettingActivity">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:text="@string/support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+            style="@style/textSettingActivity"
+            android:text="@string/support" />
 
         <ImageView
-            android:layout_width="@dimen/setting_image_size"
-            android:layout_height="@dimen/setting_image_size"
-            android:layout_gravity="end|center_vertical"
+            style="@style/imageSettingActivity"
             android:contentDescription="@string/default_image"
             android:src="@drawable/support" />
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_setting_menu"
-        android:padding="@dimen/main_layout_padding">
+    <FrameLayout style="@style/frameLayoutSettingActivity">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:text="@string/forward"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+            style="@style/textSettingActivity"
+            android:text="@string/forward" />
 
         <ImageView
-            android:layout_width="@dimen/setting_image_size"
-            android:layout_height="@dimen/setting_image_size"
-            android:layout_gravity="end|center_vertical"
+            style="@style/imageSettingActivity"
             android:contentDescription="@string/default_image"
             android:src="@drawable/forward" />
 
