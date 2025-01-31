@@ -9,4 +9,10 @@
     <string name="support" translatable="false">Написать в поддержку</string>
     <string name="forward" translatable="false">Пользовательское соглашение</string>
     <string name="night_theme" translatable="false">Темная тема</string>
+    <string name="clear_search" translatable="false">Очистить поисковый запрос</string>
+    <string name="practicum_offer" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="uri_mailto" translatable="false">mailto:</string>
+    <string name="my_mail_adress" translatable="false">frolovcite@yandex.ru</string>
+    <string name="my_mail_thema" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="my_mail_message" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
 </resources>

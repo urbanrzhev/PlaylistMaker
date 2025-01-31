@@ -1,11 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <!--
     <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- Customize your theme here. -->
 
     </style>
-    <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker" >
-        <item name="android:textColor">@color/red</item>
+    -->
+    <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
+        <item name="android:textColor">@color/white</item>
     </style>
+
 </resources>
