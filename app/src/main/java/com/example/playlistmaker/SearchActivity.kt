@@ -12,17 +12,20 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import com.google.android.material.appbar.MaterialToolbar
 
 class SearchActivity : AppCompatActivity() {
-    var temporaryEditText = ""
+   private var temporaryEditText = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val buttonSettingsBack = findViewById<ImageView>(R.id.search_back)
-        val buttonClearSearch = findViewById<Button>(R.id.clearSearchButton)
+        val buttonSettingsBack = findViewById<MaterialToolbar>(R.id.toolbar_search)
+        val buttonClearSearch = findViewById<ImageView>(R.id.clearSearchButton)
         val editSearch = findViewById<EditText>(R.id.editSearchText)
 
         val simpleTextWatcher = object : TextWatcher {
@@ -30,8 +33,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 temporaryEditText = s.toString()
-                buttonClearSearch.visibility =
-                    if (editSearch.text.toString() == "") View.GONE else View.VISIBLE
+                buttonClearSearch.isVisible = !s.isNullOrEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -48,7 +50,7 @@ class SearchActivity : AppCompatActivity() {
             )
         }
 
-        buttonSettingsBack.setOnClickListener {
+        buttonSettingsBack.setNavigationOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
@@ -64,12 +66,7 @@ class SearchActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        findViewById<EditText>(R.id.editSearchText).setText(
-            "${
-                savedInstanceState.getString(
-                    getString(R.string.secret_code)
-                )
-            }"
-        )
+        val textEdit = savedInstanceState.getString(getString(R.string.secret_code))
+        findViewById<EditText>(R.id.editSearchText).setText(textEdit)
     }
 }

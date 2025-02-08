@@ -4,14 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -48,8 +45,8 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val buttonSettingsBack = findViewById<ImageView>(R.id.settings_back)
-        buttonSettingsBack.setOnClickListener {
+        val buttonSettingsBack = findViewById<MaterialToolbar>(R.id.toolbar_settings)
+        buttonSettingsBack.setNavigationOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }

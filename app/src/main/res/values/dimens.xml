@@ -13,4 +13,5 @@
     <dimen name="title_padding_size">24dp</dimen>
     <dimen name="height_setting_menu">61dp</dimen>
     <dimen name="title_min_height">56dp</dimen>
+    <dimen name="edit_text_search_radius">8dp</dimen>
 </resources>

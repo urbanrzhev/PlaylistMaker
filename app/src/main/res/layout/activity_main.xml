@@ -4,16 +4,15 @@
     style="@style/backgroundMainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/main_layout_padding">
+    android:orientation="vertical">
 
-    <TextView
-        style="@style/titleText"
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_min_height"
-        android:text="@string/app_name"
-        android:layout_marginBottom="8dp"
-        android:textColor="@color/white"/>
+        android:layout_marginBottom="24dp"
+        app:title="@string/app_name"
+        app:titleTextAppearance="@style/my_toolbars_title_text_appearance"
+        app:titleTextColor="@color/white"/>
 
     <Button
         android:id="@+id/button_search"
@@ -32,7 +31,7 @@
     <Button
         android:id="@+id/button_settings"
         style="@style/buttonMainActivity"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="28dp"
         android:text="@string/settings"
         app:icon="@drawable/settings" />
 </LinearLayout>

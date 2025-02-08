@@ -9,4 +9,8 @@
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
         <item name="android:textColor">@color/black_from_figma</item>
     </style>
+    <style name="Theme.MySwitch" parent="Theme.AppCompat.DayNight">
+        <item name="colorControlActivated">@color/switch_circle_active</item>
+        <item name="colorSwitchThumbNormal">@color/switch_circle_no_active</item>
+    </style>
 </resources>

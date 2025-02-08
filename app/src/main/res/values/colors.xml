@@ -4,11 +4,16 @@
     <color name="black_from_figma">#1A1B22</color>
     <color name="white">#FFFFFFFF</color>
     <color name="main_background">#3772E7</color>
-
-        <color name="edit_search_hint">#AEAFB4</color>
-        <color name="edit_search_hint_dark">#FFFFFF</color>
-        <color name="purple_700">#FF3700B3</color>
-        <color name="teal_200">#FF03DAC5</color>
-        <color name="green">#FF018786</color>
-        <color name="red">#ff4400</color>
+    <color name="search_edit_box_text_color_hint_dark">#1A1B22</color>
+    <color name="switch_circle_no_active">#AEAFB4</color>
+    <color name="switch_track_light">#E6E8EB</color>
+    <color name="switch_circle_active">#3772E7</color>
+    <color name="switch_track_dark">#9FBBF3</color>
+    <color name="edit_search_hint">#AEAFB4</color>
+    <color name="edit_search_background_light">#E6E8EB</color>
+    <color name="edit_search_hint_dark">#FFFFFF</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="green">#FF018786</color>
+    <color name="red">#ff4400</color>
 </resources>
