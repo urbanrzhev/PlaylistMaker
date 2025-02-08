@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="search_edit_box" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="boxStrokeColor">@color/white</item>
-        <item name="boxStrokeWidth">0dp</item>
-        <item name="android:background">@drawable/rounde_edittext_backgroun_dark</item>
+    <style name="search_edit_box" >
+        <item name="android:textColorHint">#1A1B22</item>
+        <item name ="android:background">@color/edit_search_hint_dark</item>
+        <item name="android:drawableLeft">@drawable/search_icon_dark</item>
     </style>
-    <style name="clear_search_button">
-        <item name="android:backgroundTint">@color/white</item>
+    <style name="clear_search_button" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:backgroundTint">@color/edit_search_hint</item>
+        <item name="android:textColor">#1A1B22</item>
     </style>
     <style name="vector_back_src">
         <item name="android:src">@drawable/vector_dark_theme</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">12dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_margin">@dimen/main_layout_padding</item>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/title_min_height"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/search_back"
+            style="@style/vector_back_src"
+            android:contentDescription="@string/default_image" />
+
+        <TextView
+            style="@style/titleText"
+            android:layout_gravity="center_vertical"
+            android:text="@string/search" />
+    </LinearLayout>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <EditText
+        android:id="@+id/editSearchText"
+        style="@style/search_edit_box"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginHorizontal="@dimen/main_layout_padding"
+        android:layout_marginVertical="8dp"
+        android:drawablePadding="8dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:hint="@string/search"
+        android:inputType="text"
+        android:textColor="@color/black_from_figma"
+        android:maxLines="1"
+        android:paddingLeft="14dp"
+        android:textFontWeight="400"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/clearSearchButton"
+        style="@style/clear_search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:textFontWeight="500"
+        android:layout_gravity="center_vertical|end"
+        android:textSize="11sp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:textAllCaps="true"
+        app:cornerRadius="0dp"
+        android:layout_marginEnd="19dp"
+        android:text="@string/clear_search"
+        android:visibility="gone" />
+</FrameLayout>
+</LinearLayout>
