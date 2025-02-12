@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="black_from_figma">#1A1B22</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="main_background">#3772E7</color>
-
-        <color name="edit_search_hint">#AEAFB4</color>
-        <color name="edit_search_hint_dark">#FFFFFF</color>
-        <color name="purple_700">#FF3700B3</color>
-        <color name="teal_200">#FF03DAC5</color>
-        <color name="green">#FF018786</color>
-        <color name="red">#ff4400</color>
 </resources>
