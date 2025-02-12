@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_text_size">22sp</dimen>
+    <dimen name="min_height_setting">61dp</dimen>
+    <dimen name="settings_text_size">16sp</dimen>
+    <dimen name="settings_button_padding">0dp</dimen>
+    <dimen name="main_layout_padding">16dp</dimen>
+    <dimen name="main_layout_padding_vertical">32dp</dimen>
+    <dimen name="button_icon_padding">8dp</dimen>
+    <dimen name="button_radius">16dp</dimen>
+    <dimen name="setting_image_size">24dp</dimen>
+    <dimen name="switch_size">48dp</dimen>
+    <dimen name="title_padding_size">24dp</dimen>
+    <dimen name="height_setting_menu">61dp</dimen>
+    <dimen name="title_min_height">56dp</dimen>
+</resources>
