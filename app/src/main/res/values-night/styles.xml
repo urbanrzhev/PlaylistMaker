@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="my_toolbars" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="navigationIcon">@drawable/vector_dark_theme</item>
+        <item name="titleTextAppearance">@style/my_toolbars_title_text_appearance</item>
+    </style>
+    <style name="search_edit_box" >
+        <item name="android:textColorHint">@color/search_edit_box_text_color_hint_dark</item>
+        <item name ="android:background">@drawable/rounded_edit_text_dark</item>
+        <item name="android:drawableLeft">@drawable/search_icon_dark</item>
+    </style>
+    <style name="vector_back_src">
+        <item name="android:src">@drawable/vector_dark_theme</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_margin">@dimen/main_layout_padding</item>
+    </style>
+    <style name="textSettingActivity">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">61dp</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:padding">@dimen/main_layout_padding</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:textSize">@dimen/settings_text_size</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="trackTint">@color/switch_track_dark</item>
+        <item name="android:checked">true</item>
+    </style>
+    <style name="backgroundMainActivity">
+        <item name="android:background">@color/black_from_figma</item>
+    </style>
+</resources>

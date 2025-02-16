@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_search"
+        style="@style/my_toolbars"
+        app:iconPadding="0dp"
+        app:title="@string/search"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp">
+
+        <EditText
+            android:id="@+id/editSearchText"
+            style="@style/search_edit_box"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="@dimen/main_layout_padding"
+            android:layout_gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/ys_display_regular"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingLeft="14dp"
+            android:textColor="@color/black_from_figma"
+            android:textCursorDrawable="@drawable/cursor"
+            android:textFontWeight="400"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/clearSearchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="@dimen/main_layout_padding"
+            android:contentDescription="@string/clear_search"
+            android:visibility="gone"
+            app:srcCompat="@drawable/button_clear" />
+    </FrameLayout>
+
+</LinearLayout>

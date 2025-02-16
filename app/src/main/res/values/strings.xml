@@ -1,3 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Playlist Maker</string>
+    <string name="secret_code">myCode</string>
+    <string name="share_one">выберите приложение</string>
+    <string name="share_no">Нет доступных приложений</string>
+    <string name="practicum_android_link">https://practicum.yandex.ru/profile/android-developer/</string>
+    <string name="app_name" translatable="false">Playlist maker</string>
+    <string name="search" translatable="false">Поиск</string>
+    <string name="media_library" translatable="false">Медиатека</string>
+    <string name="settings" translatable="false">Настройки</string>
+    <string name="default_image" translatable="false">картинка</string>
+    <string name="share" translatable="false">Поделиться приложением</string>
+    <string name="support" translatable="false">Написать в поддержку</string>
+    <string name="forward" translatable="false">Пользовательское соглашение</string>
+    <string name="night_theme" translatable="false">Темная тема</string>
+    <string name="clear_search" translatable="false">Очистить</string>
+    <string name="practicum_offer" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="uri_mailto" translatable="false">mailto:</string>
+    <string name="my_mail_adress" translatable="false">frolovcite@yandex.ru</string>
+    <string name="my_mail_thema" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="my_mail_message" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
 </resources>
