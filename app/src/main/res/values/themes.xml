@@ -8,9 +8,14 @@
 -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
         <item name="android:textColor">@color/black_from_figma</item>
+        <item name="my_view_text_search_prima_color">@color/black</item>
+        <item name="my_view_text_search_second_color">@color/text_search_list_second_light</item>
+        <item name="punkt_search_recycle_text_second">@drawable/punkt_search_list_light</item>
+        <item name="vector_search_recycle_image">@drawable/vector_light_search_list</item>
     </style>
     <style name="Theme.MySwitch" parent="Theme.AppCompat.DayNight">
         <item name="colorControlActivated">@color/switch_circle_active</item>
         <item name="colorSwitchThumbNormal">@color/switch_circle_no_active</item>
     </style>
+
 </resources>

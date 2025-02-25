@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="punkt_bold">\u2022  \u26AB</string>
     <string name="secret_code">myCode</string>
     <string name="share_one">выберите приложение</string>
     <string name="share_no">Нет доступных приложений</string>
