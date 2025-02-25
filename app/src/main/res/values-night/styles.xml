@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="nothing_image_search">
+        <item name="srcCompat">@drawable/nothing_dark_for_search</item>
+    </style>
+    <style name="load_error_image_search">
+        <item name="srcCompat">@drawable/load_error_dark_for_search</item>
+    </style>
+    <style name="load_error_button_search">
+        <item name="backgroundTint">@color/white</item>
+    </style>
     <style name="image_search_list">
         <item name="srcCompat">@drawable/vector_dark_search_list</item>
     </style>

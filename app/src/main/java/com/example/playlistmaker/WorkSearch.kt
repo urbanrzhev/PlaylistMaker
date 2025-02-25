@@ -3,12 +3,19 @@ package com.example.playlistmaker
 import android.content.Context
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 fun dpToPx(dp: Float, context: Context): Int {
     return TypedValue.applyDimension(
@@ -19,19 +26,53 @@ fun dpToPx(dp: Float, context: Context): Int {
 }
 
 class MusicTrackAdapter(
-    private val track: List<Track>
-) : RecyclerView.Adapter<MusicTrackViewHolder>() {
+    private val track: List<Track>,
+    private val sign: Int = 0,
+    private val text:String = ""
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicTrackViewHolder {
-        return MusicTrackViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (sign) {
+            0 -> MusicTrackViewHolder(parent)
+            1 -> MusicNotTrackViewHolder(parent)
+            2 -> MusicNotCallViewHolder(parent,text)
+            3 -> MusicNotTrackViewHolder(parent, empty = true)
+            else -> throw IllegalStateException(parent.context.getString(R.string.illegal_state_exception))
+        }
     }
 
-    override fun onBindViewHolder(holder: MusicTrackViewHolder, position: Int) {
-        holder.bind(track[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is MusicTrackViewHolder -> holder.bind(track[position])
+        }
     }
 
     override fun getItemCount(): Int {
         return track.size
+    }
+}
+
+class MusicNotTrackViewHolder(parent: ViewGroup,empty:Boolean = false) : RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context).inflate(R.layout.nothing_for_search, parent, false)
+){
+    init {
+        if(empty){
+            val main = itemView.findViewById<LinearLayout>(R.id.main)
+            main.visibility = View.INVISIBLE
+        }
+    }
+}
+
+class MusicNotCallViewHolder(parent: ViewGroup,text:String) : ViewHolder(
+    LayoutInflater.from(parent.context).inflate(R.layout.load_error_for_search, parent, false)
+) {
+    init {
+        val updateSearch = itemView.findViewById<Button>(R.id.updateSearch)
+        val textNotFound = itemView.findViewById<TextView>(R.id.textNotFound)
+        textNotFound.text = text
+        updateSearch.setOnClickListener {
+            ITunesService.load(parent as RecyclerView)
+        }
     }
 
 }
@@ -48,52 +89,24 @@ class MusicTrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     fun bind(model: Track) {
         trackName.text = model.trackName
         artistName.text = model.artistName
-        trackTime.text = model.trackTime
-        Glide.with(itemView.context)
-            .load(model.artworkUrl100)
-            .transform(RoundedCorners(dpToPx(2f, itemView.context)))
-            .fitCenter()
-            .placeholder(R.drawable.placeholder_search_light)
-            .into(imageCover)
+        try {
+        trackTime.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis.toInt())
+            Glide.with(itemView.context)
+                .load(model.artworkUrl100)
+                .transform(RoundedCorners(dpToPx(2f, itemView.context)))
+                .fitCenter()
+                .placeholder(R.drawable.placeholder_search_light)
+                .into(imageCover)
+        }catch (e:Exception){
+            Toast.makeText(itemView.context, itemView.context.getString(R.string.crash_error), Toast.LENGTH_SHORT).show()
+        }
     }
 }
 
 data class Track(
     val trackName: String,
     val artistName: String,
-    val trackTime: String,
+    val trackTimeMillis: String,
     val artworkUrl100: String
-)
-
-val myListArray = arrayListOf(
-    Track(
-        trackName = "Smells Like Teen Spirit",
-        artistName = "Nirvana",
-        trackTime = "5:01",
-        artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-    ),
-    Track(
-        trackName = "Billie Jean",
-        artistName = "Michael Jackson",
-        trackTime = "4:35",
-        artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-    ),
-    Track(
-        trackName = "Stayin' Alive",
-        artistName = "Bee Gees",
-        trackTime = "4:10",
-        artworkUrl100 = "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-    ),
-    Track(
-        trackName = "Whole Lotta Love",
-        artistName = "Led Zeppelin",
-        trackTime = "5:33",
-        artworkUrl100 = "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-    ),
-    Track(
-        trackName = "Sweet Child O'Mine",
-        artistName = "Guns N' Roses",
-        trackTime = "5:03",
-        artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-    )
 )

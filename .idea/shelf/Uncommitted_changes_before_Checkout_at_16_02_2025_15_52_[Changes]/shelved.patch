@@ -1,0 +1,58 @@
+Index: app/src/main/java/com/example/playlistmaker/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.playlistmaker\r\n\r\nimport android.os.Bundle\r\nimport androidx.activity.enableEdgeToEdge\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.core.view.ViewCompat\r\nimport androidx.core.view.WindowInsetsCompat\r\n\r\nclass MainActivity : AppCompatActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        enableEdgeToEdge()\r\n        setContentView(R.layout.activity_main)\r\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->\r\n            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())\r\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)\r\n            insets\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/playlistmaker/MainActivity.kt b/app/src/main/java/com/example/playlistmaker/MainActivity.kt
+--- a/app/src/main/java/com/example/playlistmaker/MainActivity.kt	
++++ b/app/src/main/java/com/example/playlistmaker/MainActivity.kt	
+@@ -1,20 +1,38 @@
+ package com.example.playlistmaker
+ 
++import android.content.Intent
+ import android.os.Bundle
++import android.view.View
++import android.widget.Button
+ import androidx.activity.enableEdgeToEdge
+ import androidx.appcompat.app.AppCompatActivity
+-import androidx.core.view.ViewCompat
+-import androidx.core.view.WindowInsetsCompat
+ 
+ class MainActivity : AppCompatActivity() {
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+-        enableEdgeToEdge()
+         setContentView(R.layout.activity_main)
+-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+-            insets
++        val buttonSearch = findViewById<Button>(R.id.button_search)
++        buttonSearch.setOnClickListener {
++            val intent = Intent(this, SearchActivity::class.java)
++            startActivity(intent)
+         }
+-    }
++
++        val buttonMediaLibrary = findViewById<Button>(R.id.button_media_library)
++        val listenerButtonMediaLibrary: View.OnClickListener = object : View.OnClickListener {
++            override fun onClick(v: View?) {
++                val intent = Intent(this@MainActivity, MediaLibraryActivity::class.java)
++                startActivity(intent)
++            }
++        }
++        buttonMediaLibrary.setOnClickListener(listenerButtonMediaLibrary)
++
++        val buttonSettings = findViewById<Button>(R.id.button_settings)
++        buttonSettings.setOnClickListener {
++            val intent = Intent(this, SettingsActivity::class.java)
++
++            startActivity(intent)
++        }
++
++    } 
++
+ }
+\ No newline at end of file
