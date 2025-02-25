@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="my_view_text_search_prima_color"/>
+    <attr name="my_view_text_search_second_color"/>
+    <attr name="punkt_search_recycle_text_second"/>
+    <attr name="vector_search_recycle_image"/>
+</resources>

@@ -16,4 +16,5 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="green">#FF018786</color>
     <color name="red">#ff4400</color>
+    <color name="text_search_list_second_light">#AEAFB4</color>
 </resources>
