@@ -31,7 +31,9 @@
             android:textColor="@color/black_from_figma"
             android:textCursorDrawable="@drawable/cursor"
             android:textFontWeight="400"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/clearSearchButton"
@@ -43,14 +45,16 @@
             android:visibility="gone"
             app:srcCompat="@drawable/button_clear" />
     </FrameLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerSearch"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="13dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="13dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+
 
 </LinearLayout>
