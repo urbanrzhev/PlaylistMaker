@@ -13,6 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+.idea
 activity_drill.xml
 activity_drill2.xml
 MyCustomApplication.kt
