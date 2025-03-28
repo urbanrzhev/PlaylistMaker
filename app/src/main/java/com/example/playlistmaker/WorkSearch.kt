@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -25,17 +26,38 @@ fun dpToPx(dp: Float, context: Context): Int {
     ).toInt()
 }
 
+class MusicHistoryTrackAdapter(
+    private val track: MutableList<Track>
+) : RecyclerView.Adapter<MusicTrackViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicTrackViewHolder {
+        return MusicTrackViewHolder(parent, history = true)
+    }
+
+    override fun getItemCount(): Int {
+        return track.size
+    }
+
+    override fun onBindViewHolder(holder: MusicTrackViewHolder, position: Int) {
+            holder.bind(track[position])
+    }
+}
+
 class MusicTrackAdapter(
     private val track: List<Track>,
     private val sign: Int = 0,
-    private val text:String = ""
+    private val text: String = "",
+    private val searchHistory: SearchHistory? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    companion object {
+        const val SEARCH_NOT_TRACK: Int = 1
+        const val SEARCH_NOT_CALL: Int = 2
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (sign) {
-            0 -> MusicTrackViewHolder(parent)
+            0 -> MusicTrackViewHolder(parent, history = false, searchHistory = searchHistory)
             1 -> MusicNotTrackViewHolder(parent)
-            2 -> MusicNotCallViewHolder(parent,text)
+            2 -> MusicNotCallViewHolder(parent, text)
             3 -> MusicNotTrackViewHolder(parent, empty = true)
             else -> throw IllegalStateException(parent.context.getString(R.string.illegal_state_exception))
         }
@@ -52,18 +74,18 @@ class MusicTrackAdapter(
     }
 }
 
-class MusicNotTrackViewHolder(parent: ViewGroup,empty:Boolean = false) : RecyclerView.ViewHolder(
+class MusicNotTrackViewHolder(parent: ViewGroup, empty: Boolean = false) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.nothing_for_search, parent, false)
-){
+) {
     init {
-        if(empty){
+        if (empty) {
             val main = itemView.findViewById<LinearLayout>(R.id.main)
             main.visibility = View.INVISIBLE
         }
     }
 }
 
-class MusicNotCallViewHolder(parent: ViewGroup,text:String) : ViewHolder(
+class MusicNotCallViewHolder(parent: ViewGroup, text: String) : ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.load_error_for_search, parent, false)
 ) {
     init {
@@ -77,36 +99,42 @@ class MusicNotCallViewHolder(parent: ViewGroup,text:String) : ViewHolder(
 
 }
 
-class MusicTrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
+class MusicTrackViewHolder(
+    parent: ViewGroup,
+    val history:Boolean = false,
+    val searchHistory: SearchHistory? = null
+) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.view_list_for_search, parent, false)
 ) {
-
     private val trackName: TextView = itemView.findViewById(R.id.textView1)
     private val artistName: TextView = itemView.findViewById(R.id.textView2)
     private val trackTime: TextView = itemView.findViewById(R.id.textView3)
     private val imageCover: ImageView = itemView.findViewById(R.id.imageViewCover)
 
     fun bind(model: Track) {
+        itemView.setOnClickListener {
+            if(!history)
+                searchHistory?.addHistory(model)
+        }
         trackName.text = model.trackName
         artistName.text = model.artistName
         try {
-        trackTime.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis.toInt())
+            trackTime.text =
+                SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis.toInt())
             Glide.with(itemView.context)
                 .load(model.artworkUrl100)
                 .transform(RoundedCorners(dpToPx(2f, itemView.context)))
                 .fitCenter()
                 .placeholder(R.drawable.placeholder_search_light)
                 .into(imageCover)
-        }catch (e:Exception){
-            Toast.makeText(itemView.context, itemView.context.getString(R.string.crash_error), Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(
+                itemView.context,
+                itemView.context.getString(R.string.crash_error),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
 
-data class Track(
-    val trackName: String,
-    val artistName: String,
-    val trackTimeMillis: String,
-    val artworkUrl100: String
-)
+
