@@ -8,6 +8,9 @@
     </style>
     <style name="load_error_button_search">
         <item name="backgroundTint">@color/white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">54dp</item>
     </style>
     <style name="image_search_list">
         <item name="srcCompat">@drawable/vector_dark_search_list</item>
