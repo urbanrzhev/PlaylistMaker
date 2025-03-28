@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="vector_media_library">
+        <item name="android:background">@drawable/vector_light_theme</item>
+    </style>
+    <style name="base_media_description">
+        <item name="android:textAppearance">@style/textAppearanceRegular13sp400w</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="media_library_description_data_track" parent="base_media_description">
+        <item name="android:textColor">@color/edit_search_hint</item>
+    </style>
+    <style name="media_library_value_data_track" parent="base_media_description">
+        <item name="android:textColor">@color/search_edit_box_text_color_hint_dark</item>
+    </style>
+    <style name="vector_pause_media_library">
+        <item name="android:background">@drawable/pause_vector_light</item>
+    </style>
+    <style name="vector_add_play_list_media_library">
+        <item name="android:background">@drawable/add_play_list_media_library_light</item>
+    </style>
+    <style name="vector_like_media_library">
+        <item name="android:background">@drawable/like_light_media_library</item>
+    </style>
     <style name="nothing_image_search">
         <item name="srcCompat">@drawable/nothing_light_for_search</item>
     </style>
@@ -15,8 +37,21 @@
     </style>
     <style name="load_error_button_search">
         <item name="backgroundTint">@color/black</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">54dp</item>
+    </style>
+    <style name="textAppearanceMedium22sp400w">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">22sp</item>
     </style>
     <style name="textAppearanceMedium14sp500w">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="textAppearanceMedium14sp400w">
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
         <item name="android:textSize">14sp</item>
@@ -25,6 +60,16 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:textSize">19sp</item>
+    </style>
+    <style name="textAppearanceMedium19sp500w">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+    <style name="textAppearanceRegular13sp400w">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">13sp</item>
     </style>
     <style name="textAppearanceRegular11sp400w">
         <item name="android:fontFamily">@font/ys_display_regular</item>

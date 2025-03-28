@@ -11,6 +11,7 @@
         app:title="@string/settings"/>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/themeSwitcher"
         style="@style/textSettingActivity"
         android:theme="@style/Theme.MySwitch"
         android:layout_marginTop="24dp"
