@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <ImageView
@@ -24,12 +24,9 @@
     <Button
         android:id="@+id/updateSearch"
         style="@style/load_error_button_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:textAppearance="@style/textAppearanceMedium14sp500w"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
-        app:cornerRadius="54dp"
         android:text="@string/update" />
 
 </LinearLayout>

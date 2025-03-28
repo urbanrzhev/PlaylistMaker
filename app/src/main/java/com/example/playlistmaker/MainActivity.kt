@@ -11,6 +11,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val sharedOnOfMedia = getSharedPreferences(MY_ON_OFF_MEDIA_LIBRARY_ACTIVITY_PREFERENCES,
+            MODE_PRIVATE
+        )
+
+        if(sharedOnOfMedia.getString(MY_KEY_ON_OFF_MEDIA_LIBRARY_ACTIVITY,"false").toBoolean()){
+            val intent = Intent(this, MediaLibraryActivity::class.java)
+            startActivity(intent)
+        }
+
         val buttonSearch = findViewById<Button>(R.id.button_search)
         buttonSearch.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)

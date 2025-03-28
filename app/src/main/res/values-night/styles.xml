@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="media_library_value_data_track" parent="base_media_description">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="media_library_description_data_track" parent="base_media_description">
+        <item name="android:textAppearance">@style/textAppearanceRegular13sp400w</item>
+        <item name="android:textColor">@color/edit_search_hint</item>
+    </style>
+    <style name="vector_media_library">
+        <item name="android:background">@drawable/vector_dark_theme</item>
+    </style>
+    <style name="vector_pause_media_library">
+        <item name="android:background">@drawable/pause_vector_dark</item>
+    </style>
+    <style name="vector_add_play_list_media_library">
+        <item name="android:background">@drawable/add_play_list_media_library_dark</item>
+    </style>
+    <style name="vector_like_media_library">
+        <item name="android:background">@drawable/like_dark_media_library</item>
+    </style>
     <style name="nothing_image_search">
         <item name="srcCompat">@drawable/nothing_dark_for_search</item>
     </style>
@@ -8,6 +27,9 @@
     </style>
     <style name="load_error_button_search">
         <item name="backgroundTint">@color/white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">54dp</item>
     </style>
     <style name="image_search_list">
         <item name="srcCompat">@drawable/vector_dark_search_list</item>
