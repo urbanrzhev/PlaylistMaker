@@ -3,8 +3,9 @@ package com.example.playlistmaker
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-const val MY_SWITCHER_PREFERENCES = "my_switcher_preferences"
-const val MY_KEY_SWITCHER = "my_key_switcher"
+private const val MY_SWITCHER_PREFERENCES = "my_switcher_preferences"
+private const val MY_KEY_SWITCHER = "my_key_switcher"
+
 class App : Application() {
     private var darkTheme = false
     private var sharedPrefs: SharedPreferences? = null

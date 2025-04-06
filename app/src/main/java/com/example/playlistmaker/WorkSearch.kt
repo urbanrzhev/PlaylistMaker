@@ -1,7 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
-import android.util.Log
+import android.content.Intent
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
@@ -115,6 +116,13 @@ class MusicTrackViewHolder(
         itemView.setOnClickListener {
             if(!history)
                 searchHistory?.addHistory(model)
+        }
+        itemView.setOnClickListener {
+            if(!history)
+                searchHistory?.addHistory(model)
+            val intent = Intent(itemView.context, MediaLibraryActivity::class.java)
+            itemView.context.startActivity(intent)
+            trackActive = model
         }
         trackName.text = model.trackName
         artistName.text = model.artistName

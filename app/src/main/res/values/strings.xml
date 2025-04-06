@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="country">Страна</string>
+    <string name="ghanr">Жанр</string>
+    <string name="lengthTrack">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
     <string name="punkt_bold">\u2022  \u26AB</string>
     <string name="secret_code">myCode</string>
     <string name="nothing_for_search">Ничего не нашлось</string>

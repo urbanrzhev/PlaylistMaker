@@ -1,12 +1,10 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -48,6 +46,17 @@ class SearchActivity : AppCompatActivity() {
                 if (hasFocus && editSearch.text.isEmpty() && sharedPrefsHistory.getCount()) View.VISIBLE else View.GONE
         }
 
+        recyclerViewHistory.adapter = sharedPrefsHistory.getAdapter()
+
+        clearHistoryButton.setOnClickListener {
+            sharedPrefsHistory.clearHistory()
+            viewGroupHistory.visibility = View.GONE
+        }
+
+        editSearch.setOnFocusChangeListener { _, hasFocus ->
+            viewGroupHistory.isVisible = hasFocus && editSearch.text.isEmpty() && sharedPrefsHistory.getCount()
+        }
+
         editSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 ITunesService.load(editSearch.text.toString(), recyclerView, sharedPrefsHistory)
@@ -70,7 +79,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
         editSearch.addTextChangedListener(simpleTextWatcher)
-
         buttonClearSearch.setOnClickListener {
             editSearch.text = null
             val inputMethodManager =
