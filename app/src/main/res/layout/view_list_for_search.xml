@@ -12,7 +12,7 @@
         android:layout_height="45dp"
         android:layout_gravity="center_vertical|start"
         android:contentDescription="@string/default_image"
-        app:srcCompat="@drawable/placeholder_search_light" />
+        app:srcCompat="@drawable/placeholder_search" />
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                 android:layout_height="3dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginHorizontal="5dp"
-                android:background="?attr/punkt_search_recycle_text_second"/>
+                android:background="@drawable/punkt_search_list"/>
             <TextView
                 android:id="@+id/textView3"
                 style="@style/text_search_list_second"/>
@@ -55,7 +55,7 @@
         android:id="@+id/imageViewVector"
         android:layout_width="8dp"
         android:layout_height="14dp"
-        android:background="?attr/vector_search_recycle_image"
+        android:background="@drawable/vector_for_recycler_search_list"
         android:layout_gravity="center_vertical|end" />
 
 </FrameLayout>

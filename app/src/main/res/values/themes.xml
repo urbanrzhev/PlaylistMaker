@@ -7,11 +7,21 @@
     </style>
 -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
+        <item name="search_text_hint_edittext">@color/little_white</item>
+        <item name="search_icon_edittext">@color/little_white</item>
+        <item name="pause_play_color">@color/black_from_figma</item>
+        <item name="punkt_for_recycler_search_color">@color/little_white</item>
+        <item name="edittext_search_color">@color/color_e6e8eb</item>
+        <item name="vector_color_back">@color/black</item>
+        <item name="vector_color_recycler_search_list">@color/little_white</item>
         <item name="android:textColor">@color/black_from_figma</item>
         <item name="my_view_text_search_prima_color">@color/black</item>
         <item name="my_view_text_search_second_color">@color/text_search_list_second_light</item>
-        <item name="punkt_search_recycle_text_second">@drawable/punkt_search_list_light</item>
-        <item name="vector_search_recycle_image">@drawable/vector_light_search_list</item>
+        <item name="title_and_group_color">@color/black_from_figma</item>
+        <item name="media_library_description_data_track_color">@color/little_white</item>
+        <item name="media_library_value_data_track_color">@color/black_from_figma</item>
+        <item name="value_text_media_library_color">@color/black_from_figma</item>
+        <item name="search_activity_background_tint_clear_history_button">@color/black_from_figma</item>
     </style>
     <style name="Theme.MySwitch" parent="Theme.AppCompat.DayNight">
         <item name="colorControlActivated">@color/switch_circle_active</item>

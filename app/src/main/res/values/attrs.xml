@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="search_icon_edittext" format="color"/>
+    <attr name="search_text_hint_edittext" format="color"/>
+    <attr name="punkt_for_recycler_search_color" format="color"/>
+    <attr name="edittext_search_color" format="color"/>
+    <attr name="vector_color_back" format="color"/>
+    <attr name="vector_color_recycler_search_list" format="color"/>
     <attr name="my_view_text_search_prima_color"/>
     <attr name="my_view_text_search_second_color"/>
     <attr name="punkt_search_recycle_text_second"/>
-    <attr name="vector_search_recycle_image"/>
 </resources>

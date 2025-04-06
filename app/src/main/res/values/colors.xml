@@ -3,10 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="black_from_figma">#1A1B22</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="little_white">#AEAFB4</color>
     <color name="main_background">#3772E7</color>
     <color name="search_edit_box_text_color_hint_dark">#1A1B22</color>
     <color name="switch_circle_no_active">#AEAFB4</color>
-    <color name="switch_track_light">#E6E8EB</color>
+    <color name="color_e6e8eb">#E6E8EB</color>
     <color name="switch_circle_active">#3772E7</color>
     <color name="switch_track_dark">#9FBBF3</color>
     <color name="edit_search_hint">#AEAFB4</color>

@@ -1,7 +1,5 @@
 package com.example.playlistmaker
 
-import android.content.SharedPreferences
-import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Retrofit
@@ -16,7 +14,11 @@ data class Track(
    @SerializedName("artistName") val artistName: String,
    @SerializedName("trackTimeMillis") val trackTimeMillis: String,
    @SerializedName("artworkUrl100") val artworkUrl100: String,
-    val trackId: Int
+   val collectionName:String,
+   val releaseDate:String,
+   val primaryGenreName:String,
+   val country:String,
+   val trackId: Int
 )
 
 object EmptyList {
@@ -24,6 +26,10 @@ object EmptyList {
         "wertwret",
         "wreterw",
         "97000",
+        "",
+        "",
+        "",
+        "",
         "",
         0
     )
@@ -84,4 +90,5 @@ object ITunesService {
         if (temporaryRequestString.isNotEmpty())
             load(temporaryRequestString, recycler, searchHist)
     }
+
 }

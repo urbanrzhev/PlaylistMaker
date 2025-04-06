@@ -2,16 +2,19 @@ package com.example.playlistmaker
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-const val MY_SWITCHER_PREFERENCES = "my_switcher_preferences"
-const val MY_KEY_SWITCHER = "my_key_switcher"
+
+private const val MY_SWITCHER_FOR_THEME_PREFERENCES = "my_switcher_preferences"
+private const val MY_KEY_SWITCHER_FOR_THEME = "my_key_switcher"
+
 class App : Application() {
-    private var darkTheme = false
-    private var sharedPrefs: SharedPreferences? = null
+    var darkTheme = false
+    private var sharedPrefsForTheme: SharedPreferences? = null
 
     override fun onCreate() {
         super.onCreate()
-        sharedPrefs = getSharedPreferences(MY_SWITCHER_PREFERENCES, MODE_PRIVATE)
+        sharedPrefsForTheme = getSharedPreferences(MY_SWITCHER_FOR_THEME_PREFERENCES, MODE_PRIVATE)
         darkTheme = getMyTheme()
         switchTheme(darkTheme)
     }
@@ -20,21 +23,23 @@ class App : Application() {
         darkTheme = darkThemeEnabled
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
-                setMyTheme(true)
+                Log.v("my","AppCompatDelegate.MODE_NIGHT_YES")
                 AppCompatDelegate.MODE_NIGHT_YES
             } else {
-                setMyTheme(false)
+                Log.v("my","AppCompatDelegate.MODE_NIGHT_NO")
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-    }
-    fun getMyTheme():Boolean{
-        return sharedPrefs?.getString(MY_KEY_SWITCHER,"false").toBoolean()
-    }
-    private fun setMyTheme(checked:Boolean){
-        sharedPrefs?.edit()
-            ?.putString(MY_KEY_SWITCHER, checked.toString())
-            ?.apply()
+            //setMyTheme(darkTheme)
     }
 
+    private fun getMyTheme(): Boolean {
+        return sharedPrefsForTheme?.getString(MY_KEY_SWITCHER_FOR_THEME, "false").toBoolean()
+    }
+
+    private fun setMyTheme(checked: Boolean) {
+        sharedPrefsForTheme?.edit()
+            ?.putString(MY_KEY_SWITCHER_FOR_THEME, checked.toString())
+            ?.apply()
+    }
 }

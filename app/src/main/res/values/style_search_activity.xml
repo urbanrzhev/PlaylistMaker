@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="search_activity_background_tint_clear_history_button" format="color"/>
+    <style name="button_system_search_activity">
+        <item name="cornerRadius">54dp</item>
+        <item name="android:backgroundTint">?attr/search_activity_background_tint_clear_history_button</item>
+        <item name="android:textAppearance">@style/textAppearanceMedium14sp500w</item>
+    </style>
+</resources>

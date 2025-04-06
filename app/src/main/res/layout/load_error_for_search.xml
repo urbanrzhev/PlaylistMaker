@@ -23,10 +23,10 @@
 
     <Button
         android:id="@+id/updateSearch"
-        style="@style/load_error_button_search"
-        android:textAppearance="@style/textAppearanceMedium14sp500w"
+        style="@style/button_system_search_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
         android:text="@string/update" />
-
 </LinearLayout>

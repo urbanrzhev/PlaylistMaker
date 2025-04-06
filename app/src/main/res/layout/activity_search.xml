@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -17,7 +18,9 @@
 
         <EditText
             android:id="@+id/editSearchText"
-            style="@style/search_edit_box"
+            android:textColorHint="?attr/search_text_hint_edittext"
+            android:background="@drawable/rounded_edit_text"
+            android:drawableLeft="@drawable/search_icon"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_gravity="center_vertical"
@@ -65,7 +68,6 @@
                 android:textAppearance="@style/textAppearanceMedium19sp500w"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/you_were_looking_for"/>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerSearchHistory"
                 android:layout_width="match_parent"
@@ -75,15 +77,16 @@
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
-
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <Button
                 android:id="@+id/clearHistoryButton"
-                style="@style/load_error_button_search"
+                style="@style/button_system_search_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/clear_history"
-                android:textAppearance="@style/textAppearanceMedium14sp500w" />
+                android:text="@string/clear_history" />
+
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerSearch"

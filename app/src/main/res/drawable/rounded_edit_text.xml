@@ -3,7 +3,7 @@
     android:shape="rectangle"
     android:padding="10dp">
 
-    <solid android:color="@color/edit_search_background_light" />
+    <solid android:color="?attr/edittext_search_color" />
     <corners
         android:bottomRightRadius="@dimen/edit_text_search_radius"
         android:bottomLeftRadius="@dimen/edit_text_search_radius"

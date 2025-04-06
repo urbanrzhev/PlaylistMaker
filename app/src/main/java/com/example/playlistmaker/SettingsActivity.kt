@@ -4,10 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 
@@ -16,14 +19,26 @@ class SettingsActivity : AppCompatActivity() {
     @SuppressLint("QueryPermissionsNeeded")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            v.setPadding(systemBars.left, systemBars.top + ime.top, systemBars.right, systemBars.bottom)
+            insets
+        }
         val buttonTextShareTheApp = findViewById<TextView>(R.id.buttonTextShareTheApp)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-        themeSwitcher.isChecked = (applicationContext as App).getMyTheme()
-        themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            (applicationContext as App).switchTheme(checked)
+        var temporarySwitcherChecked = themeSwitcher.isChecked
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            if(temporarySwitcherChecked != switcher.isChecked) {
+               // if ((applicationContext as App).darkTheme != checked) {
+                 //   switcher.isChecked = checked
+                    Log.v("my", "$checked  -- ${switcher.isChecked}")
+                    (applicationContext as App).switchTheme(checked)
+             //   }
+            }
         }
-
         buttonTextShareTheApp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.practicum_android_link))

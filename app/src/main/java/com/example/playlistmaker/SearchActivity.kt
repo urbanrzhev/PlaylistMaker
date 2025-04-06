@@ -1,12 +1,10 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -14,7 +12,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
@@ -25,7 +26,15 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_search)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val bottomPadding = if(ime.bottom > 0) ime.bottom else systemBars.bottom
+            v.setPadding(systemBars.left, systemBars.top + ime.top, systemBars.right, bottomPadding)
+            insets
+        }
         val buttonSettingsBack = findViewById<MaterialToolbar>(R.id.toolbar_search)
         val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
         val buttonClearSearch = findViewById<ImageView>(R.id.clearSearchButton)
@@ -46,6 +55,17 @@ class SearchActivity : AppCompatActivity() {
         editSearch.setOnFocusChangeListener { _, hasFocus ->
             viewGroupHistory.visibility =
                 if (hasFocus && editSearch.text.isEmpty() && sharedPrefsHistory.getCount()) View.VISIBLE else View.GONE
+        }
+
+        recyclerViewHistory.adapter = sharedPrefsHistory.getAdapter()
+
+        clearHistoryButton.setOnClickListener {
+            sharedPrefsHistory.clearHistory()
+            viewGroupHistory.visibility = View.GONE
+        }
+
+        editSearch.setOnFocusChangeListener { _, hasFocus ->
+            viewGroupHistory.isVisible = hasFocus && editSearch.text.isEmpty() && sharedPrefsHistory.getCount()
         }
 
         editSearch.setOnEditorActionListener { _, actionId, _ ->
@@ -70,7 +90,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
         editSearch.addTextChangedListener(simpleTextWatcher)
-
         buttonClearSearch.setOnClickListener {
             editSearch.text = null
             val inputMethodManager =

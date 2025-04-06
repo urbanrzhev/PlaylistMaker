@@ -1,7 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
-import android.util.Log
+import android.content.Intent
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -116,6 +116,13 @@ class MusicTrackViewHolder(
             if(!history)
                 searchHistory?.addHistory(model)
         }
+        itemView.setOnClickListener {
+            if(!history)
+                searchHistory?.addHistory(model)
+            val intent = Intent(itemView.context, MediaLibraryActivity::class.java)
+            itemView.context.startActivity(intent)
+            trackActive = model
+        }
         trackName.text = model.trackName
         artistName.text = model.artistName
         try {
@@ -125,7 +132,7 @@ class MusicTrackViewHolder(
                 .load(model.artworkUrl100)
                 .transform(RoundedCorners(dpToPx(2f, itemView.context)))
                 .fitCenter()
-                .placeholder(R.drawable.placeholder_search_light)
+                .placeholder(R.drawable.placeholder_search)
                 .into(imageCover)
         } catch (e: Exception) {
             Toast.makeText(
