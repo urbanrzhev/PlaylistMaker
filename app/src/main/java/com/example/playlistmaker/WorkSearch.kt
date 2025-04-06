@@ -2,7 +2,6 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -114,6 +113,10 @@ class MusicTrackViewHolder(
     private val imageCover: ImageView = itemView.findViewById(R.id.imageViewCover)
 
     fun bind(model: Track) {
+        itemView.setOnClickListener {
+            if(!history)
+                searchHistory?.addHistory(model)
+        }
         itemView.setOnClickListener {
             if(!history)
                 searchHistory?.addHistory(model)
