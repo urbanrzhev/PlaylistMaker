@@ -2,19 +2,29 @@ package com.example.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+    var themeSwitcher: SwitchMaterial? = null
+    var listener: CompoundButton.OnCheckedChangeListener? = null
+    var sharedPrefs: SharedPreferences? = null
 
     @SuppressLint("QueryPermissionsNeeded")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,21 +34,23 @@ class SettingsActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            v.setPadding(systemBars.left, systemBars.top + ime.top, systemBars.right, systemBars.bottom)
+            v.setPadding(
+                systemBars.left,
+                systemBars.top + ime.top,
+                systemBars.right,
+                systemBars.bottom
+            )
             insets
         }
         val buttonTextShareTheApp = findViewById<TextView>(R.id.buttonTextShareTheApp)
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-        val temporarySwitcherChecked = themeSwitcher.isChecked
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            if(temporarySwitcherChecked != switcher.isChecked) {
-               // if ((applicationContext as App).darkTheme != checked) {
-                 //   switcher.isChecked = checked
-                    Log.v("my", "$checked  -- ${switcher.isChecked}")
-                    (applicationContext as App).switchTheme(checked)
-             //   }
-            }
+        themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        //val themeSwitcher2 = findViewById<SwitchMaterial>(R.id.themeSwitcher2)
+        themeSwitcher?.isChecked = (applicationContext as App).getMyTheme()
+        Log.v("my", "${resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK} congig")
+        themeSwitcher?.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).switchTheme(checked)
         }
+
         buttonTextShareTheApp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.practicum_android_link))

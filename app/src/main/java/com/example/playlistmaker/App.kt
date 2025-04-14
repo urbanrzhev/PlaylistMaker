@@ -2,9 +2,11 @@ package com.example.playlistmaker
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-private const val MY_SWITCHER_PREFERENCES = "my_switcher_preferences"
+ const val MY_SWITCHER_PREFERENCES = "my_switcher_preferences"
 private const val MY_KEY_SWITCHER = "my_key_switcher"
+const val MY_KEY_SWITCHER2 = "my_key_switcher2"
 
 class App : Application() {
     private var darkTheme = false
@@ -26,6 +28,7 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
+        Log.v("my","switchTheme")
         setMyTheme(darkTheme)
     }
     fun getMyTheme():Boolean{
