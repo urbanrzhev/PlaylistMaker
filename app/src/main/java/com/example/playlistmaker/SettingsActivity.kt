@@ -29,7 +29,7 @@ class SettingsActivity : AppCompatActivity() {
         }
         val buttonTextShareTheApp = findViewById<TextView>(R.id.buttonTextShareTheApp)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-        var temporarySwitcherChecked = themeSwitcher.isChecked
+        val temporarySwitcherChecked = themeSwitcher.isChecked
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             if(temporarySwitcherChecked != switcher.isChecked) {
                // if ((applicationContext as App).darkTheme != checked) {
