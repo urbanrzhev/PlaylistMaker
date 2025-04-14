@@ -28,6 +28,7 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
+        setMyTheme(darkTheme)
     }
     fun getMyTheme():Boolean{
         return sharedPrefs?.getString(MY_KEY_SWITCHER,"false").toBoolean()
