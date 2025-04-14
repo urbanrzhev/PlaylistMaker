@@ -17,7 +17,12 @@ class MainActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            v.setPadding(systemBars.left, systemBars.top + ime.top, systemBars.right, systemBars.bottom)
+            v.setPadding(
+                systemBars.left,
+                systemBars.top + ime.top,
+                systemBars.right,
+                systemBars.bottom
+            )
             insets
         }
         val sharedOnOfMedia = getSharedPreferences(MY_ON_OFF_MEDIA_LIBRARY_ACTIVITY_PREFERENCES,
