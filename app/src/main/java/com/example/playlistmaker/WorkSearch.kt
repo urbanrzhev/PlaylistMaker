@@ -2,6 +2,8 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+private const val CLICK_DEBOUNCE_DELAY = 1000L
 fun dpToPx(dp: Float, context: Context): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,
@@ -38,7 +41,7 @@ class MusicHistoryTrackAdapter(
     }
 
     override fun onBindViewHolder(holder: MusicTrackViewHolder, position: Int) {
-            holder.bind(track[position])
+        holder.bind(track[position])
     }
 }
 
@@ -96,16 +99,16 @@ class MusicNotCallViewHolder(parent: ViewGroup, text: String) : ViewHolder(
             ITunesService.load(parent as RecyclerView)
         }
     }
-
 }
 
 class MusicTrackViewHolder(
     parent: ViewGroup,
-    val history:Boolean = false,
+    val history: Boolean = false,
     val searchHistory: SearchHistory? = null
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.view_list_for_search, parent, false)
 ) {
+    private var isClickAllowed = true
     private val trackName: TextView = itemView.findViewById(R.id.textView1)
     private val artistName: TextView = itemView.findViewById(R.id.textView2)
     private val trackTime: TextView = itemView.findViewById(R.id.textView3)
@@ -113,15 +116,17 @@ class MusicTrackViewHolder(
 
     fun bind(model: Track) {
         itemView.setOnClickListener {
-            if(!history)
+            if (!history)
                 searchHistory?.addHistory(model)
         }
         itemView.setOnClickListener {
-            if(!history)
+            if (!history)
                 searchHistory?.addHistory(model)
-            val intent = Intent(itemView.context, MediaLibraryActivity::class.java)
-            itemView.context.startActivity(intent)
-            trackActive = model
+            if (isClickAllowed) {
+                goIntent()
+                trackActive = model
+                clickDebounce()
+            }
         }
         trackName.text = model.trackName
         artistName.text = model.artistName
@@ -141,6 +146,17 @@ class MusicTrackViewHolder(
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+    private fun goIntent(){
+        val intent = Intent(itemView.context, MediaLibraryActivity::class.java)
+        itemView.context.startActivity(intent)
+    }
+    private fun clickDebounce(){
+        isClickAllowed = false
+        Handler(Looper.getMainLooper())
+            .postDelayed({
+                isClickAllowed = true
+            }, CLICK_DEBOUNCE_DELAY)
     }
 }
 

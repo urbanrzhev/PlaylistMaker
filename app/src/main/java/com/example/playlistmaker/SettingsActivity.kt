@@ -2,30 +2,18 @@ package com.example.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
-    var themeSwitcher: SwitchMaterial? = null
-    var listener: CompoundButton.OnCheckedChangeListener? = null
-    var sharedPrefs: SharedPreferences? = null
-
     @SuppressLint("QueryPermissionsNeeded")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +31,9 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
         val buttonTextShareTheApp = findViewById<TextView>(R.id.buttonTextShareTheApp)
-        themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-        //val themeSwitcher2 = findViewById<SwitchMaterial>(R.id.themeSwitcher2)
-        themeSwitcher?.isChecked = (applicationContext as App).getMyTheme()
-        Log.v("my", "${resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK} congig")
-        themeSwitcher?.setOnCheckedChangeListener { _, checked ->
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        themeSwitcher.isChecked = (applicationContext as App).getMyTheme()
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
             (applicationContext as App).switchTheme(checked)
         }
 
