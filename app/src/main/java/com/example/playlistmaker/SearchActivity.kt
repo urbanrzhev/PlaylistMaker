@@ -8,13 +8,16 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -41,6 +44,7 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top + ime.top, systemBars.right, bottomPadding)
             insets
         }
+        val progressBar = findViewById<FrameLayout>(R.id.progress_circular)
         val buttonSettingsBack = findViewById<MaterialToolbar>(R.id.toolbar_search)
         val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
         val buttonClearSearch = findViewById<ImageView>(R.id.clearSearchButton)
@@ -48,11 +52,10 @@ class SearchActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerSearch)
         val recyclerViewHistory = findViewById<RecyclerView>(R.id.recyclerSearchHistory)
         val viewGroupHistory = findViewById<LinearLayout>(R.id.viewGroupHistory)
-        val sharedPrefsHistory =
-            SearchHistory(getSharedPreferences(SearchHistory.MY_HISTORY_PREFERENCES, MODE_PRIVATE))
+        val sharedPrefsHistory = SearchHistory(getSharedPreferences(SearchHistory.MY_HISTORY_PREFERENCES, MODE_PRIVATE))
         recyclerViewHistory.adapter = sharedPrefsHistory.getAdapter()
         runnable =
-            Runnable { searchRequest(editSearch.text.toString(), recyclerView, sharedPrefsHistory) }
+            Runnable { searchRequest(editSearch.text.toString(), recyclerView, sharedPrefsHistory, progressBar) }
 
         clearHistoryButton.setOnClickListener {
             sharedPrefsHistory.clearHistory()
@@ -81,7 +84,10 @@ class SearchActivity : AppCompatActivity() {
                 buttonClearSearch.isVisible = !s.isNullOrEmpty()
                 viewGroupHistory.visibility =
                     if (editSearch.hasFocus() && editSearch.text.isEmpty() && sharedPrefsHistory.getCount()) View.VISIBLE else View.GONE
-                searchDebounce()
+                if(s.toString().isNotEmpty()) {
+                    s.toString()
+                    searchDebounce()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -125,8 +131,12 @@ class SearchActivity : AppCompatActivity() {
     private fun searchRequest(
         requestText: String,
         recyclerView: RecyclerView,
-        sharedPrefsHistory: SearchHistory
+        sharedPrefsHistory: SearchHistory,
+        progressBar: View
     ) {
-        ITunesService.load(requestText, recyclerView, sharedPrefsHistory)
+        if(requestText.isNotEmpty()) {
+            progressBar.visibility = View.VISIBLE
+            ITunesService.load(requestText, recyclerView, sharedPrefsHistory, progressBar)
+        }
     }
 }

@@ -20,7 +20,9 @@ class SearchHistory(
     init {
         getHistory(musicHistoryList)
     }
-
+    fun getSharedPrefs():SharedPreferences{
+        return sharedPrefs
+    }
     fun addHistory(track: Track) {
         val trackList = getActualList().filter {
             it.trackId != track.trackId

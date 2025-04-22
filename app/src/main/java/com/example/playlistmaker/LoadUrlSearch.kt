@@ -1,5 +1,13 @@
 package com.example.playlistmaker
 
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.View
+import android.widget.FrameLayout
+import android.widget.ProgressBar
+import androidx.core.view.isVisible
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Retrofit
@@ -14,6 +22,7 @@ data class Track(
    @SerializedName("artistName") val artistName: String,
    @SerializedName("trackTimeMillis") val trackTimeMillis: String,
    @SerializedName("artworkUrl100") val artworkUrl100: String,
+   val previewUrl: String,
    val collectionName:String,
    val releaseDate:String,
    val primaryGenreName:String,
@@ -31,10 +40,11 @@ object EmptyList {
         "",
         "",
         "",
+        "",
         0
     )
 }
-
+//class V(private val context:Context):View(context)
 data class MusicList(
     val resultCount: Int,
     val results: List<Track>
@@ -53,7 +63,7 @@ object ITunesService {
         .build()
     val catApi = retrofit.create(InterfaceITunes::class.java)
     var searchHist:SearchHistory? = null
-    fun load(request: String, recycler: RecyclerView, searchHistory: SearchHistory?) {
+    fun load(request: String, recycler: RecyclerView, searchHistory: SearchHistory?, progressBar: View?) {
         searchHist = searchHistory
         if(request.isNotEmpty()) {
             temporaryRequestString = request
@@ -62,33 +72,36 @@ object ITunesService {
                     call: Call<MusicList>,
                     response: retrofit2.Response<MusicList>
                 ) {
+                    progressBar?.visibility = View.GONE
                     if ((response.body()?.resultCount ?: 0) > 0 && response.code() == 200) {
                         recycler.adapter = MusicTrackAdapter(response.body()!!.results, searchHistory = searchHist)
                     }else if (response.code() != 200)
                         recycler.adapter = MusicTrackAdapter(
                             listOf(EmptyList.track),
                             sign = MusicTrackAdapter.SEARCH_NOT_CALL,
-                            text = recycler.context.getString(R.string.load_error_two_for_search)
+                            text = recycler.context.getString(R.string.load_error_two_for_search),
+                            viewVisibleFalse = progressBar
                         )
                     else
                         recycler.adapter = MusicTrackAdapter(listOf(EmptyList.track), sign = MusicTrackAdapter.SEARCH_NOT_TRACK)
                 }
 
                 override fun onFailure(call: Call<MusicList>, t: Throwable) {
+                    progressBar?.visibility = View.GONE
                     recycler.adapter = MusicTrackAdapter(
                         listOf(EmptyList.track),
                         sign = MusicTrackAdapter.SEARCH_NOT_CALL,
                         text = recycler.context.getString(R.string.load_error_one_for_search)
                     )
                 }
-
             })
         }
     }
 
-    fun load(recycler: RecyclerView) {
-        if (temporaryRequestString.isNotEmpty())
-            load(temporaryRequestString, recycler, searchHist)
+    fun load(recycler: RecyclerView, progressBarView: View?) {
+        progressBarView?.visibility = View.VISIBLE
+        if (temporaryRequestString.isNotEmpty()) {
+            load(temporaryRequestString, recycler, searchHist, progressBarView)
+        }
     }
-
 }
