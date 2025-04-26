@@ -1,13 +1,5 @@
 package com.example.playlistmaker
 
-import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.view.View
-import android.widget.FrameLayout
-import android.widget.ProgressBar
-import androidx.core.view.isVisible
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Retrofit
@@ -44,7 +36,6 @@ object EmptyList {
         0
     )
 }
-//class V(private val context:Context):View(context)
 data class MusicList(
     val resultCount: Int,
     val results: List<Track>
@@ -56,38 +47,39 @@ interface InterfaceITunes {
 }
 
 object ITunesService {
-    var temporaryRequestString: String = ""
-    val retrofit = Retrofit.Builder()
+    private var onSuccessDefault:()->Unit = { }
+    private var temporaryRequestString: String = ""
+    private val retrofit = Retrofit.Builder()
         .baseUrl("https://itunes.apple.com")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    val catApi = retrofit.create(InterfaceITunes::class.java)
+    private val iTunesApi:InterfaceITunes = retrofit.create(InterfaceITunes::class.java)
     var searchHist:SearchHistory? = null
-    fun load(request: String, recycler: RecyclerView, searchHistory: SearchHistory?, progressBar: View?) {
+    fun load(request: String, recycler: RecyclerView, searchHistory: SearchHistory?, onSuccess:()->Unit) {
         searchHist = searchHistory
+        onSuccessDefault = onSuccess
         if(request.isNotEmpty()) {
             temporaryRequestString = request
-            catApi.getMusicList(request).enqueue(object : Callback<MusicList> {
+            iTunesApi.getMusicList(request).enqueue(object : Callback<MusicList> {
                 override fun onResponse(
                     call: Call<MusicList>,
                     response: retrofit2.Response<MusicList>
                 ) {
-                    progressBar?.visibility = View.GONE
+                    onSuccess()
                     if ((response.body()?.resultCount ?: 0) > 0 && response.code() == 200) {
                         recycler.adapter = MusicTrackAdapter(response.body()!!.results, searchHistory = searchHist)
                     }else if (response.code() != 200)
                         recycler.adapter = MusicTrackAdapter(
                             listOf(EmptyList.track),
                             sign = MusicTrackAdapter.SEARCH_NOT_CALL,
-                            text = recycler.context.getString(R.string.load_error_two_for_search),
-                            viewVisibleFalse = progressBar
+                            text = recycler.context.getString(R.string.load_error_two_for_search)
                         )
                     else
                         recycler.adapter = MusicTrackAdapter(listOf(EmptyList.track), sign = MusicTrackAdapter.SEARCH_NOT_TRACK)
                 }
 
                 override fun onFailure(call: Call<MusicList>, t: Throwable) {
-                    progressBar?.visibility = View.GONE
+                    onSuccess()
                     recycler.adapter = MusicTrackAdapter(
                         listOf(EmptyList.track),
                         sign = MusicTrackAdapter.SEARCH_NOT_CALL,
@@ -98,10 +90,9 @@ object ITunesService {
         }
     }
 
-    fun load(recycler: RecyclerView, progressBarView: View?) {
-        progressBarView?.visibility = View.VISIBLE
+    fun load(recycler: RecyclerView) {
         if (temporaryRequestString.isNotEmpty()) {
-            load(temporaryRequestString, recycler, searchHist, progressBarView)
+            load(temporaryRequestString, recycler, searchHist, onSuccessDefault)
         }
     }
 }

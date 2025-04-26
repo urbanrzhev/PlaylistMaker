@@ -32,6 +32,7 @@ class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var runnable = Runnable { }
     private var temporaryEditText = ""
+    private var progressBar: FrameLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,7 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top + ime.top, systemBars.right, bottomPadding)
             insets
         }
-        val progressBar = findViewById<FrameLayout>(R.id.progress_circular)
+        progressBar = findViewById<FrameLayout>(R.id.progress_circular)
         val buttonSettingsBack = findViewById<MaterialToolbar>(R.id.toolbar_search)
         val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
         val buttonClearSearch = findViewById<ImageView>(R.id.clearSearchButton)
@@ -52,24 +53,25 @@ class SearchActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerSearch)
         val recyclerViewHistory = findViewById<RecyclerView>(R.id.recyclerSearchHistory)
         val viewGroupHistory = findViewById<LinearLayout>(R.id.viewGroupHistory)
-        val sharedPrefsHistory = SearchHistory(getSharedPreferences(SearchHistory.MY_HISTORY_PREFERENCES, MODE_PRIVATE))
+        val sharedPrefsHistory =
+            SearchHistory(getSharedPreferences(SearchHistory.MY_HISTORY_PREFERENCES, MODE_PRIVATE))
         recyclerViewHistory.adapter = sharedPrefsHistory.getAdapter()
         runnable =
-            Runnable { searchRequest(editSearch.text.toString(), recyclerView, sharedPrefsHistory, progressBar) }
+            Runnable { searchRequest(editSearch.text.toString(), recyclerView, sharedPrefsHistory) }
 
         clearHistoryButton.setOnClickListener {
             sharedPrefsHistory.clearHistory()
-            viewGroupHistory.visibility = View.GONE
+            viewGroupHistory.isVisible = false
         }
 
         editSearch.setOnFocusChangeListener { _, hasFocus ->
-            viewGroupHistory.visibility =
-                if (hasFocus && editSearch.text.isEmpty() && sharedPrefsHistory.getCount()) View.VISIBLE else View.GONE
+            viewGroupHistory.isVisible =
+                hasFocus && editSearch.text.isEmpty() && sharedPrefsHistory.getCount()
         }
 
         clearHistoryButton.setOnClickListener {
             sharedPrefsHistory.clearHistory()
-            viewGroupHistory.visibility = View.GONE
+            viewGroupHistory.isVisible = false
         }
 
         editSearch.setOnFocusChangeListener { _, hasFocus ->
@@ -82,12 +84,11 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 temporaryEditText = s.toString()
                 buttonClearSearch.isVisible = !s.isNullOrEmpty()
-                viewGroupHistory.visibility =
-                    if (editSearch.hasFocus() && editSearch.text.isEmpty() && sharedPrefsHistory.getCount()) View.VISIBLE else View.GONE
-                if(s.toString().isNotEmpty()) {
-                    s.toString()
+                viewGroupHistory.isVisible =
+                    editSearch.hasFocus() && editSearch.text.isEmpty() && sharedPrefsHistory.getCount()
+                if (s.toString().isNotEmpty())
                     searchDebounce()
-                }
+                else recyclerView.adapter = null
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -114,7 +115,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(getString(R.string.secret_code), temporaryEditText)
-
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -131,12 +131,19 @@ class SearchActivity : AppCompatActivity() {
     private fun searchRequest(
         requestText: String,
         recyclerView: RecyclerView,
-        sharedPrefsHistory: SearchHistory,
-        progressBar: View
+        sharedPrefsHistory: SearchHistory
     ) {
-        if(requestText.isNotEmpty()) {
-            progressBar.visibility = View.VISIBLE
-            ITunesService.load(requestText, recyclerView, sharedPrefsHistory, progressBar)
+        if (requestText.isNotEmpty()) {
+            progressBar?.isVisible = true
+            ITunesService.load(
+                requestText,
+                recyclerView,
+                sharedPrefsHistory,
+                onSuccess = { progressBarVisibleFalse() })
         }
+    }
+
+    private fun progressBarVisibleFalse() {
+        progressBar?.isVisible = false
     }
 }

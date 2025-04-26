@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
@@ -50,8 +51,7 @@ class MusicTrackAdapter(
     private val track: List<Track>,
     private val sign: Int = 0,
     private val text: String = "",
-    private val searchHistory: SearchHistory? = null,
-    private val viewVisibleFalse:View? = null
+    private val searchHistory: SearchHistory? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val SEARCH_NOT_TRACK: Int = 1
@@ -62,7 +62,7 @@ class MusicTrackAdapter(
         return when (sign) {
             0 -> MusicTrackViewHolder(parent, history = false, searchHistory = searchHistory)
             1 -> MusicNotTrackViewHolder(parent)
-            2 -> MusicNotCallViewHolder(parent, text, viewVisibleFalse)
+            2 -> MusicNotCallViewHolder(parent, text)
             3 -> MusicNotTrackViewHolder(parent, empty = true)
             else -> throw IllegalStateException(parent.context.getString(R.string.illegal_state_exception))
         }
@@ -85,12 +85,12 @@ class MusicNotTrackViewHolder(parent: ViewGroup, empty: Boolean = false) : Recyc
     init {
         if (empty) {
             val main = itemView.findViewById<LinearLayout>(R.id.main)
-            main.visibility = View.INVISIBLE
+            main.isVisible = false
         }
     }
 }
 
-class MusicNotCallViewHolder(parent: ViewGroup, text: String, progressBarView: View?) : ViewHolder(
+class MusicNotCallViewHolder(parent: ViewGroup, text: String) : ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.load_error_for_search, parent, false)
 ) {
     init {
@@ -98,7 +98,7 @@ class MusicNotCallViewHolder(parent: ViewGroup, text: String, progressBarView: V
         val textNotFound = itemView.findViewById<TextView>(R.id.textNotFound)
         textNotFound.text = text
         updateSearch.setOnClickListener {
-            ITunesService.load(parent as RecyclerView, progressBarView)
+            ITunesService.load(parent as RecyclerView)
         }
     }
 }

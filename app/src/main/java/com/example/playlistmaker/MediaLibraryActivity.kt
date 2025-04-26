@@ -15,6 +15,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
@@ -145,14 +146,16 @@ class MediaLibraryActivity : AppCompatActivity() {
     }
 
     private fun preparePlayer() {
-        mediaPlayer.setDataSource(trackActive?.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            play?.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
+        if(trackActive != null) {
+            mediaPlayer.setDataSource(trackActive?.previewUrl)
+            mediaPlayer.prepareAsync()
+            mediaPlayer.setOnPreparedListener {
+                play?.isEnabled = true
+                playerState = STATE_PREPARED
+            }
+            mediaPlayer.setOnCompletionListener {
+                playerState = STATE_PREPARED
+            }
         }
     }
 
@@ -233,8 +236,8 @@ class MediaLibraryActivity : AppCompatActivity() {
 
     private fun visibleView(view: View, modelString: String?, view2: TextView) {
         if (modelString == null) {
-            view.visibility = View.GONE
-            view2.visibility = View.GONE
+            view.isVisible = false
+            view2.isVisible = false
         } else {
             view2.text = modelString
         }
