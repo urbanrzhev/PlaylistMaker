@@ -139,11 +139,15 @@ class SearchActivity : AppCompatActivity() {
                 requestText,
                 recyclerView,
                 sharedPrefsHistory,
-                onSuccess = { progressBarVisibleFalse() })
+                onSuccess = { progressBarVisibleFalse() },
+                onProgressBarVisibleTrue = {progressBarVisibleTrue()})
         }
     }
 
     private fun progressBarVisibleFalse() {
         progressBar?.isVisible = false
+    }
+    private fun progressBarVisibleTrue() {
+        progressBar?.isVisible = true
     }
 }

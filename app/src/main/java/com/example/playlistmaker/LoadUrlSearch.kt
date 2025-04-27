@@ -48,6 +48,7 @@ interface InterfaceITunes {
 
 object ITunesService {
     private var onSuccessDefault:()->Unit = { }
+    private var onProgressBarVisibleTrueDefault:()->Unit = { }
     private var temporaryRequestString: String = ""
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://itunes.apple.com")
@@ -55,9 +56,11 @@ object ITunesService {
         .build()
     private val iTunesApi:InterfaceITunes = retrofit.create(InterfaceITunes::class.java)
     var searchHist:SearchHistory? = null
-    fun load(request: String, recycler: RecyclerView, searchHistory: SearchHistory?, onSuccess:()->Unit) {
+    fun load(request: String, recycler: RecyclerView, searchHistory: SearchHistory?, onSuccess:()->Unit= onSuccessDefault, onProgressBarVisibleTrue:()->Unit = onProgressBarVisibleTrueDefault) {
+        onProgressBarVisibleTrue()
         searchHist = searchHistory
         onSuccessDefault = onSuccess
+        onProgressBarVisibleTrueDefault = onProgressBarVisibleTrue
         if(request.isNotEmpty()) {
             temporaryRequestString = request
             iTunesApi.getMusicList(request).enqueue(object : Callback<MusicList> {
@@ -92,7 +95,7 @@ object ITunesService {
 
     fun load(recycler: RecyclerView) {
         if (temporaryRequestString.isNotEmpty()) {
-            load(temporaryRequestString, recycler, searchHist, onSuccessDefault)
+            load(temporaryRequestString, recycler, searchHist)
         }
     }
 }
