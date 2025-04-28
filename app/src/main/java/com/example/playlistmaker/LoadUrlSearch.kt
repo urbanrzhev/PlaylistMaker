@@ -14,6 +14,7 @@ data class Track(
    @SerializedName("artistName") val artistName: String,
    @SerializedName("trackTimeMillis") val trackTimeMillis: String,
    @SerializedName("artworkUrl100") val artworkUrl100: String,
+   val previewUrl: String,
    val collectionName:String,
    val releaseDate:String,
    val primaryGenreName:String,
@@ -31,10 +32,10 @@ object EmptyList {
         "",
         "",
         "",
+        "",
         0
     )
 }
-
 data class MusicList(
     val resultCount: Int,
     val results: List<Track>
@@ -46,22 +47,28 @@ interface InterfaceITunes {
 }
 
 object ITunesService {
-    var temporaryRequestString: String = ""
-    val retrofit = Retrofit.Builder()
+    private var onSuccessDefault:()->Unit = { }
+    private var onProgressBarVisibleTrueDefault:()->Unit = { }
+    private var temporaryRequestString: String = ""
+    private val retrofit = Retrofit.Builder()
         .baseUrl("https://itunes.apple.com")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    val catApi = retrofit.create(InterfaceITunes::class.java)
+    private val iTunesApi:InterfaceITunes = retrofit.create(InterfaceITunes::class.java)
     var searchHist:SearchHistory? = null
-    fun load(request: String, recycler: RecyclerView, searchHistory: SearchHistory?) {
+    fun load(request: String, recycler: RecyclerView, searchHistory: SearchHistory?, onSuccess:()->Unit= onSuccessDefault, onProgressBarVisibleTrue:()->Unit = onProgressBarVisibleTrueDefault) {
+        onProgressBarVisibleTrue()
         searchHist = searchHistory
+        onSuccessDefault = onSuccess
+        onProgressBarVisibleTrueDefault = onProgressBarVisibleTrue
         if(request.isNotEmpty()) {
             temporaryRequestString = request
-            catApi.getMusicList(request).enqueue(object : Callback<MusicList> {
+            iTunesApi.getMusicList(request).enqueue(object : Callback<MusicList> {
                 override fun onResponse(
                     call: Call<MusicList>,
                     response: retrofit2.Response<MusicList>
                 ) {
+                    onSuccess()
                     if ((response.body()?.resultCount ?: 0) > 0 && response.code() == 200) {
                         recycler.adapter = MusicTrackAdapter(response.body()!!.results, searchHistory = searchHist)
                     }else if (response.code() != 200)
@@ -75,20 +82,20 @@ object ITunesService {
                 }
 
                 override fun onFailure(call: Call<MusicList>, t: Throwable) {
+                    onSuccess()
                     recycler.adapter = MusicTrackAdapter(
                         listOf(EmptyList.track),
                         sign = MusicTrackAdapter.SEARCH_NOT_CALL,
                         text = recycler.context.getString(R.string.load_error_one_for_search)
                     )
                 }
-
             })
         }
     }
 
     fun load(recycler: RecyclerView) {
-        if (temporaryRequestString.isNotEmpty())
+        if (temporaryRequestString.isNotEmpty()) {
             load(temporaryRequestString, recycler, searchHist)
+        }
     }
-
 }

@@ -6,6 +6,7 @@
     </style>
     -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
+        <item name="colorPrimary">@color/white</item>
         <item name="search_text_hint_edittext">@color/black_from_figma</item>
         <item name="search_icon_edittext">@color/black_from_figma</item>
         <item name="pause_play_color">@color/white</item>
