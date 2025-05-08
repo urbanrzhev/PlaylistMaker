@@ -1,101 +1,74 @@
 package com.example.playlistmaker
 
+import com.example.playlistmaker.data.dto.TrackDto
+import com.example.playlistmaker.data.dto.TracksSearchResponse
+import com.example.playlistmaker.data.network.ITunesApiService
+import com.example.playlistmaker.presentation.TracksAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
-import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.annotations.SerializedName
 
-data class Track(
-   @SerializedName("trackName") val trackName: String,
-   @SerializedName("artistName") val artistName: String,
-   @SerializedName("trackTimeMillis") val trackTimeMillis: String,
-   @SerializedName("artworkUrl100") val artworkUrl100: String,
-   val previewUrl: String,
-   val collectionName:String,
-   val releaseDate:String,
-   val primaryGenreName:String,
-   val country:String,
-   val trackId: Int
-)
 
-object EmptyList {
-    val track: Track = Track(
-        "wertwret",
-        "wreterw",
-        "97000",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        0
-    )
-}
-data class MusicList(
+/*data class MusicList(
     val resultCount: Int,
     val results: List<Track>
-)
+)*/
 
-interface InterfaceITunes {
+/*interface InterfaceITunes {
     @GET("/search?entity=song")
     fun getMusicList(@Query("term") text: String): Call<MusicList>
-}
+}*/
 
 object ITunesService {
-    private var onSuccessDefault:()->Unit = { }
-    private var onProgressBarVisibleTrueDefault:()->Unit = { }
-    private var temporaryRequestString: String = ""
+    private lateinit var onProgressBarVisibleTrueDefault: () -> Unit
+    private lateinit var temporaryRequestString: String
+    private lateinit var callbackSevice: (List<TrackDto>) -> Unit
+    private lateinit var errorCallbackSevice: (Int,Boolean) -> Unit
+    private lateinit var errorConnectionCallbackSevice: () -> Unit
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://itunes.apple.com")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    private val iTunesApi:InterfaceITunes = retrofit.create(InterfaceITunes::class.java)
-    var searchHist:SearchHistory? = null
-    fun load(request: String, recycler: RecyclerView, searchHistory: SearchHistory?, onSuccess:()->Unit= onSuccessDefault, onProgressBarVisibleTrue:()->Unit = onProgressBarVisibleTrueDefault) {
-        onProgressBarVisibleTrue()
-        searchHist = searchHistory
-        onSuccessDefault = onSuccess
-        onProgressBarVisibleTrueDefault = onProgressBarVisibleTrue
-        if(request.isNotEmpty()) {
+    private val iTunesApi = retrofit.create(ITunesApiService::class.java)
+    //var searchHist: SearchHistory? = null
+    fun load(
+        request: String,
+      //  searchHistory: SearchHistory?,
+        onProgressBarVisibleTrueCallback: () -> Unit = onProgressBarVisibleTrueDefault,
+        callback: (List<TrackDto>) -> Unit,
+        errorCallback: (Int,Boolean)->Unit,
+        errorConnectionCallback: () -> Unit
+    ) {
+        callbackSevice = callback
+        errorCallbackSevice = errorCallback
+        errorConnectionCallbackSevice = errorConnectionCallback
+        onProgressBarVisibleTrueCallback()
+        //searchHist = searchHistory
+        onProgressBarVisibleTrueDefault = onProgressBarVisibleTrueCallback
+        if (request.isNotEmpty()) {
             temporaryRequestString = request
-            iTunesApi.getMusicList(request).enqueue(object : Callback<MusicList> {
+            iTunesApi.searchTracks(request).enqueue(object : Callback<TracksSearchResponse> {
                 override fun onResponse(
-                    call: Call<MusicList>,
-                    response: retrofit2.Response<MusicList>
+                    call: Call<TracksSearchResponse>,
+                    response: retrofit2.Response<TracksSearchResponse>
                 ) {
-                    onSuccess()
-                    if ((response.body()?.resultCount ?: 0) > 0 && response.code() == 200) {
-                        recycler.adapter = MusicTrackAdapter(response.body()!!.results, searchHistory = searchHist)
-                    }else if (response.code() != 200)
-                        recycler.adapter = MusicTrackAdapter(
-                            listOf(EmptyList.track),
-                            sign = MusicTrackAdapter.SEARCH_NOT_CALL,
-                            text = recycler.context.getString(R.string.load_error_two_for_search)
-                        )
+                    if ((response.body()?.results?.size ?: 0) > 0 && response.code() == 200) {
+                        callback(response.body()!!.results)
+                    } else if (response.code() != 200)
+                        errorCallback(TracksAdapter.SEARCH_NOT_CALL,true)
                     else
-                        recycler.adapter = MusicTrackAdapter(listOf(EmptyList.track), sign = MusicTrackAdapter.SEARCH_NOT_TRACK)
+                        errorCallback(TracksAdapter.SEARCH_NOT_TRACK,false)
                 }
 
-                override fun onFailure(call: Call<MusicList>, t: Throwable) {
-                    onSuccess()
-                    recycler.adapter = MusicTrackAdapter(
-                        listOf(EmptyList.track),
-                        sign = MusicTrackAdapter.SEARCH_NOT_CALL,
-                        text = recycler.context.getString(R.string.load_error_one_for_search)
-                    )
+                override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
+                    errorConnectionCallback()
                 }
             })
         }
     }
 
-    fun load(recycler: RecyclerView) {
-        if (temporaryRequestString.isNotEmpty()) {
-            load(temporaryRequestString, recycler, searchHist)
-        }
+    fun load() {
+   //     load(temporaryRequestString, searchHistory = searchHist, callback = callbackSevice, errorCallback = errorCallbackSevice, errorConnectionCallback = errorConnectionCallbackSevice)
     }
 }

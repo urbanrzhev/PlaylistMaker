@@ -6,32 +6,30 @@ import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.ui.player.MediaLibraryActivity
+import com.example.playlistmaker.ui.player.trackActive
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-private const val CLICK_DEBOUNCE_DELAY = 1000L
+/*private const val CLICK_DEBOUNCE_DELAY = 1000L
 fun dpToPx(dp: Float, context: Context): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,
         dp,
         context.resources.displayMetrics
     ).toInt()
-}
+}*/
 
-class MusicHistoryTrackAdapter(
+/*class MusicHistoryTrackAdapter(
     private val track: MutableList<Track>
 ) : RecyclerView.Adapter<MusicTrackViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicTrackViewHolder {
@@ -45,25 +43,30 @@ class MusicHistoryTrackAdapter(
     override fun onBindViewHolder(holder: MusicTrackViewHolder, position: Int) {
         holder.bind(track[position])
     }
-}
+}*/
 
-class MusicTrackAdapter(
-    private val track: List<Track>,
+/*class MusicTrackAdapter(
+    private val track: List<Track> = listOf(),
     private val sign: Int = 0,
     private val text: String = "",
     private val searchHistory: SearchHistory? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
+        const val SEARCH_COMPLETED: Int = 0
         const val SEARCH_NOT_TRACK: Int = 1
         const val SEARCH_NOT_CALL: Int = 2
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (sign) {
-            0 -> MusicTrackViewHolder(parent, history = false, searchHistory = searchHistory)
-            1 -> MusicNotTrackViewHolder(parent)
-            2 -> MusicNotCallViewHolder(parent, text)
-            3 -> MusicNotTrackViewHolder(parent, empty = true)
+            SEARCH_COMPLETED -> MusicTrackViewHolder(
+                parent,
+                history = false,
+                searchHistory = searchHistory
+            )
+
+            SEARCH_NOT_TRACK -> MusicNotTrackViewHolder(parent)
+            SEARCH_NOT_CALL -> MusicNotCallViewHolder(parent, text)
             else -> throw IllegalStateException(parent.context.getString(R.string.illegal_state_exception))
         }
     }
@@ -75,22 +78,18 @@ class MusicTrackAdapter(
     }
 
     override fun getItemCount(): Int {
+        if (sign != SEARCH_COMPLETED) return 1
         return track.size
     }
-}
+}*/
 
-class MusicNotTrackViewHolder(parent: ViewGroup, empty: Boolean = false) : RecyclerView.ViewHolder(
-    LayoutInflater.from(parent.context).inflate(R.layout.nothing_for_search, parent, false)
-) {
-    init {
-        if (empty) {
-            val main = itemView.findViewById<LinearLayout>(R.id.main)
-            main.isVisible = false
-        }
-    }
-}
+/*class MusicNotTrackViewHolder(parent: ViewGroup) :
+    RecyclerView.ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.nothing_for_search, parent, false)
+    ) {
+}*/
 
-class MusicNotCallViewHolder(parent: ViewGroup, text: String) : ViewHolder(
+/*class MusicNotCallViewHolder(parent: ViewGroup, text: String) : ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.load_error_for_search, parent, false)
 ) {
     init {
@@ -98,11 +97,12 @@ class MusicNotCallViewHolder(parent: ViewGroup, text: String) : ViewHolder(
         val textNotFound = itemView.findViewById<TextView>(R.id.textNotFound)
         textNotFound.text = text
         updateSearch.setOnClickListener {
-            ITunesService.load(parent as RecyclerView)
+            ITunesService.load()
         }
     }
-}
+}*/
 
+/*
 class MusicTrackViewHolder(
     parent: ViewGroup,
     val history: Boolean = false,
@@ -149,11 +149,13 @@ class MusicTrackViewHolder(
             ).show()
         }
     }
-    private fun goIntent(){
+
+    private fun goIntent() {
         val intent = Intent(itemView.context, MediaLibraryActivity::class.java)
         itemView.context.startActivity(intent)
     }
-    private fun clickDebounce(){
+
+    private fun clickDebounce() {
         isClickAllowed = false
         Handler(Looper.getMainLooper())
             .postDelayed({
@@ -163,3 +165,4 @@ class MusicTrackViewHolder(
 }
 
 
+*/

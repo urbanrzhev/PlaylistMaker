@@ -1,11 +1,10 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -18,6 +17,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.tracks.dpToPx
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -187,8 +189,8 @@ class MediaLibraryActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.textArtistName).text = model.artistName
 
         try {
-            lengthTrack?.text =
-                SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis.toInt())
+            lengthTrack?.text = model.trackTimeNormal
+                //SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis.toInt())
             textTimeOut?.text = lengthTrack?.text
             Glide.with(this)
                 .load(getCoverArtwork(model.artworkUrl100))
@@ -243,3 +245,16 @@ class MediaLibraryActivity : AppCompatActivity() {
         }
     }
 }
+
+data class TrackDto(
+    val trackName: String,
+    val artistName: String,
+    val trackTimeMillis: String,
+    val artworkUrl100: String,
+    val previewUrl: String,
+    val collectionName: String,
+    val releaseDate: String,
+    val primaryGenreName: String,
+    val country: String,
+    val trackId: Int
+)
