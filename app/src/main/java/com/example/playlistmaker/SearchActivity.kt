@@ -3,6 +3,7 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Region.Op
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,9 +31,10 @@ private const val SEARCH_DEBOUNCE_DELAY = 2000L
 
 class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
-    private var runnable = Runnable { }
+    private lateinit var runnable:Runnable
     private var temporaryEditText = ""
-    private var progressBar: FrameLayout? = null
+    private lateinit var progressBar: FrameLayout
+    private lateinit var optionAdaptersAndProgressBar: OptionAdaptersAndProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,7 @@ class SearchActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             val bottomPadding = if (ime.bottom > 0) ime.bottom else systemBars.bottom
+
             v.setPadding(systemBars.left, systemBars.top + ime.top, systemBars.right, bottomPadding)
             insets
         }
@@ -51,13 +54,14 @@ class SearchActivity : AppCompatActivity() {
         val buttonClearSearch = findViewById<ImageView>(R.id.clearSearchButton)
         val editSearch = findViewById<EditText>(R.id.editSearchText)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerSearch)
+        optionAdaptersAndProgressBar = OptionAdaptersAndProgressBar(recyclerView, progressBar)
         val recyclerViewHistory = findViewById<RecyclerView>(R.id.recyclerSearchHistory)
         val viewGroupHistory = findViewById<LinearLayout>(R.id.viewGroupHistory)
         val sharedPrefsHistory =
             SearchHistory(getSharedPreferences(SearchHistory.MY_HISTORY_PREFERENCES, MODE_PRIVATE))
         recyclerViewHistory.adapter = sharedPrefsHistory.getAdapter()
         runnable =
-            Runnable { searchRequest(editSearch.text.toString(), recyclerView, sharedPrefsHistory) }
+            Runnable { searchRequest(editSearch.text.toString(), sharedPrefsHistory) }
 
         clearHistoryButton.setOnClickListener {
             sharedPrefsHistory.clearHistory()
@@ -130,24 +134,22 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchRequest(
         requestText: String,
-        recyclerView: RecyclerView,
         sharedPrefsHistory: SearchHistory
     ) {
         if (requestText.isNotEmpty()) {
-            progressBar?.isVisible = true
             ITunesService.load(
                 requestText,
-                recyclerView,
                 sharedPrefsHistory,
-                onSuccess = { progressBarVisibleFalse() },
-                onProgressBarVisibleTrue = {progressBarVisibleTrue()})
+                onProgressBarVisibleTrueCallback = { optionAdaptersAndProgressBar.progressBarVisibleTrue() },
+                callback = { data -> optionAdaptersAndProgressBar.setAdapterSuccefull(data) },
+                errorCallback = { errorData, text ->
+                    optionAdaptersAndProgressBar.setAdaptersErrors(
+                        errorData,
+                        text
+                    )
+                },
+                errorConnectionCallback = { optionAdaptersAndProgressBar.setAdaptersErrorConnect() }
+            )
         }
-    }
-
-    private fun progressBarVisibleFalse() {
-        progressBar?.isVisible = false
-    }
-    private fun progressBarVisibleTrue() {
-        progressBar?.isVisible = true
     }
 }
