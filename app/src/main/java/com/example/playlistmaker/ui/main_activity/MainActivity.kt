@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.main_activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker.ui.player.MY_KEY_ON_OFF_MEDIA_LIBRARY_ACTIVITY
+import com.example.playlistmaker.ui.player.MY_ON_OFF_MEDIA_LIBRARY_ACTIVITY_PREFERENCES
+import com.example.playlistmaker.ui.player.MediaLibraryActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.ui.settings.SettingsActivity
+import com.example.playlistmaker.ui.tracks.SearchActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +31,8 @@ class MainActivity : AppCompatActivity() {
             )
             insets
         }
-        val sharedOnOfMedia = getSharedPreferences(MY_ON_OFF_MEDIA_LIBRARY_ACTIVITY_PREFERENCES,
+        val sharedOnOfMedia = getSharedPreferences(
+            MY_ON_OFF_MEDIA_LIBRARY_ACTIVITY_PREFERENCES,
             MODE_PRIVATE
         )
 

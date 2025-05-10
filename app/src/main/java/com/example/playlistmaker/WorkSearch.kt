@@ -6,34 +6,30 @@ import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.ITunesService.searchHist
-import okhttp3.Response
+import com.example.playlistmaker.ui.player.MediaLibraryActivity
+import com.example.playlistmaker.ui.player.trackActive
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-private const val CLICK_DEBOUNCE_DELAY = 1000L
+/*private const val CLICK_DEBOUNCE_DELAY = 1000L
 fun dpToPx(dp: Float, context: Context): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,
         dp,
         context.resources.displayMetrics
     ).toInt()
-}
+}*/
 
-class MusicHistoryTrackAdapter(
+/*class MusicHistoryTrackAdapter(
     private val track: MutableList<Track>
 ) : RecyclerView.Adapter<MusicTrackViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicTrackViewHolder {
@@ -47,9 +43,9 @@ class MusicHistoryTrackAdapter(
     override fun onBindViewHolder(holder: MusicTrackViewHolder, position: Int) {
         holder.bind(track[position])
     }
-}
+}*/
 
-class MusicTrackAdapter(
+/*class MusicTrackAdapter(
     private val track: List<Track> = listOf(),
     private val sign: Int = 0,
     private val text: String = "",
@@ -85,15 +81,15 @@ class MusicTrackAdapter(
         if (sign != SEARCH_COMPLETED) return 1
         return track.size
     }
-}
+}*/
 
-class MusicNotTrackViewHolder(parent: ViewGroup) :
+/*class MusicNotTrackViewHolder(parent: ViewGroup) :
     RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.nothing_for_search, parent, false)
     ) {
-}
+}*/
 
-class MusicNotCallViewHolder(parent: ViewGroup, text: String) : ViewHolder(
+/*class MusicNotCallViewHolder(parent: ViewGroup, text: String) : ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.load_error_for_search, parent, false)
 ) {
     init {
@@ -104,8 +100,9 @@ class MusicNotCallViewHolder(parent: ViewGroup, text: String) : ViewHolder(
             ITunesService.load()
         }
     }
-}
+}*/
 
+/*
 class MusicTrackViewHolder(
     parent: ViewGroup,
     val history: Boolean = false,
@@ -168,3 +165,4 @@ class MusicTrackViewHolder(
 }
 
 
+*/

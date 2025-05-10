@@ -28,7 +28,6 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        Log.v("my","switchTheme")
         setMyTheme(darkTheme)
     }
     fun getMyTheme():Boolean{
