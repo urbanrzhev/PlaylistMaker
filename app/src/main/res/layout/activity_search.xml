@@ -109,10 +109,4 @@
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </LinearLayout>
-<Button
-    android:id="@+id/click"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="aksldfj"
-    android:layout_gravity="bottom"/>
 </LinearLayout>

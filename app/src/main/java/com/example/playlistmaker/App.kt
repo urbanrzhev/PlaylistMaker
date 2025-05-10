@@ -1,22 +1,18 @@
 package com.example.playlistmaker
 
 import android.app.Application
-import android.content.SharedPreferences
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
- const val MY_SWITCHER_PREFERENCES = "my_switcher_preferences"
-private const val MY_KEY_SWITCHER = "my_key_switcher"
-const val MY_KEY_SWITCHER2 = "my_key_switcher2"
+import com.example.playlistmaker.domain.api.SharedPreferencesInteractor
 
 class App : Application() {
     private var darkTheme = false
-    private var sharedPrefs: SharedPreferences? = null
 
     override fun onCreate() {
         super.onCreate()
-        sharedPrefs = getSharedPreferences(MY_SWITCHER_PREFERENCES, MODE_PRIVATE)
-        darkTheme = getMyTheme()
-        switchTheme(darkTheme)
+        Creator.provideSharedPreferencesInteractor(this).getAppDarkTheme(SharedPreferencesInteractor.BooleanConsumer {
+                darkTheme = it
+                switchTheme(darkTheme)
+            })
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
@@ -28,15 +24,6 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        setMyTheme(darkTheme)
+        Creator.provideSharedPreferencesInteractor(this).setAppDarkTheme(darkTheme)
     }
-    fun getMyTheme():Boolean{
-        return sharedPrefs?.getString(MY_KEY_SWITCHER,"false").toBoolean()
-    }
-    private fun setMyTheme(checked:Boolean){
-        sharedPrefs?.edit()
-            ?.putString(MY_KEY_SWITCHER, checked.toString())
-            ?.apply()
-    }
-
 }
