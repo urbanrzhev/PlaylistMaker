@@ -10,7 +10,7 @@ import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.SharedPreferencesInteractor
 import com.example.playlistmaker.presentation.ControlerPlayer
-import com.example.playlistmaker.presentation.ShowActiveTrack
+import com.example.playlistmaker.presentation.ShowActiveTrackUseCase
 import com.example.playlistmaker.domain.models.Track
 
 class MediaLibraryActivity : AppCompatActivity() {
@@ -51,7 +51,7 @@ class MediaLibraryActivity : AppCompatActivity() {
     }
 
     private fun loadTrack(model: Track) {
-        ShowActiveTrack(this, findViewById(R.id.main), model)
+        ShowActiveTrackUseCase(this, findViewById(R.id.main), model)
             .show()
     }
 
@@ -68,6 +68,7 @@ class MediaLibraryActivity : AppCompatActivity() {
                         loadTrack(track)
                         mediaPlayer = ControlerPlayer(findViewById(R.id.main), track)
                     }
-                })
+                }
+        )
     }
 }

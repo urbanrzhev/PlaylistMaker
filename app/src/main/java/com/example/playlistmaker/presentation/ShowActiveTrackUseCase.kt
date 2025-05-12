@@ -12,7 +12,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.util.MyDisplayMetrics
 
-class ShowActiveTrack(private val context:Context, private val view: View, private val model:Track) {
+class ShowActiveTrackUseCase(private val context:Context, private val view: View, private val model:Track) {
     fun show(){
         val imageCover = view.findViewById<ImageView>(R.id.imageView3)
         val lengthTrack = view.findViewById<TextView>(R.id.textLengthTrackValue1)

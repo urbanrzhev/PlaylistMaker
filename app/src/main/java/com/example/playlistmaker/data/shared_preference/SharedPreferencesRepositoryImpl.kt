@@ -23,6 +23,7 @@ class SharedPreferencesRepositoryImpl(context: Context) :
             .apply()
     }
 
+
     override fun getAppDarkTheme(): Boolean {
         return sharedPreferences.getBoolean(MyConstants.MY_KEY_SWITCHER,false)
     }
