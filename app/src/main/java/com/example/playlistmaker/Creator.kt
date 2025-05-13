@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Context
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.TracksRepositoryImpl
+import com.example.playlistmaker.data.shared_preference.SharedPreferencesClientImpl
+import com.example.playlistmaker.data.shared_preference.SharedPreferencesRepository2Impl
 import com.example.playlistmaker.data.shared_preference.SharedPreferencesRepositoryImpl
 import com.example.playlistmaker.domain.api.ActiveTrackForMediaPlayerInteractor
 import com.example.playlistmaker.domain.api.AppDarkThemeInteractor
@@ -13,6 +15,7 @@ import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.impl.ActiveTrackForMediaPlayerInteractorImpl
 import com.example.playlistmaker.domain.impl.AppDarkThemeInteractorImpl
 import com.example.playlistmaker.domain.impl.HistoryTrackListInteractorImpl
+import com.example.playlistmaker.domain.impl.StartImpl
 import com.example.playlistmaker.domain.impl.StartActivityInteractorImpl
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 
@@ -39,5 +42,8 @@ object Creator {
 
     fun provideActiveTrackForMediaPlayerInteractor(context: Context): ActiveTrackForMediaPlayerInteractor {
         return ActiveTrackForMediaPlayerInteractorImpl(SharedPreferencesRepositoryImpl(context))
+    }
+    fun povide(context:Context):StartImpl{
+        return StartImpl(SharedPreferencesRepository2Impl(SharedPreferencesClientImpl(context)))
     }
 }
