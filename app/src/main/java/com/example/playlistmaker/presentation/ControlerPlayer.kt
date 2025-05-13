@@ -11,7 +11,7 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.util.TimeFormat
 import com.example.playlistmaker.domain.util.MyConstants.DELAY
 
-class ControlerPlayer(val view: View, val track: Track) : MediaPlayer() {
+class MediaPlayerInteractorImpl(val view: View, val track: Track) : MediaPlayer(), MediaPlayerInteractor {
     private var playerState = STATE_DEFAULT
     private val myContext = this
     private val timeText: TextView = view.findViewById<TextView>(R.id.textTimeOutPause)
@@ -72,8 +72,11 @@ class ControlerPlayer(val view: View, val track: Track) : MediaPlayer() {
         playerState = STATE_PLAYING
         timeProgress(true)
     }
+    override fun release() {
+        this.release() 
+ }    
 
-    fun pausePlayer() {
+    override fun pause() {
         this.pause()
         play.setBackgroundResource(R.drawable.play_play)
         playerState = STATE_PAUSED
