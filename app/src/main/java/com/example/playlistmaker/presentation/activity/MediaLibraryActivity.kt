@@ -14,7 +14,7 @@ import com.example.playlistmaker.presentation.ShowActiveTrack
 import com.example.playlistmaker.domain.models.Track
 
 class MediaLibraryActivity : AppCompatActivity() {
-    private lateinit var mediaPlayer: MediaPlayerUseCase // ControlerPlayer? = null
+    private var mediaPlayer: MediaPlayerUseCase? = null// ControlerPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
