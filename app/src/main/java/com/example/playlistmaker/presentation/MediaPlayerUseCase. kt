@@ -72,11 +72,11 @@ class MediaPlayerUseCase(val mainLayout: View, val track: Track) : MediaPlayer()
         playerState = STATE_PLAYING
         timeProgress(true)
     }
-    override fun release() {
+    fun release() {
         this.release() 
  }    
 
-    override fun pause() {
+    fun pause() {
         this.pause()
         play.setBackgroundResource(R.drawable.play_play)
         playerState = STATE_PAUSED
