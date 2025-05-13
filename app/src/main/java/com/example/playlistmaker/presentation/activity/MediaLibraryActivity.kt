@@ -14,7 +14,7 @@ import com.example.playlistmaker.presentation.ShowActiveTrack
 import com.example.playlistmaker.domain.models.Track
 
 class MediaLibraryActivity : AppCompatActivity() {
-    private lateinit var mediaPlayer: MediaPlayerInteractor // ControlerPlayer? = null
+    private lateinit var mediaPlayer: MediaPlayerUseCase // ControlerPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +66,7 @@ class MediaLibraryActivity : AppCompatActivity() {
                     val track: Track = it
                     if (track.previewUrl.isNotEmpty()) {
                         loadTrack(track)
-                        mediaPlayer = Crator.provideMediaPlayerIneractorImpl(findById<View>(R.id.main), track)
+                        mediaPlayer = MediaPlayerUseCase(findById<View>(R.id.main), track)
                         //ControlerPlayer(findViewById(R.id.main), track)
                     }
                 })
