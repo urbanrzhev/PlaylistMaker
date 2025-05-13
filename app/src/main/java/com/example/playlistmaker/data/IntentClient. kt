@@ -1,0 +1,3 @@
+interface IntentClient{
+fun getIntent() :Intent
+} 
