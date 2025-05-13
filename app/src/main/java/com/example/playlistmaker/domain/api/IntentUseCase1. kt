@@ -1,0 +1,7 @@
+class IntentUseCase1(val repository:IntentRepository) {
+fun goIntent() {
+if(repository.get1Intent()){
+
+}
+} 
+} 
