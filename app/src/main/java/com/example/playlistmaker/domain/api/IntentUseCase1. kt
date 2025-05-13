@@ -1,7 +1,10 @@
 class IntentUseCase1(val repository:IntentRepository) {
-fun goIntent() {
-if(repository.get1Intent()){
-
+fun goIntent(context:Context) {
+if(repository.get1Intent().resolveActivity(context.packageManager) != null) {
+                context.startActivity(Intent.createChooser(intent, getString(R.string.share_one)))
+            } else {
+                Toast.makeText(this, getString(R.string.share_no), Toast.LENGTH_SHORT).show()
+            }
 }
 } 
 } 
