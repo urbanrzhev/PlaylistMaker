@@ -8,7 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.api.SharedPreferencesInteractor
+import com.example.playlistmaker.domain.api.ActiveTrackForMediaPlayerInteractor
 import com.example.playlistmaker.presentation.ControlerPlayer
 import com.example.playlistmaker.presentation.ShowActiveTrackUseCase
 import com.example.playlistmaker.domain.models.Track
@@ -56,13 +56,13 @@ class MediaLibraryActivity : AppCompatActivity() {
     }
 
     private fun setStartActivity(key:Boolean) {
-        Creator.provideSharedPreferencesInteractor(this)
+        Creator.provideStartActivityInteractor(this)
             .setStartActivity(key)
     }
 
     private fun getTrackDefault() {
-        Creator.provideSharedPreferencesInteractor(this).getActiveTrackForMediaPlayer(
-                SharedPreferencesInteractor.TrackConsumer {
+        Creator.provideActiveTrackForMediaPlayerInteractor(this).getActiveTrackForMediaPlayer(
+                ActiveTrackForMediaPlayerInteractor.TrackConsumer {
                     val track: Track = it
                     if (track.previewUrl.isNotEmpty()) {
                         loadTrack(track)

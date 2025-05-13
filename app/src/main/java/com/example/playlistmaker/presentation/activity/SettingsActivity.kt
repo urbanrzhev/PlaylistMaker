@@ -10,11 +10,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.App
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.api.SharedPreferencesInteractor
-import com.example.playlistmaker.domain.util.MyConstants
+import com.example.playlistmaker.domain.api.AppDarkThemeInteractor
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 
@@ -76,8 +74,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun installThemeSwitcher(themeSwitcher:SwitchMaterial){
-        Creator.provideSharedPreferencesInteractor(this).getAppDarkTheme(
-                SharedPreferencesInteractor.BooleanConsumer {
+        Creator.provideAppDarkThemeInteractor(this).getAppDarkTheme(
+            AppDarkThemeInteractor.BooleanConsumer {
                     themeSwitcher.isChecked = it
                 }
         )

@@ -13,7 +13,7 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.util.MyDisplayMetrics
 
 class TrackViewHolder(
-    val parent: ViewGroup
+    private val parent: ViewGroup
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.view_list_for_search, parent, false)
 ) {

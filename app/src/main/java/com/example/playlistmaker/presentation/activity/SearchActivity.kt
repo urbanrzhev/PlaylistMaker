@@ -233,7 +233,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setActiveTrackForMediaPlayer(track: Track) {
-        Creator.provideSharedPreferencesInteractor(this).setActiveTrackForMediaPlayer(
+        Creator.provideActiveTrackForMediaPlayerInteractor(this).setActiveTrackForMediaPlayer(
             track
         )
     }

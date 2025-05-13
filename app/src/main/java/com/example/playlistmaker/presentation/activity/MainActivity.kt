@@ -10,7 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.api.SharedPreferencesInteractor
+import com.example.playlistmaker.domain.api.StartActivityInteractor
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun selectStartActivity(){
-        Creator.provideSharedPreferencesInteractor(this).getStartActivity(SharedPreferencesInteractor.BooleanConsumer{
+        Creator.provideStartActivityInteractor(this).getStartActivity(StartActivityInteractor.BooleanConsumer{
                 if (it) {
                     val intent = Intent(this, MediaLibraryActivity::class.java)
                     startActivity(intent)
