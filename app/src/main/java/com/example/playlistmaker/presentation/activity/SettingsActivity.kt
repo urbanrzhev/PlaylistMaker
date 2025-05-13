@@ -45,11 +45,18 @@ class SettingsActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.practicum_android_link))
             intent.setType("text/plain")
+            IntentUseCase1().getIntent(this,
+                                       { intent->
+                                           startActivity(Intent.createChooser(intent, getString(R.string.share_one)))
+                                       }, 
+                                       {
+                                           Toast.makeText(this, getString(R.string.share_no), Toast.LENGTH_SHORT).show()
+     
+                                          } )
             if (intent.resolveActivity(packageManager) != null) {
-                startActivity(Intent.createChooser(intent, getString(R.string.share_one)))
+                
             } else {
-                Toast.makeText(this, getString(R.string.share_no), Toast.LENGTH_SHORT).show()
-            }
+                       }
         }
         val buttonTextWriteToSupport = findViewById<TextView>(R.id.buttonTextWriteToSupport)
         buttonTextWriteToSupport.setOnClickListener {
