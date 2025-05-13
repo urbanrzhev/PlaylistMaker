@@ -1,9 +1,10 @@
 class IntentUseCase1(val repository:IntentRepository) {
-fun goIntent(context:Context) {
+fun goIntent(context:Context, callbackOnCompleted:(Intent) - >Unit, 
+callbackError:() - >Unit) {
 if(repository.get1Intent().resolveActivity(context.packageManager) != null) {
-                context.startActivity(Intent.createChooser(intent, getString(R.string.share_one)))
-            } else {
-                Toast.makeText(this, getString(R.string.share_no), Toast.LENGTH_SHORT).show()
+          callbackOnCompleted(intent) 
+           } else {
+           callbackError() 
             }
 }
 } 
