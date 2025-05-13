@@ -1,0 +1,5 @@
+interface IntentSettingsRepository{
+fun getIntent() 
+fun getIntent() 
+fun getIntent() 
+} 
