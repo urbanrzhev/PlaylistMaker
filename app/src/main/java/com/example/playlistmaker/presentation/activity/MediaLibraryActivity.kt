@@ -14,7 +14,7 @@ import com.example.playlistmaker.presentation.ShowActiveTrack
 import com.example.playlistmaker.domain.models.Track
 
 class MediaLibraryActivity : AppCompatActivity() {
-    private var mediaPlayer: ControlerPlayer? = null
+    private lateinit var mediaPlayer: MediaPlayerInteractor // ControlerPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,12 +36,12 @@ class MediaLibraryActivity : AppCompatActivity() {
             onBackPressed()
         }
         setStartActivity(true)
-        getTrackDefault()
+        initActivity()
     }
 
     override fun onPause() {
         super.onPause()
-        mediaPlayer?.pausePlayer()
+        mediaPlayer?.pause()
     }
 
     override fun onDestroy() {
@@ -60,13 +60,14 @@ class MediaLibraryActivity : AppCompatActivity() {
             .setStartActivity(key)
     }
 
-    private fun getTrackDefault() {
+    private fun initActivity() {
         Creator.provideSharedPreferencesInteractor(this).getActiveTrackForMediaPlayer(
                 SharedPreferencesInteractor.TrackConsumer {
                     val track: Track = it
                     if (track.previewUrl.isNotEmpty()) {
                         loadTrack(track)
-                        mediaPlayer = ControlerPlayer(findViewById(R.id.main), track)
+                        mediaPlayer = Crator.provideMediaPlayerIneractorImpl(findById<View>(R.id.main), track)
+                        //ControlerPlayer(findViewById(R.id.main), track)
                     }
                 })
     }
