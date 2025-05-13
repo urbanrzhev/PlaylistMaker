@@ -1,0 +1,4 @@
+interface MediaPlayerInteractor{
+fun pause() 
+fun release() 
+} 
