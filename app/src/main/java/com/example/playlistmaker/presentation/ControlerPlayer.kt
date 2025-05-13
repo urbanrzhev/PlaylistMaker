@@ -11,11 +11,11 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.util.TimeFormat
 import com.example.playlistmaker.domain.util.MyConstants.DELAY
 
-class MediaPlayerInteractorImpl(val view: View, val track: Track) : MediaPlayer(), MediaPlayerInteractor {
+class MediaPlayerInteractorImpl(val mainLayout: View, val track: Track) : MediaPlayer(), MediaPlayerInteractor {
     private var playerState = STATE_DEFAULT
     private val myContext = this
-    private val timeText: TextView = view.findViewById<TextView>(R.id.textTimeOutPause)
-    private val play: View = view.findViewById<Button>(R.id.buttonPause)
+    private val timeText: TextView = mainLayout.findViewById<TextView>(R.id.textTimeOutPause)
+    private val play: View = mainLayout.findViewById<Button>(R.id.buttonPause)
     private val mainThreadHandler: Handler = Handler(Looper.getMainLooper())
     private val playStopRunnable: Runnable = object : Runnable {
         override fun run() {
