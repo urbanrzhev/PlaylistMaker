@@ -1,4 +1,8 @@
 class MediaPlayerRepositoryImpl():MediaPlayer(), MediaPlayerRepository{
-fun pause() 
-fun release() 
+override fun pause() {
+this.pause()
+} 
+override fun release(){
+this.release()
+}
 }
