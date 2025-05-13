@@ -1,4 +1,4 @@
-class MediaPlayerRepositoryImpl():MediaPlayer(){
+class MediaPlayerRepositoryImpl():MediaPlayer(), MediaPlayerRepository{
 fun pause() 
 fun release() 
 }
