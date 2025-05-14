@@ -8,6 +8,6 @@ interface HistoryTrackListInteraсtor {
     fun count():Int
 
     fun interface Consumer{
-        fun consume(trackList:MutableList<Track>)
+        fun consume(trackList:List<Track>)
     }
 }

@@ -4,7 +4,7 @@ interface StartActivityInteractor {
     fun getStartActivity(
         consumer: BooleanConsumer
     )
-    fun setStartActivity(keyData: Boolean)
+    fun setStartActivity(data: Boolean)
     fun interface BooleanConsumer {
         fun consume(response: Boolean)
     }

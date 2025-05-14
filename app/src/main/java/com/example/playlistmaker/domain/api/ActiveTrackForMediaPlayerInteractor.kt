@@ -6,7 +6,7 @@ interface ActiveTrackForMediaPlayerInteractor {
     fun getActiveTrackForMediaPlayer(
         consumer: TrackConsumer
     )
-    fun setActiveTrackForMediaPlayer(keyData: Track)
+    fun setActiveTrackForMediaPlayer(data: Track)
     fun interface TrackConsumer {
         fun consume(response: Track)
     }
