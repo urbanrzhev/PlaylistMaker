@@ -4,7 +4,8 @@ import com.example.playlistmaker.data.dto.SharedPreferencesBooleanRequest
 import com.example.playlistmaker.domain.models.Track
 
 interface SharedPreferencesRepository2 {
-    fun getMediaPlayerLoadStartActivity(dto:SharedPreferencesBooleanRequest): Boolean
+   fun getBoolean(key:String) 
+    //fun getMediaPlayerLoadStartActivity(dto:SharedPreferencesBooleanRequest): Boolean
     fun setMediaPlayerLoadStartActivity(dto:SharedPreferencesBooleanRequest)
     fun getAppDarkTheme(dto:SharedPreferencesBooleanRequest): Boolean
     fun setAppDarkTheme(dto:SharedPreferencesBooleanRequest)
