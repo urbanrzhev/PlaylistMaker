@@ -11,24 +11,24 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
   private val gson = Gson() 
     private val sharedPreferences =
         context.getSharedPreferences(MyConstants.MY_ALL_PREFERENCES, MyConstants.MODE_PRIVATE)
-    override fun getBooleanRequest(dto: SharedPreferencesBooleanRequest): SharedPreferencesBooleanResponse =
+    override fun getBoolean(dto: SharedPreferencesBooleanRequest): SharedPreferencesBooleanResponse =
         SharedPreferencesBooleanResponse(sharedPreferences.getBoolean(dto.key, false))
 
-    override fun getStringRequest(dto: SharedPreferencesStringRequest): SharedPreferencesStringResponse =
+    override fun getString(dto: SharedPreferencesStringRequest): SharedPreferencesStringResponse =
         SharedPreferencesStringResponse(sharedPreferences.getString(dto.key, null))
 
-    override fun setBooleanData(dto:SharedPreferencesBooleanRequest) {
+    override fun setBoolean(dto:SharedPreferencesBooleanRequest) {
         sharedPreferences.edit()
             .putBoolean(dto.key,dto.data?:false)
             .apply()
     }
 
-    override fun setStringData(dto: SharedPreferencesStringRequest) {
+    override fun setString(dto: SharedPreferencesStringRequest) {
         sharedPreferences.edit()
             .putString(dto.key,dto.data?:"")
             .apply()
     }
-    override fun getTrackRequest(dto:SharedPreferencesTrackRequest) :TrackDto?{
+    override fun getTrack(dto:SharedPreferencesTrackRequest) :TrackDto?{
          return gson.fromJson(
             sharedPreferences.getString(
                 dto.key,
@@ -36,7 +36,7 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
             ), TrackDto::class.java
         )
        }
-    override fun setTrackData(dto:SharedPreferencesTrackRequest) {
+    override fun setTrack(dto:SharedPreferencesTrackRequest) {
         sharedPreferences.edit()
             .putString(
                 dto.key, gson.toJson(
@@ -45,13 +45,13 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
             )
             .apply()
      } 
-    override fun getTrackListRequest(dto:SharedPreferencesTrackListRequest) :List<TrackDto>?{
+    override fun getTrackList(dto:SharedPreferencesTrackListRequest) :List<TrackDto>?{
         val sp = sharedPreferences.getString(dto.key, null) ?: return emptyListOf()
         val itemType = object : TypeToken<List<TrackDto>>() {}.type
         val trackList = gson.fromJson<List<TrackDto>>(sp, itemType)
         return trackList
      } 
-    override fun setTrackListData(dto:SharedPreferencesTrackListRequest){
+    override fun setTrackList(dto:SharedPreferencesTrackListRequest){
 
      } 
     override fun clearTrackList(dto:SharedPreferencesTrackListRequest){
