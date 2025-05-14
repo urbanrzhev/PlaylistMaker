@@ -19,13 +19,13 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
 
     override fun setBooleanData(dto:SharedPreferencesBooleanRequest) {
         sharedPreferences.edit()
-            .putBoolean(dto.key,dto.dataBoolean?:false)
+            .putBoolean(dto.key,dto.data?:false)
             .apply()
     }
 
     override fun setStringData(dto: SharedPreferencesStringRequest) {
         sharedPreferences.edit()
-            .putString(dto.key,dto.dataString?:"")
+            .putString(dto.key,dto.data?:"")
             .apply()
     }
     override fun getTrackRequest(dto:SharedPreferencesTrackRequest) :TrackDto?{
@@ -37,7 +37,13 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
         )
        }
     override fun setTrackData(dto:SharedPreferencesTrackRequest) {
-        
+        sharedPreferences.edit()
+            .putString(
+                dto.key, gson.toJson(
+                    dto.data
+                )
+            )
+            .apply()
      } 
 
 }
