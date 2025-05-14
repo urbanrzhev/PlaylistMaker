@@ -16,17 +16,19 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
     override fun getStringRequest(dto: SharedPreferencesStringRequest): SharedPreferencesStringResponse =
         SharedPreferencesStringResponse(sharedPreferences.getString(dto.key, null))
 
-    override fun setBoolean(dto:SharedPreferencesBooleanRequest) {
+    override fun setBooleanData(dto:SharedPreferencesBooleanRequest) {
         sharedPreferences.edit()
             .putBoolean(dto.key,dto.data?:false)
             .apply()
     }
 
-    override fun setString(dto: SharedPreferencesStringRequest) {
+    override fun setStringData(dto: SharedPreferencesStringRequest) {
         sharedPreferences.edit()
             .putString(dto.key,dto.data?:"")
             .apply()
     }
-
+    override fun getTrackRequest(dto:SharedPreferencesStringRequest) :{
+          
+       } 
 
 }
