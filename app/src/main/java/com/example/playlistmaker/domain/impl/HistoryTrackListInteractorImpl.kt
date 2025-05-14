@@ -11,6 +11,7 @@ class HistoryTrackListInteractorImpl(private val sharedPreferencesRepository: Sh
             trackList = trackList.filter {
                 it.trackId != track.trackId
             } as MutableList<Track>
+            //mutable
             trackList.add(0, track)
             if (trackList.size > 10) trackList.removeAt(10)
             sharedPreferencesRepository.setSearchHistoryTrackList(trackList)
