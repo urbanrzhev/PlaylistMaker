@@ -28,12 +28,11 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
 
     override fun getActiveTrackForMediaPlayer(dto:SharedPreferencesStringRequest): Track{
            val result = sharedPreferencesClient.getStringRequest(dto)
-           if(result.data != null) {
-              return gson.fromJson(
-            result.data , Track::class.java
-        ) ?: Track() 
-        } else return Track() 
-    }
+           return if(result != null){
+               
+              } else Track() 
+        }
+
 
     override fun setActiveTrackForMediaPlayer(keyData: Track) {
 
