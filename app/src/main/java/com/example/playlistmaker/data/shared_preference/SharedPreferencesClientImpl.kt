@@ -46,7 +46,10 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
             .apply()
      } 
     override fun getTrackListRequest(dto:SharedPreferencesTrackListRequest) :List<TrackDto>?{
-
+        val sp = sharedPreferences.getString(dto.key, null) ?: return emptyListOf()
+        val itemType = object : TypeToken<List<TrackDto>>() {}.type
+        val trackList = gson.fromJson<List<TrackDto>>(sp, itemType)
+        return trackList
      } 
     override fun setTrackListData(dto:SharedPreferencesTrackListRequest){
 
