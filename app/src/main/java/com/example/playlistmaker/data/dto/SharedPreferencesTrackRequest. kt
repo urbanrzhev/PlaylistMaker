@@ -1,0 +1,4 @@
+class SharedPreferencesTrackRequest(
+val key:String, 
+val data:TrackDto? = null
+} 
