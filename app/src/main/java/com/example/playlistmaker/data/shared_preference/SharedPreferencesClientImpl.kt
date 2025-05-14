@@ -45,7 +45,16 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
             )
             .apply()
      } 
+    override fun getTrackListRequest(dto:SharedPreferencesTrackListRequest) :List<TrackDto>?{
 
+     } 
+    override fun setTrackListData(dto:SharedPreferencesTrackListRequest){
+
+     } 
+    override fun clearTrackList(dto:SharedPreferencesTrackListRequest){
+      // null
+          dto.clear?.sharedPreferences.clear(dto.key)
+     } 
 }
 
 
