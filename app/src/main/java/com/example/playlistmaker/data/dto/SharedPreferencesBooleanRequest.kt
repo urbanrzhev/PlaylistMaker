@@ -1,5 +1,5 @@
 package com.example.playlistmaker.data.dto
 
 class SharedPreferencesBooleanRequest(
-    val key: Boolean
+    val key: String
 )
