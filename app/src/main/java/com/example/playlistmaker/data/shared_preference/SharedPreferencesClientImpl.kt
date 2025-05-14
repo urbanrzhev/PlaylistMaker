@@ -28,7 +28,7 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
             .putString(dto.key,dto.dataString?:"")
             .apply()
     }
-    override fun getTrackRequest(dto:SharedPreferencesStringRequest) :TrackDto?{
+    override fun getTrackRequest(dto:SharedPreferencesTrackRequest) :TrackDto?{
          return gson.fromJson(
             sharedPreferences.getString(
                 dto.key,
@@ -36,9 +36,15 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
             ), TrackDto::class.java
         )
        }
-    override fun setTrackData(dto:SharedPreferences
+    override fun setTrackData(dto:SharedPreferencesTrackRequest) {
+        
+     } 
 
 }
+
+
+
+
 
 
 
