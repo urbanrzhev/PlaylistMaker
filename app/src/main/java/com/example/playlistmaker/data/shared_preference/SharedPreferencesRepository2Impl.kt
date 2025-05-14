@@ -41,8 +41,20 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
 
     override fun getSearchHistoryTrackList(dto:SharedPreferencesStringRequest ): MutableList<Track> {
         val result = sharedPreferencesClient.getTrackListRequest(dto)
+        // time format
         val res = result.map{
-            
+            Track(
+                        trackName = it.trackName,
+                        artistName = it.artistName,
+                        trackTimeNormal = it.trackTimeNormal//TimeFormat(it.trackTimeMillis).getTimeMM_SS(),
+                        artworkUrl100 = it.artworkUrl100,
+                        previewUrl = it.previewUrl,
+                        collectionName = it.collectionName,
+                        releaseDate = it.releaseDate,
+                        primaryGenreName = it.primaryGenreName,
+                        country = it.country,
+                        trackId = it.trackId
+                    )
         }
         return mutableListOf()
     }
