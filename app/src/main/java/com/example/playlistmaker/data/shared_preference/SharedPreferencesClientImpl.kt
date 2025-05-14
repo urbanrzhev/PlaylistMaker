@@ -27,8 +27,8 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
             .putString(dto.key,dto.data?:"")
             .apply()
     }
-    override fun getTrackRequest(dto:SharedPreferencesStringRequest) :{
-          
+    override fun getTrackRequest(dto:SharedPreferencesStringRequest) :TrackDto{
+          return 
        } 
 
 }
