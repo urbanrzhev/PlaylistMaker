@@ -26,8 +26,11 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
 
     }
 
-    override fun getActiveTrackForMediaPlayer(): Track{
-        return Track()
+    override fun getActiveTrackForMediaPlayer(dto:SharedPreferencesStringRequest): Track{
+           val result = sharedPreferencesClient.getStringRequest(dto)
+           if(result.data != null) {
+              
+        } else return Track() 
     }
 
     override fun setActiveTrackForMediaPlayer(keyData: Track) {
