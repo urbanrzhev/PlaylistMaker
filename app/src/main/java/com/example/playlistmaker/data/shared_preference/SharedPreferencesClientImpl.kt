@@ -8,6 +8,7 @@ import com.example.playlistmaker.data.dto.SharedPreferencesStringResponse
 import com.example.playlistmaker.domain.util.MyConstants
 
 class SharedPreferencesClientImpl(private val context: Context) : SharedPreferencesClient {
+  private val gson = Gson() 
     private val sharedPreferences =
         context.getSharedPreferences(MyConstants.MY_ALL_PREFERENCES, MyConstants.MODE_PRIVATE)
     override fun getBooleanRequest(dto: SharedPreferencesBooleanRequest): SharedPreferencesBooleanResponse =
@@ -27,8 +28,13 @@ class SharedPreferencesClientImpl(private val context: Context) : SharedPreferen
             .putString(dto.key,dto.data?:"")
             .apply()
     }
-    override fun getTrackRequest(dto:SharedPreferencesStringRequest) :TrackDto{
-          return 
+    override fun getTrackRequest(dto:SharedPreferencesStringRequest) :TrackDto?{
+         return gson.fromJson(
+            sharedPreferences.getString(
+                dto.key,
+                null
+            ), TrackDto::class.java
+        )
        } 
 
 }
