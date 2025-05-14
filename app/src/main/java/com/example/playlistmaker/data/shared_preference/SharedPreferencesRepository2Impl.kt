@@ -14,7 +14,7 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
     }
 
     override fun setMediaPlayerLoadStartActivity(dto:SharedPreferencesBooleanRequest) {
-        sharedPreferencesClient. 
+        sharedPreferencesClient.setBooleanData(dto)
     }
 
     override fun getAppDarkTheme(dto:SharedPreferencesBooleanRequest): Boolean {
@@ -22,7 +22,8 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
         return result.result?:false
     }
 
-    override fun setAppDarkTheme(keyData: Boolean) {
+    override fun setAppDarkTheme(dto:SharedPreferencesBooleanRequest) {
+        sharedPreferencesClient.setBooleanData(dto) 
 
     }
 
@@ -35,8 +36,8 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
         }
 
 
-    override fun setActiveTrackForMediaPlayer(keyData: Track) {
-
+    override fun setActiveTrackForMediaPlayer(dto:SharedPreferencesStringRequest) {
+        sharedPreferencesClient.setStringData(dto)
     }
 
     override fun getSearchHistoryTrackList(dto:SharedPreferencesStringRequest ): List<Track> {
