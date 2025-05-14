@@ -4,7 +4,7 @@ data class TrackDto(
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: String = "" ,
-    val trackTimeNormal: String = "", 
+    val trackTimeNormal: String = "",
     val artworkUrl100: String,
     val previewUrl: String,
     val collectionName: String,

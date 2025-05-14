@@ -10,7 +10,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.api.Start
 import com.example.playlistmaker.domain.api.StartActivityInteractor
 
 class MainActivity : AppCompatActivity() {
@@ -53,18 +52,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun selectStartActivity(){
-        /*Creator.provideStartActivityInteractor(this).getStartActivity(StartActivityInteractor.BooleanConsumer{
+        Creator.provideStartActivityInteractor(this).getStartActivity(StartActivityInteractor.BooleanConsumer{
                 if (it) {
                     val intent = Intent(this, MediaLibraryActivity::class.java)
                     startActivity(intent)
                 }
             }
-        )*/
-        Creator.povide(this).getStartActivity( Start.BooleanConsumer{
-            if (it) {
-                val intent = Intent(this, MediaLibraryActivity::class.java)
-                startActivity(intent)
-            }
-        })
+        )
     }
 }

@@ -1,71 +1,112 @@
 package com.example.playlistmaker.data.shared_preference
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
+import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.api.SharedPreferencesRepository
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.util.MyConstants
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
-class SharedPreferencesRepositoryImpl(context: Context) :
+class SharedPreferencesRepositoryImpl(private val sharedPreferencesClient: SharedPreferencesClient) :
     SharedPreferencesRepository {
-    private val gson = Gson()
-    private val sharedPreferences = context.getSharedPreferences(MyConstants.MY_ALL_PREFERENCES,MODE_PRIVATE)
-
-    override fun getMediaPlayerLoadStartActivity(): Boolean {
-        return sharedPreferences.getBoolean(MyConstants.MY_KEY_ON_OFF_MEDIA_LIBRARY_ACTIVITY, false)
+    override fun getBoolean(key: String): Boolean {
+        val result = sharedPreferencesClient.getBoolean(
+                key = key
+        )
+        return result
     }
 
-    override fun setMediaPlayerLoadStartActivity(keyData: Boolean) {
-        sharedPreferences.edit()
-            .putBoolean(MyConstants.MY_KEY_ON_OFF_MEDIA_LIBRARY_ACTIVITY,keyData)
-            .apply()
+    override fun setBoolean(key: String, data: Boolean) {
+        sharedPreferencesClient.setBoolean(
+                key = key,
+                data = data
+        )
     }
 
-
-    override fun getAppDarkTheme(): Boolean {
-        return sharedPreferences.getBoolean(MyConstants.MY_KEY_SWITCHER,false)
+    override fun getTrack(key: String): Track {
+        val result = sharedPreferencesClient.getTrack(
+            key
+        )
+        return if (result != null) Track(
+            trackName = result.trackName,
+            artistName = result.artistName,
+            trackTimeNormal = result.trackTimeNormal,
+            artworkUrl100 = result.artworkUrl100,
+            previewUrl = result.previewUrl,
+            collectionName = result.collectionName,
+            releaseDate = result.releaseDate,
+            primaryGenreName = result.primaryGenreName,
+            country = result.country,
+            trackId = result.trackId
+        ) else Track()
     }
 
-    override fun setAppDarkTheme(keyData: Boolean) {
-        sharedPreferences.edit()
-            .putBoolean(MyConstants.MY_KEY_SWITCHER, keyData)
-            .apply()
-    }
-    override fun getActiveTrackForMediaPlayer(): Track {
-        return gson.fromJson(
-            sharedPreferences.getString(
-                MyConstants.MY_KEY_DEFAULT_TRACK_MEDIA_LIBRARY_ACTIVITY,
-                null
-            ), Track::class.java
-        ) ?: Track()
+    override fun setTrack(key: String, data: Track) {
+        val data2 = TrackDto(
+            trackName = data.trackName,
+            artistName = data.artistName,
+            trackTimeNormal = data.trackTimeNormal,
+            artworkUrl100 = data.artworkUrl100,
+            previewUrl = data.previewUrl,
+            collectionName = data.collectionName,
+            releaseDate = data.releaseDate,
+            primaryGenreName = data.primaryGenreName,
+            country = data.country,
+            trackId = data.trackId
+        )
+        sharedPreferencesClient.setTrack(
+                key = key,
+                data = data2
+        )
     }
 
-    override fun setActiveTrackForMediaPlayer(keyData: Track) {
-        sharedPreferences.edit()
-            .putString(
-                MyConstants.MY_KEY_DEFAULT_TRACK_MEDIA_LIBRARY_ACTIVITY, gson.toJson(
-                    keyData
-                )
+    override fun getTrackList(key: String): List<Track> {
+        val result = sharedPreferencesClient.getTrackList(
+                key = key
+        )
+        val res = result.map {
+            Track(
+                trackName = it.trackName,
+                artistName = it.artistName,
+                trackTimeNormal = it.trackTimeNormal,
+                artworkUrl100 = it.artworkUrl100,
+                previewUrl = it.previewUrl,
+                collectionName = it.collectionName,
+                releaseDate = it.releaseDate,
+                primaryGenreName = it.primaryGenreName,
+                country = it.country,
+                trackId = it.trackId
             )
-            .apply()
+        }
+        return res
     }
 
-    override fun getSearchHistoryTrackList(): MutableList<Track> {
-        val sp = sharedPreferences.getString(MyConstants.KEY_HISTORY_TRACK_LIST, null) ?: return mutableListOf()
-        val itemType = object : TypeToken<MutableList<Track>>() {}.type
-        val trackList = gson.fromJson<MutableList<Track>>(sp, itemType)
-        return trackList
+    override fun setTrackList(key: String, data: List<Track>) {
+        sharedPreferencesClient.setTrackList(
+            key = key,
+            data = data.map {
+                TrackDto(
+                    trackName = it.trackName,
+                    artistName = it.artistName,
+                    trackTimeNormal = it.trackTimeNormal,
+                    artworkUrl100 = it.artworkUrl100,
+                    previewUrl = it.previewUrl,
+                    collectionName = it.collectionName,
+                    releaseDate = it.releaseDate,
+                    primaryGenreName = it.primaryGenreName,
+                    country = it.country,
+                    trackId = it.trackId
+                )
+            }
+        )
     }
 
-    override fun setSearchHistoryTrackList(trackList: MutableList<Track>) {
-        sharedPreferences.edit()
-            .putString(MyConstants.KEY_HISTORY_TRACK_LIST, gson.toJson(trackList))
-            .apply()
-    }
-
-    override fun clearSearchHistoryTrackList() {
-        sharedPreferences.edit().remove(MyConstants.KEY_HISTORY_TRACK_LIST).apply()
+    override fun clearTrackList(key: String, clear: Boolean) {
+        sharedPreferencesClient.clearTrackList(
+                key = key,
+                clear = clear
+            )
     }
 }
+
+
+
+
+    

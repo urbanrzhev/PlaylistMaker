@@ -1,63 +1,70 @@
 package com.example.playlistmaker.data.shared_preference
 
 import android.content.Context
-import com.example.playlistmaker.data.dto.SharedPreferencesBooleanRequest
-import com.example.playlistmaker.data.dto.SharedPreferencesBooleanResponse
-import com.example.playlistmaker.data.dto.SharedPreferencesStringRequest
-import com.example.playlistmaker.data.dto.SharedPreferencesStringResponse
+import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.util.MyConstants
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-class SharedPreferencesClientImpl(private val context: Context) : SharedPreferencesClient {
-  private val gson = Gson() 
+class SharedPreferencesClientImpl(
+    private val context: Context
+) : SharedPreferencesClient {
+    private val keyPreferences = "my_all_preferences"
+    private val gson = Gson()
     private val sharedPreferences =
-        context.getSharedPreferences(MyConstants.MY_ALL_PREFERENCES, MyConstants.MODE_PRIVATE)
-    override fun getBoolean(dto: SharedPreferencesBooleanRequest): SharedPreferencesBooleanResponse =
-        SharedPreferencesBooleanResponse(sharedPreferences.getBoolean(dto.key, false))
+        context.getSharedPreferences(keyPreferences, MyConstants.MODE_PRIVATE)
 
-    override fun getString(dto: SharedPreferencesStringRequest): SharedPreferencesStringResponse =
-        SharedPreferencesStringResponse(sharedPreferences.getString(dto.key, null))
+    override fun getBoolean(key: String): Boolean =
+        sharedPreferences.getBoolean(key, false)
 
-    override fun setBoolean(dto:SharedPreferencesBooleanRequest) {
+
+    override fun setBoolean(key: String,data:Boolean) {
         sharedPreferences.edit()
-            .putBoolean(dto.key,dto.data?:false)
+            .putBoolean(key, data)
             .apply()
     }
 
-    override fun setString(dto: SharedPreferencesStringRequest) {
-        sharedPreferences.edit()
-            .putString(dto.key,dto.data?:"")
-            .apply()
-    }
-    override fun getTrack(dto:SharedPreferencesTrackRequest) :TrackDto?{
-         return gson.fromJson(
+    override fun getTrack(key:String): TrackDto? {
+        return gson.fromJson(
             sharedPreferences.getString(
-                dto.key,
+                key,
                 null
             ), TrackDto::class.java
-        )
-       }
-    override fun setTrack(dto:SharedPreferencesTrackRequest) {
+        ) ?: null
+    }
+
+    override fun setTrack(key: String,data: TrackDto) {
         sharedPreferences.edit()
             .putString(
-                dto.key, gson.toJson(
-                    dto.data
+                key, gson.toJson(
+                    data
                 )
             )
             .apply()
-     } 
-    override fun getTrackList(dto:SharedPreferencesTrackListRequest) :List<TrackDto>?{
-        val sp = sharedPreferences.getString(dto.key, null) ?: return emptyListOf()
+    }
+
+    override fun getTrackList(key: String): List<TrackDto> {
+        val sp = sharedPreferences.getString(key, null) ?: return emptyList()
         val itemType = object : TypeToken<List<TrackDto>>() {}.type
         val trackList = gson.fromJson<List<TrackDto>>(sp, itemType)
-        return trackList
-     } 
-    override fun setTrackList(dto:SharedPreferencesTrackListRequest){
+        return trackList ?: emptyList()
+    }
 
-     } 
-    override fun clearTrackList(dto:SharedPreferencesTrackListRequest){
-      // null
-          dto.clear?.sharedPreferences.clear(dto.key)
-     } 
+    override fun setTrackList(key: String, data:List<TrackDto>) {
+        sharedPreferences.edit()
+            .putString(
+                key, gson.toJson(
+                    data
+                )
+            )
+            .apply()
+    }
+
+    override fun clearTrackList(key: String, clear:Boolean) {
+        if (clear)
+            sharedPreferences.edit().remove(key)
+                .apply()
+    }
 }
 
 
