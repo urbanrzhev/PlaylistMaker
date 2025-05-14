@@ -9,8 +9,7 @@ import android.widget.TextView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.util.TimeFormat
-import com.example.playlistmaker.domain.util.MyConstants.DELAY
-
+private const val DELAY = 500L
 class ControlerPlayer(val view: View, val track: Track) : MediaPlayer() {
     private var playerState = STATE_DEFAULT
     private val myContext = this

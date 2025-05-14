@@ -2,12 +2,11 @@ package com.example.playlistmaker.domain.api
 
 import com.example.playlistmaker.domain.models.Track
 
-interface HistoryTrackListInteraсtor {
+interface SearchHistoryInteractor {
     fun addTrack(track:Track?, consumer: Consumer)
     fun clear()
     fun count():Int
-
     fun interface Consumer{
-        fun consume(trackList:MutableList<Track>)
+        fun consume(trackList:List<Track>)
     }
 }

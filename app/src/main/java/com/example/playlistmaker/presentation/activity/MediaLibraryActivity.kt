@@ -6,15 +6,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.api.ActiveTrackForMediaPlayerInteractor
+import com.example.playlistmaker.data.shared_preference.SharedPreferencesManagerImpl
 import com.example.playlistmaker.presentation.ControlerPlayer
 import com.example.playlistmaker.presentation.ShowActiveTrackUseCase
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.use_case.GetActiveTrackUseCase
+import com.example.playlistmaker.domain.use_case.SetStartActivityUseCase
 
 class MediaLibraryActivity : AppCompatActivity() {
     private var mediaPlayer: ControlerPlayer? = null
+    private val trackGet = GetActiveTrackUseCase(SharedPreferencesManagerImpl())
+    private val startActivity = SetStartActivityUseCase(SharedPreferencesManagerImpl())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,19 +59,17 @@ class MediaLibraryActivity : AppCompatActivity() {
     }
 
     private fun setStartActivity(key:Boolean) {
-        Creator.provideStartActivityInteractor(this)
-            .setStartActivity(key)
+        startActivity.setActivity(key)
     }
 
     private fun getTrackDefault() {
-        Creator.provideActiveTrackForMediaPlayerInteractor(this).getActiveTrackForMediaPlayer(
-                ActiveTrackForMediaPlayerInteractor.TrackConsumer {
-                    val track: Track = it
-                    if (track.previewUrl.isNotEmpty()) {
-                        loadTrack(track)
-                        mediaPlayer = ControlerPlayer(findViewById(R.id.main), track)
-                    }
-                }
-        )
+        trackGet.getTrack{
+            val track: Track = it
+            if (track.previewUrl.isNotEmpty()) {
+                loadTrack(track)
+                mediaPlayer = ControlerPlayer(findViewById(R.id.main), track)
+            }
+        }
+
     }
 }

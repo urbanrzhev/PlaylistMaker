@@ -10,13 +10,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.api.AppDarkThemeInteractor
+import com.example.playlistmaker.data.shared_preference.SharedPreferencesManagerImpl
+import com.example.playlistmaker.domain.use_case.GetThemeUseCase
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+    private val themeGet = GetThemeUseCase(SharedPreferencesManagerImpl())
     @SuppressLint("QueryPermissionsNeeded")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,10 +75,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun installThemeSwitcher(themeSwitcher:SwitchMaterial){
-        Creator.provideAppDarkThemeInteractor(this).getAppDarkTheme(
-            AppDarkThemeInteractor.BooleanConsumer {
-                    themeSwitcher.isChecked = it
-                }
-        )
+        themeGet.getTheme {
+            themeSwitcher.isChecked = it
+        }
     }
 }

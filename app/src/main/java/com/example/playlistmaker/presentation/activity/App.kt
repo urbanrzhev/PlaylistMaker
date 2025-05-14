@@ -1,19 +1,29 @@
 package com.example.playlistmaker.presentation.activity
 
 import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.Creator
-import com.example.playlistmaker.domain.api.AppDarkThemeInteractor
+import com.example.playlistmaker.data.shared_preference.SharedPreferencesManagerImpl
+import com.example.playlistmaker.domain.use_case.GetThemeUseCase
+import com.example.playlistmaker.domain.use_case.SetThemeUseCase
 
 class App : Application() {
     private var darkTheme = false
+    private lateinit var themeGet: GetThemeUseCase
+    private lateinit var themeSet: SetThemeUseCase
 
+    companion object{
+        lateinit var appContext:Context
+    }
     override fun onCreate() {
         super.onCreate()
-        Creator.provideAppDarkThemeInteractor(this).getAppDarkTheme(AppDarkThemeInteractor.BooleanConsumer {
-                darkTheme = it
-                switchTheme(darkTheme)
-            })
+        appContext = applicationContext
+        themeGet = GetThemeUseCase(SharedPreferencesManagerImpl())
+        themeSet = SetThemeUseCase(SharedPreferencesManagerImpl())
+        themeGet.getTheme {
+            darkTheme = it
+        }
+        switchTheme((darkTheme))
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
@@ -25,6 +35,6 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        Creator.provideAppDarkThemeInteractor(this).setAppDarkTheme(darkTheme)
+        themeSet.setTheme(darkTheme)
     }
 }

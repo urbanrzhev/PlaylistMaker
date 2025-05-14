@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -17,18 +15,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.api.HistoryTrackListInteraсtor
+import com.example.playlistmaker.data.shared_preference.SharedPreferencesManagerImpl
+import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.models.TrackData
-import com.example.playlistmaker.domain.util.MyConstants
-import com.example.playlistmaker.domain.util.MyConstants.CLICK_DEBOUNCE_DELAY
+import com.example.playlistmaker.domain.use_case.SetActiveTrackUseCase
 import com.example.playlistmaker.presentation.TracksAdapter
 import com.example.playlistmaker.presentation.TracksHistoryAdapter
 import com.google.android.material.appbar.MaterialToolbar
+
+private const val CLICK_DEBOUNCE_DELAY = 1000L
+private const val SEARCH_DEBOUNCE_DELAY: Long = 2000L
 
 class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
@@ -37,6 +39,9 @@ class SearchActivity : AppCompatActivity() {
     private var temporaryTextRequest = ""
     private var isClickAllowed = true
     private lateinit var recyclerViewHistory: RecyclerView
+    private val trackSet = SetActiveTrackUseCase(SharedPreferencesManagerImpl())
+    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
+    private val tracksInteractor = Creator.provideTracksInteractor()
     private lateinit var progressBar: FrameLayout
     private lateinit var recyclerView: RecyclerView
     private val clickItemAdapter: (Track, Boolean) -> Unit = { track, history ->
@@ -91,23 +96,15 @@ class SearchActivity : AppCompatActivity() {
             viewGroupHistory.isVisible =
                 hasFocus && editSearch.text.isEmpty() && countHistoryTrackList() > 0
         }
-
-        val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                temporaryEditText = s.toString()
-                buttonClearSearch.isVisible = !s.isNullOrEmpty()
-                viewGroupHistory.isVisible =
-                    editSearch.hasFocus() && editSearch.text.isEmpty() && countHistoryTrackList() > 0
-                if (s.toString().isNotEmpty())
-                    searchDebounce(runnable)
-                else recyclerView.adapter = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
+        editSearch.doOnTextChanged { s, _, _, _ ->
+            temporaryEditText = s.toString()
+            buttonClearSearch.isVisible = !s.isNullOrEmpty()
+            viewGroupHistory.isVisible =
+                editSearch.hasFocus() && editSearch.text.isEmpty() && countHistoryTrackList() > 0
+            if (s.toString().isNotEmpty())
+                searchDebounce(runnable)
+            else recyclerView.adapter = null
         }
-
-        editSearch.addTextChangedListener(simpleTextWatcher)
         buttonClearSearch.setOnClickListener {
             editSearch.text = null
             val inputMethodManager =
@@ -137,7 +134,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchDebounce(runnable: Runnable) {
         handler.removeCallbacks(runnable)
-        handler.postDelayed(runnable, MyConstants.SEARCH_DEBOUNCE_DELAY)
+        handler.postDelayed(runnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     private fun searchRequest(
@@ -207,14 +204,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun countHistoryTrackList(): Int {
-        return Creator.provideHistoryTrackListInteractor(this).count()
+        return searchHistoryInteractor.count()
     }
 
     private fun addHistoryTrackList(track: Track?) {
-        Creator.provideHistoryTrackListInteractor(this)
-            .addTrack(track, HistoryTrackListInteraсtor.Consumer {
-                recyclerViewHistory.adapter = TracksHistoryAdapter(it, clickItemAdapter)
-            })
+        searchHistoryInteractor.addTrack(track, SearchHistoryInteractor.Consumer {
+            recyclerViewHistory.adapter = TracksHistoryAdapter(it, clickItemAdapter)
+        })
     }
 
     private fun initHistoryAdapter() {
@@ -222,19 +218,16 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearHistoryTrackList() {
-        Creator.provideHistoryTrackListInteractor(this).clear()
+        searchHistoryInteractor.clear()
     }
 
     private fun searchTracks(requestText: String) {
-        Creator.provideTracksInteractor()
-            .searchTracks(requestText, TracksInteractor.TracksConsumer {
-                setAdapter(it)
-            })
+        tracksInteractor.searchTracks(requestText, TracksInteractor.TracksConsumer {
+            setAdapter(it)
+        })
     }
 
     private fun setActiveTrackForMediaPlayer(track: Track) {
-        Creator.provideActiveTrackForMediaPlayerInteractor(this).setActiveTrackForMediaPlayer(
-            track
-        )
+        trackSet.setTrack(track)
     }
 }
