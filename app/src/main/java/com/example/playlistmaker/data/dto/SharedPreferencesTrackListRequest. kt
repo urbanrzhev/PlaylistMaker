@@ -1,4 +1,5 @@
 class SharedPreferencesTrackListRequest(
 val key:String, 
-val data:List<TrackDto>? = null
+val data:List<TrackDto>? = null, 
+val clear:Boolean? = null
 ) 
