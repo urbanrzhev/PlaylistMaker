@@ -60,11 +60,16 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
         return emptyList()
     }
 
-    override fun setSearchHistoryTrackList(trackList: MutableList<Track>) {
-
+    override fun setSearchHistoryTrackList(dto:SharedPreferencesTrackListRequest) {
+                 sharedPreferencesClient.setTrackListData(dto)
     }
 
-    override fun clearSearchHistoryTrackList() {
-
+    override fun clearSearchHistoryTrackList(dto:SharedPreferencesTrackListRequest) {
+   sharedPreferencesClient.clearTrackListData(dto)
     }
 }
+
+
+
+
+    
