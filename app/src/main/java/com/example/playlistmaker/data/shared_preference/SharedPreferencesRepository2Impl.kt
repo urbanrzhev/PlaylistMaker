@@ -17,15 +17,16 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
 
     }
 
-    override fun getAppDarkTheme(): Boolean {
-return true
+    override fun getAppDarkTheme(dto:SharedPreferencesBooleanRequest): Boolean {
+           val result = sharedPreferencesClient.getBooleanRequest(dto)
+        return result.result?:false
     }
 
     override fun setAppDarkTheme(keyData: Boolean) {
 
     }
 
-    override fun getActiveTrackForMediaPlayer(): Track {
+    override fun getActiveTrackForMediaPlayer(): Track{
         return Track()
     }
 
