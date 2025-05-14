@@ -13,8 +13,8 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
         return result.result?:false
     }
 
-    override fun setMediaPlayerLoadStartActivity(keyData: Boolean) {
-
+    override fun setMediaPlayerLoadStartActivity(dto:SharedPreferencesBooleanRequest) {
+        sharedPreferencesClient. 
     }
 
     override fun getAppDarkTheme(dto:SharedPreferencesBooleanRequest): Boolean {
