@@ -37,7 +37,7 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
 
 
     override fun setActiveTrackForMediaPlayer(dto:SharedPreferencesStringRequest) {
-        sharedPreferencesClient.setStringData(dto)
+        sharedPreferencesClient.setTrackData(dto)
     }
 
     override fun getSearchHistoryTrackList(dto:SharedPreferencesStringRequest ): List<Track> {
