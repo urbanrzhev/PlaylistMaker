@@ -39,7 +39,7 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
 
     }
 
-    override fun getSearchHistoryTrackList(dto:SharedPreferencesStringRequest ): MutableList<Track> {
+    override fun getSearchHistoryTrackList(dto:SharedPreferencesStringRequest ): List<Track> {
         val result = sharedPreferencesClient.getTrackListRequest(dto)
         // time format
         val res = result.map{
@@ -56,7 +56,7 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
                         trackId = it.trackId
                     )
         }
-        return mutableListOf()
+        return emptyList()
     }
 
     override fun setSearchHistoryTrackList(trackList: MutableList<Track>) {
