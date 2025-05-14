@@ -27,7 +27,7 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
 
     }
 
-    override fun getActiveTrackForMediaPlayer(dto:SharedPreferencesStringRequest): Track{
+    override fun getActiveTrackForMediaPlayer(dto:SharedPreferencesTrackRequest): Track{
            val result = sharedPreferencesClient.getTrackRequest(dto)
            return if(result != null){
                // time format
@@ -36,11 +36,11 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
         }
 
 
-    override fun setActiveTrackForMediaPlayer(dto:SharedPreferencesStringRequest) {
+    override fun setActiveTrackForMediaPlayer(dto:SharedPreferencesTrackRequest) {
         sharedPreferencesClient.setTrackData(dto)
     }
 
-    override fun getSearchHistoryTrackList(dto:SharedPreferencesStringRequest ): List<Track> {
+    override fun getSearchHistoryTrackList(dto:SharedPreferencesTrackListRequest ): List<Track> {
         val result = sharedPreferencesClient.getTrackListRequest(dto)
         // time format
         val res = result.map{
