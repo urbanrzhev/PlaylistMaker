@@ -47,6 +47,7 @@ class SharedPreferencesRepository2Impl(private val sharedPreferencesClient: Shar
             Track(
                         trackName = it.trackName,
                         artistName = it.artistName,
+                //time
                         trackTimeNormal = it.trackTimeNormal//TimeFormat(it.trackTimeMillis).getTimeMM_SS(),
                         artworkUrl100 = it.artworkUrl100,
                         previewUrl = it.previewUrl,
