@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,8 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.shared_preference.SharedPreferencesManagerImpl
+import com.example.playlistmaker.domain.use_case.GetStartActivityUseCase
 
 class MainActivity : AppCompatActivity() {
+    private val startActivity = GetStartActivityUseCase(SharedPreferencesManagerImpl())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,15 +29,7 @@ class MainActivity : AppCompatActivity() {
             )
             insets
         }
-        val sharedOnOfMedia = getSharedPreferences(MY_ON_OFF_MEDIA_LIBRARY_ACTIVITY_PREFERENCES,
-            MODE_PRIVATE
-        )
-
-        if(sharedOnOfMedia.getString(MY_KEY_ON_OFF_MEDIA_LIBRARY_ACTIVITY,"false").toBoolean()){
-            val intent = Intent(this, MediaLibraryActivity::class.java)
-            startActivity(intent)
-        }
-
+        selectStartActivity()
         val buttonSearch = findViewById<Button>(R.id.button_search)
         buttonSearch.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
@@ -52,10 +48,16 @@ class MainActivity : AppCompatActivity() {
         val buttonSettings = findViewById<Button>(R.id.button_settings)
         buttonSettings.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
-
             startActivity(intent)
         }
-
     }
 
+    private fun selectStartActivity(){
+        startActivity.getActivity {
+            if(it) {
+                val intent = Intent(this, MediaLibraryActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
 }
