@@ -1,23 +1,33 @@
 package com.example.playlistmaker.presentation.activity
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.shared_preference.SharedPreferencesManagerImpl
-import com.example.playlistmaker.presentation.ControlerPlayer
-import com.example.playlistmaker.presentation.ShowActiveTrackUseCase
+import com.example.playlistmaker.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.use_case.GetActiveTrackUseCase
-import com.example.playlistmaker.domain.use_case.SetStartActivityUseCase
+import com.example.playlistmaker.domain.util.TimeFormat
+import com.example.playlistmaker.presentation.ui.ShowActiveTrack
+
+private const val DELAY = 500L
+private const val DELAY_NULL = 0L
 
 class MediaLibraryActivity : AppCompatActivity() {
-    private var mediaPlayer: ControlerPlayer? = null
-    private val trackGet = GetActiveTrackUseCase(SharedPreferencesManagerImpl())
-    private val startActivity = SetStartActivityUseCase(SharedPreferencesManagerImpl())
+    private val mediaPlayer: MediaPlayerInteractor = Creator.provedeMediaPlayerInteractor()
+    private lateinit var timeText: TextView
+    private val mainThreadHandler: Handler = Handler(Looper.getMainLooper())
+    private val trackGet = Creator.provideGetActiveTrackUseCase()
+    private val startActivity = Creator.provideSetStartActivityUseCase()
+    private lateinit var playButton:View
+    private lateinit var playStopRunnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +44,21 @@ class MediaLibraryActivity : AppCompatActivity() {
             )
             insets
         }
+        playStopRunnable = Runnable{
+            timeText.text = TimeFormat(mediaPlayer.currentPosition()).getTimeMM_SS()
+            mainThreadHandler.postDelayed(playStopRunnable, DELAY)
+        }
+        timeText = findViewById<TextView>(R.id.textTimeOutPause)
+        playButton = findViewById<Button>(R.id.buttonPause)
+        playButton.setOnClickListener {
+            mediaPlayer.control(start = {
+                playButton.setBackgroundResource(R.drawable.pause_play)
+                timeProgress(true)
+            }, pause = {
+                playButton.setBackgroundResource(R.drawable.play_play)
+                timeProgress(false)
+            })
+        }
         val vectorBack = findViewById<View>(R.id.vectorBack)
         vectorBack.setOnClickListener {
             onBackPressed()
@@ -44,17 +69,19 @@ class MediaLibraryActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        mediaPlayer?.pausePlayer()
+        playButton.setBackgroundResource(R.drawable.play_play)
+        mediaPlayer.pause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer?.release()
+        timeProgress(false)
+        mediaPlayer.release()
         setStartActivity(false)
     }
 
     private fun loadTrack(model: Track) {
-        ShowActiveTrackUseCase(this, findViewById(R.id.main), model)
+        ShowActiveTrack(this, findViewById(R.id.main), model)
             .show()
     }
 
@@ -67,9 +94,26 @@ class MediaLibraryActivity : AppCompatActivity() {
             val track: Track = it
             if (track.previewUrl.isNotEmpty()) {
                 loadTrack(track)
-                mediaPlayer = ControlerPlayer(findViewById(R.id.main), track)
+                mediaPlayer.prepare(track.previewUrl, consumerPrepared = {
+                    playButton.isEnabled = true
+                }, consumerCompleted = {
+                    playButton.isEnabled = true
+                }, consumerEnd = {
+                    playButton.setBackgroundResource(R.drawable.play_play)
+                    timeProgress(false)
+                    timeText.text = TimeFormat(DELAY_NULL).getTimeMM_SS()
+                })
             }
         }
+    }
 
+    private fun timeProgress(value: Boolean) {
+        if (value) {
+            mainThreadHandler.post(
+                playStopRunnable
+            )
+        } else {
+            mainThreadHandler.removeCallbacks(playStopRunnable)
+        }
     }
 }

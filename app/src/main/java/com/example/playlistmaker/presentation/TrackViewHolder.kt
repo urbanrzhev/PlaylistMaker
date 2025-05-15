@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.util.MyDisplayMetrics
+import com.example.playlistmaker.presentation.ui.MyDisplayMetrics
 
 class TrackViewHolder(
     private val parent: ViewGroup

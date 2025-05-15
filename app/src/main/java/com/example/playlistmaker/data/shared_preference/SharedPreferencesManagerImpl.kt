@@ -9,7 +9,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 private const val MY_ALL_PREFERENCES = "my_all_preferences"
-class SharedPreferencesManagerImpl(): SharedPreferencesManager {
+class SharedPreferencesManagerImpl: SharedPreferencesManager {
     private val context:Context = App.appContext
     private val gson = Gson()
     private val sharedPreferences =

@@ -3,7 +3,7 @@ package com.example.playlistmaker.presentation.activity
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.data.shared_preference.SharedPreferencesManagerImpl
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.domain.use_case.GetThemeUseCase
 import com.example.playlistmaker.domain.use_case.SetThemeUseCase
 
@@ -18,8 +18,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
-        themeGet = GetThemeUseCase(SharedPreferencesManagerImpl())
-        themeSet = SetThemeUseCase(SharedPreferencesManagerImpl())
+        themeGet = Creator.provideGetThemeUseCase()
+        themeSet = Creator.provideSetThemeUseCase()
         themeGet.getTheme {
             darkTheme = it
         }

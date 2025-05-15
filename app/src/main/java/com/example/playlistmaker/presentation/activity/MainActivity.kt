@@ -8,12 +8,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.shared_preference.SharedPreferencesManagerImpl
-import com.example.playlistmaker.domain.use_case.GetStartActivityUseCase
 
 class MainActivity : AppCompatActivity() {
-    private val startActivity = GetStartActivityUseCase(SharedPreferencesManagerImpl())
+    private val startActivity = Creator.provideGetStartActivityUseCase()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

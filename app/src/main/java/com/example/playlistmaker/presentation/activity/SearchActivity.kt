@@ -19,12 +19,10 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.shared_preference.SharedPreferencesManagerImpl
 import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.models.TrackData
-import com.example.playlistmaker.domain.use_case.SetActiveTrackUseCase
 import com.example.playlistmaker.presentation.TracksAdapter
 import com.example.playlistmaker.presentation.TracksHistoryAdapter
 import com.google.android.material.appbar.MaterialToolbar
@@ -39,7 +37,7 @@ class SearchActivity : AppCompatActivity() {
     private var temporaryTextRequest = ""
     private var isClickAllowed = true
     private lateinit var recyclerViewHistory: RecyclerView
-    private val trackSet = SetActiveTrackUseCase(SharedPreferencesManagerImpl())
+    private val trackSet = Creator.provideSetActiveTrackUseCase()
     private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
     private val tracksInteractor = Creator.provideTracksInteractor()
     private lateinit var progressBar: FrameLayout
@@ -96,6 +94,7 @@ class SearchActivity : AppCompatActivity() {
             viewGroupHistory.isVisible =
                 hasFocus && editSearch.text.isEmpty() && countHistoryTrackList() > 0
         }
+
         editSearch.doOnTextChanged { s, _, _, _ ->
             temporaryEditText = s.toString()
             buttonClearSearch.isVisible = !s.isNullOrEmpty()
@@ -105,6 +104,7 @@ class SearchActivity : AppCompatActivity() {
                 searchDebounce(runnable)
             else recyclerView.adapter = null
         }
+
         buttonClearSearch.setOnClickListener {
             editSearch.text = null
             val inputMethodManager =

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.presentation.ui
 
 import android.content.Context
 import android.view.View
@@ -10,9 +10,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.util.MyDisplayMetrics
 
-class ShowActiveTrackUseCase(private val context:Context, private val view: View, private val model:Track) {
+class ShowActiveTrack(private val context:Context, private val view: View, private val model:Track) {
     fun show(){
         val imageCover = view.findViewById<ImageView>(R.id.imageView3)
         val lengthTrack = view.findViewById<TextView>(R.id.textLengthTrackValue1)
@@ -69,10 +68,10 @@ class ShowActiveTrackUseCase(private val context:Context, private val view: View
     }
 
     private fun getYear(date: String): String? {
-        try {
-            return date.split("-")[0]
+        return try {
+            date.split("-")[0]
         } catch (e: Exception) {
-            return null
+            null
         }
     }
 }
