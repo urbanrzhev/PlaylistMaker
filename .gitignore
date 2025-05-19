@@ -17,3 +17,4 @@ local.properties
 activity_drill.xml
 activity_drill2.xml
 MyCustomApplication.kt
+ControlerPlayer.kt

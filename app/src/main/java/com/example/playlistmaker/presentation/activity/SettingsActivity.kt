@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,10 +10,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+    private val themeGet = Creator.provideGetThemeUseCase()
     @SuppressLint("QueryPermissionsNeeded")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +35,10 @@ class SettingsActivity : AppCompatActivity() {
         }
         val buttonTextShareTheApp = findViewById<TextView>(R.id.buttonTextShareTheApp)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-        themeSwitcher.isChecked = (applicationContext as App).getMyTheme()
+        installThemeSwitcher(themeSwitcher)
         themeSwitcher.setOnCheckedChangeListener { _, checked ->
             (applicationContext as App).switchTheme(checked)
         }
-
         buttonTextShareTheApp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.practicum_android_link))
@@ -64,11 +66,16 @@ class SettingsActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
-
         val buttonSettingsBack = findViewById<MaterialToolbar>(R.id.toolbar_settings)
         buttonSettingsBack.setNavigationOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun installThemeSwitcher(themeSwitcher:SwitchMaterial){
+        themeGet.getTheme {
+            themeSwitcher.isChecked = it
         }
     }
 }
