@@ -33,16 +33,4 @@
         style="@style/textSettingActivity"
         android:text="@string/forward"
         android:drawableEnd="@drawable/forward"/>
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/themeSwitcher2"
-        style="@style/textSettingActivity"
-        android:layout_marginTop="24dp"
-        android:text="@string/night_theme"
-        android:theme="@style/Theme.MySwitch" />
 </LinearLayout>
