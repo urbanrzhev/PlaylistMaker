@@ -13,7 +13,7 @@ class MediaPlayerRepositoryImpl(private val player: MediaPlayer):MediaPlayerRepo
         const val STATE_PAUSED = 3
     }
 
-    override fun preparePlayer(url:String, setOnPreparedListener:()->Unit, setOnCompletionListener:()->Unit, endListener: () -> Unit) {
+    override fun preparePlayer(url:String, setOnPreparedListener:()->Unit, //setOnCompletionListener:()->Unit, endListener: () -> Unit) {
         this.endListener = endListener
         player.setDataSource(url)
         player.prepareAsync()
@@ -41,7 +41,7 @@ class MediaPlayerRepositoryImpl(private val player: MediaPlayer):MediaPlayerRepo
     override fun releasePlayer() {
         player.release()
     }
-
+private
     override fun pausePlayer() {
         player.pause()
         playerState = STATE_PAUSED
