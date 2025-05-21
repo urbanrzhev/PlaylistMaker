@@ -1,0 +1,227 @@
+package com.example.playlistmaker.ui.activity
+
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
+import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.util.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.TracksAdapter
+import com.example.playlistmaker.ui.TracksHistoryAdapter
+import com.example.playlistmaker.util.Resource
+import com.google.android.material.appbar.MaterialToolbar
+
+private const val CLICK_DEBOUNCE_DELAY = 1000L
+private const val SEARCH_DEBOUNCE_DELAY: Long = 2000L
+
+class SearchActivity : AppCompatActivity() {
+    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var runnable: Runnable
+    private var temporaryEditText = ""
+    private var temporaryTextRequest = ""
+    private var isClickAllowed = true
+    private lateinit var recyclerViewHistory: RecyclerView
+    private val trackSet = Creator.provideSetActiveTrackUseCase()
+    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
+    private val tracksInteractor = Creator.provideTracksInteractor()
+    private lateinit var progressBar: FrameLayout
+    private lateinit var recyclerView: RecyclerView
+    private val clickItemAdapter: (Track, Boolean) -> Unit = { track, history ->
+        if (!history) {
+            addHistoryTrackList(track)
+        }
+        if (isClickAllowed) {
+            goIntent()
+            setActiveTrackForMediaPlayer(track)
+            clickDebounce()
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_search)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val bottomPadding = if (ime.bottom > 0) ime.bottom else systemBars.bottom
+            v.setPadding(systemBars.left, systemBars.top + ime.top, systemBars.right, bottomPadding)
+            insets
+        }
+        val buttonSettingsBack = findViewById<MaterialToolbar>(R.id.toolbar_search)
+        val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
+        val buttonClearSearch = findViewById<ImageView>(R.id.clearSearchButton)
+        val editSearch = findViewById<EditText>(R.id.editSearchText)
+        val viewGroupHistory = findViewById<LinearLayout>(R.id.viewGroupHistory)
+        recyclerView = findViewById<RecyclerView>(R.id.recyclerSearch)
+        recyclerViewHistory = findViewById<RecyclerView>(R.id.recyclerSearchHistory)
+        progressBar = findViewById<FrameLayout>(R.id.progress_circular)
+        runnable = Runnable { searchRequest(editSearch.text.toString()) }
+        initHistoryAdapter()
+
+        clearHistoryButton.setOnClickListener {
+            clearHistoryTrackList()
+            viewGroupHistory.isVisible = false
+        }
+
+        editSearch.setOnFocusChangeListener { _, hasFocus ->
+            viewGroupHistory.isVisible =
+                hasFocus && editSearch.text.isEmpty() && countHistoryTrackList() > 0
+        }
+
+        clearHistoryButton.setOnClickListener {
+            clearHistoryTrackList()
+            viewGroupHistory.isVisible = false
+        }
+
+        editSearch.setOnFocusChangeListener { _, hasFocus ->
+            viewGroupHistory.isVisible =
+                hasFocus && editSearch.text.isEmpty() && countHistoryTrackList() > 0
+        }
+
+        editSearch.doOnTextChanged { s, _, _, _ ->
+            temporaryEditText = s.toString()
+            buttonClearSearch.isVisible = !s.isNullOrEmpty()
+            viewGroupHistory.isVisible =
+                editSearch.hasFocus() && editSearch.text.isEmpty() && countHistoryTrackList() > 0
+            if (s.toString().isNotEmpty())
+                searchDebounce(runnable)
+            else recyclerView.adapter = null
+        }
+
+        buttonClearSearch.setOnClickListener {
+            editSearch.text = null
+            val inputMethodManager =
+                getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(
+                buttonClearSearch.windowToken,
+                0
+            )
+        }
+
+        buttonSettingsBack.setNavigationOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(getString(R.string.secret_code), temporaryEditText)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val textEdit = savedInstanceState.getString(getString(R.string.secret_code))
+        findViewById<EditText>(R.id.editSearchText).setText(textEdit)
+    }
+
+    private fun searchDebounce(runnable: Runnable) {
+        handler.removeCallbacks(runnable)
+        handler.postDelayed(runnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun searchRequest(
+        requestText: String
+    ) {
+        if (requestText.isNotEmpty()) {
+            temporaryTextRequest = requestText
+            progressBar.isVisible = true
+            searchTracks(requestText)
+        }
+    }
+
+    private fun setAdapter(data: Resource<List<Track>>) {
+        handler.post(Runnable {
+            progressBar.isVisible = false
+            var adapter: TracksAdapter? = null
+                //?????????????????????????????????????????
+                   if(data is Resource.Success) {
+                        adapter = TracksAdapter(
+                            track = data.data?: emptyList(),
+                            sign = if ((data.data?.size ?: 0) > 0) TracksAdapter.SEARCH_COMPLETED else TracksAdapter.SEARCH_NOT_TRACK,
+                            clickListener = clickItemAdapter
+                        )
+                    }else if(data is Resource.Error){
+                       adapter = TracksAdapter(
+                           track = data.data?: emptyList(),
+                           sign = TracksAdapter.SEARCH_NOT_CALL,
+                           text = getString(R.string.load_error_two_for_search),
+                           callbackReloadRequest = {
+                               searchDebounce {
+                                   searchRequest(temporaryTextRequest)
+                               }
+                           }
+                       )
+                       adapter  = TracksAdapter(
+                           track = data.data?: emptyList(),
+                           sign = TracksAdapter.SEARCH_NOT_CALL,
+                           text = getString(R.string.load_error_two_for_search),
+                           callbackReloadRequest = {
+                               searchDebounce {
+                                   searchRequest(temporaryTextRequest)
+                               }
+                           }
+                       )
+                   }
+            recyclerView.adapter = adapter
+        })
+    }
+
+    private fun clickDebounce() {
+        isClickAllowed = false
+        Handler(Looper.getMainLooper())
+            .postDelayed({
+                isClickAllowed = true
+            }, CLICK_DEBOUNCE_DELAY)
+    }
+
+    private fun goIntent() {
+        val intent = Intent(this, MediaLibraryActivity::class.java)
+        this.startActivity(intent)
+    }
+
+    private fun countHistoryTrackList(): Int {
+        return searchHistoryInteractor.count()
+    }
+
+    private fun addHistoryTrackList(track: Track?) {
+        searchHistoryInteractor.addTrack(track, SearchHistoryInteractor.Consumer {
+            recyclerViewHistory.adapter = TracksHistoryAdapter(it, clickItemAdapter)
+        })
+    }
+
+    private fun initHistoryAdapter() {
+        addHistoryTrackList(null)
+    }
+
+    private fun clearHistoryTrackList() {
+        searchHistoryInteractor.clear()
+    }
+
+    private fun searchTracks(requestText: String) {
+        tracksInteractor.searchTracks(requestText, TracksInteractor.TracksConsumer {
+            setAdapter(it)
+        })
+    }
+
+    private fun setActiveTrackForMediaPlayer(track: Track) {
+        trackSet.setTrack(track)
+    }
+}
