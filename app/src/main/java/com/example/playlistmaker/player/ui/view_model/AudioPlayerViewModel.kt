@@ -1,0 +1,89 @@
+package com.example.playlistmaker.player.ui.view_model
+
+import android.os.Handler
+import android.os.Looper
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.example.playlistmaker.R
+import com.example.playlistmaker.common.domain.models.Track
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.common.util.TimeFormat
+import com.example.playlistmaker.player.ui.models.SingleLiveEvent
+
+class AudioPlayerViewModel: ViewModel() {
+    private val getActiveTrackUseCase = Creator.provideGetActiveTrackUseCase()
+    private val mediaPlayer = Creator.provideMediaPlayerInteractor()
+    private val setStartActivityUseCase = Creator.provideSetStartActivityUseCase()
+    private var enablePlayButton = MutableLiveData(false)
+    private val activeTrack = SingleLiveEvent<Track>()
+    private var backgroundPlayButton = MutableLiveData(R.drawable.play_play)
+    private lateinit var playStopRunnable: Runnable
+    private var timeProgressLiveData = MutableLiveData(String())
+    private val mainThreadHandler: Handler = Handler(Looper.getMainLooper())
+    fun observeActiveTrack():LiveData<Track> = activeTrack
+    fun observeEnablePlayButton(): LiveData<Boolean> = enablePlayButton
+    fun observeBackgroundPlayButton(): LiveData<Int> = backgroundPlayButton
+    fun observeTimeProgressLiveData(): LiveData<String> = timeProgressLiveData
+
+    companion object {
+        private const val DELAY = 400L
+        private const val DELAY_NULL = 0L
+    }
+
+    init {
+        activeTrack.value = getActiveTrack()
+        val url = activeTrack.value?.previewUrl
+        if (!url.isNullOrEmpty()) {
+            mediaPlayer.prepare(url, consumerPrepared = {
+                enablePlayButton.value = true
+            }, consumerCompleted = {
+                enablePlayButton.value = true
+            }, consumerEnd = {
+                backgroundPlayButton.value = R.drawable.play_play
+                timeProgressLiveData.value = TimeFormat(DELAY_NULL).getTimeMM_SS()
+                timeProgress(false)
+            })
+        }
+        playStopRunnable = Runnable {
+            timeProgressLiveData.value = TimeFormat(mediaPlayer.currentPosition()).getTimeMM_SS()
+            mainThreadHandler.postDelayed(playStopRunnable, DELAY)
+        }
+    }
+
+    private fun getActiveTrack() = getActiveTrackUseCase.execute()
+
+    private fun timeProgress(value: Boolean) {
+        if (value) {
+            mainThreadHandler.post(
+                playStopRunnable
+            )
+        } else {
+            mainThreadHandler.removeCallbacks(playStopRunnable)
+        }
+    }
+
+    fun setThisStartActivity(value: Boolean) {
+        setStartActivityUseCase.setActivity(value)
+    }
+
+    fun control() {
+        mediaPlayer.control(start = {
+            backgroundPlayButton.value = R.drawable.pause_play
+            timeProgress(true)
+        }, pause = {
+            backgroundPlayButton.value = R.drawable.play_play
+            timeProgress(false)
+        })
+    }
+
+    fun pause() {
+        mediaPlayer.pause()
+        backgroundPlayButton.value = R.drawable.play_play
+    }
+
+    override fun onCleared() {
+        mediaPlayer.release()
+        timeProgress(false)
+    }
+}
