@@ -34,8 +34,8 @@ class SearchActivity : AppCompatActivity() {
         addTrackHistory(it)
         goAudioPlayer(it)
     }
-    private val adapterSearchNotTrack = TracksAdapter(state = TracksAdapter.SEARCH_NOT_TRACK)
-    private val adapterSearchNotCall = TracksAdapter(state = TracksAdapter.SEARCH_NOT_CALL) {
+    private val adapterSearchNotTrack = TracksAdapter(state = TracksAdapter.RESULT_NOT_TRACK)
+    private val adapterSearchNotCall = TracksAdapter(state = TracksAdapter.RESULT_NOT_CALL) {
         viewModel.searchDebounce()
     }
     private val adapterHistory = TracksHistoryAdapter {
@@ -80,13 +80,9 @@ class SearchActivity : AppCompatActivity() {
 
         binding.editSearchText.setOnFocusChangeListener { _, hasFocus ->
             binding.viewGroupHistory.isVisible =
-                hasFocus && binding.editSearchText.text.isEmpty() && countHistoryTrackList() > 0
+                hasFocus && binding.editSearchText.text.isEmpty() && adapterHistory.tracks.size > 0
         }
 
-        binding.editSearchText.setOnFocusChangeListener { _, hasFocus ->
-            binding.viewGroupHistory.isVisible =
-                hasFocus && binding.editSearchText.text.isEmpty() && countHistoryTrackList() > 0
-        }
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -94,7 +90,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 temporaryEditText = s.toString()
                 binding.clearSearchButton.isVisible = !s.isNullOrEmpty()
-                if (binding.editSearchText.hasFocus() && binding.editSearchText.text.isEmpty() && countHistoryTrackList() > 0)
+                if (binding.editSearchText.hasFocus() && binding.editSearchText.text.isEmpty() && adapterHistory.tracks.size > 0)
                     showHistory()
                 if (s.toString().isNotEmpty()) {
                     viewModel.searchDebounce(s.toString())
@@ -183,10 +179,6 @@ class SearchActivity : AppCompatActivity() {
             startActivity(intent)
             setActiveTrack(track)
         }
-    }
-
-    private fun countHistoryTrackList(): Int {
-        return adapterHistory.tracks.size
     }
 
     private fun addTrackHistory(track: Track) {

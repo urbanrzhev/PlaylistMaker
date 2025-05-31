@@ -10,7 +10,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
-import com.example.playlistmaker.search.util.MyDisplayMetrics
+import com.example.playlistmaker.common.util.MyDisplayMetrics
 
 class ShowActiveTrack(
     private val context: Context,

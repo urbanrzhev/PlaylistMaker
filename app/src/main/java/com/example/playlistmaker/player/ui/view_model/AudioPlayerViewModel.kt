@@ -9,19 +9,17 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.common.util.TimeFormat
-import com.example.playlistmaker.player.ui.models.SingleLiveEvent
 
 class AudioPlayerViewModel: ViewModel() {
     private val getActiveTrackUseCase = Creator.provideGetActiveTrackUseCase()
     private val mediaPlayer = Creator.provideMediaPlayerInteractor()
     private val setStartActivityUseCase = Creator.provideSetStartActivityUseCase()
     private var enablePlayButton = MutableLiveData(false)
-    private val activeTrack = SingleLiveEvent<Track>()
+    private val activeTrack = getActiveTrackUseCase.execute()
     private var backgroundPlayButton = MutableLiveData(R.drawable.play_play)
     private lateinit var playStopRunnable: Runnable
-    private var timeProgressLiveData = MutableLiveData(String())
+    private var timeProgressLiveData = MutableLiveData(TimeFormat(DELAY_NULL).getTimeMM_SS())
     private val mainThreadHandler: Handler = Handler(Looper.getMainLooper())
-    fun observeActiveTrack():LiveData<Track> = activeTrack
     fun observeEnablePlayButton(): LiveData<Boolean> = enablePlayButton
     fun observeBackgroundPlayButton(): LiveData<Int> = backgroundPlayButton
     fun observeTimeProgressLiveData(): LiveData<String> = timeProgressLiveData
@@ -32,9 +30,8 @@ class AudioPlayerViewModel: ViewModel() {
     }
 
     init {
-        activeTrack.value = getActiveTrack()
-        val url = activeTrack.value?.previewUrl
-        if (!url.isNullOrEmpty()) {
+        val url = activeTrack.previewUrl
+        if (url.isNotEmpty()) {
             mediaPlayer.prepare(url, consumerPrepared = {
                 enablePlayButton.value = true
             }, consumerCompleted = {
@@ -51,7 +48,9 @@ class AudioPlayerViewModel: ViewModel() {
         }
     }
 
-    private fun getActiveTrack() = getActiveTrackUseCase.execute()
+    fun getActiveTrack():Track{
+        return activeTrack
+    }
 
     private fun timeProgress(value: Boolean) {
         if (value) {

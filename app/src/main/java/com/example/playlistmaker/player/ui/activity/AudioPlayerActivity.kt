@@ -41,15 +41,13 @@ class AudioPlayerActivity : AppCompatActivity() {
         viewModel.observeEnablePlayButton().observe(this) { enabled ->
             binding.buttonPause.isEnabled = enabled
         }
-        viewModel.observeActiveTrack().observe(this){ track ->
-            loadTrack(track)
-        }
         binding.buttonPause.setOnClickListener {
             viewModel.control()
         }
         binding.vectorBack.setOnClickListener {
             onBackPressed()
         }
+        loadTrack(viewModel.getActiveTrack())
         setStartActivity(true)
     }
 
@@ -65,7 +63,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private fun loadTrack(model: Track) {
-        ShowActiveTrack(this, binding, model)
+        ShowActiveTrack(this, binding, model    )
             .show()
     }
 
