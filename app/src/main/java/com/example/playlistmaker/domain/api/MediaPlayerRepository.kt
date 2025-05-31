@@ -7,3 +7,4 @@ interface MediaPlayerRepository {
     fun playbackControl():Boolean
     fun releasePlayer()
 }
+
