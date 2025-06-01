@@ -2,7 +2,7 @@ package com.example.playlistmaker.search.domain.api
 
 import com.example.playlistmaker.common.domain.models.Track
 
-interface SearchHistoryInteractor {
+interface HistoryInteractor {
     fun addTrack(track: Track?, consumer: Consumer)
     fun getTracks():List<Track>
     fun clear()

@@ -34,16 +34,8 @@ class SearchActivity : AppCompatActivity() {
         addTrackHistory(it)
         goAudioPlayer(it)
     }
-    private val adapterSearchNotTrack = TracksAdapter(state = TracksAdapter.RESULT_NOT_TRACK)
-    private val adapterSearchNotCall = TracksAdapter(state = TracksAdapter.RESULT_NOT_CALL) {
-        viewModel.searchDebounce()
-    }
     private val adapterHistory = TracksHistoryAdapter {
         goAudioPlayer(it)
-    }
-
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,9 +58,7 @@ class SearchActivity : AppCompatActivity() {
             render(it)
         }
         viewModel.observeHistory().observe(this) {
-            adapterHistory.tracks.clear()
-            adapterHistory.tracks.addAll(it)
-            adapterHistory.notifyDataSetChanged()
+            adapterHistory.setTrackList(it)
         }
         viewModel.observerProgressBarLiveData().observe(this) {
             showProgressBar(it)
@@ -80,7 +70,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.editSearchText.setOnFocusChangeListener { _, hasFocus ->
             binding.viewGroupHistory.isVisible =
-                hasFocus && binding.editSearchText.text.isEmpty() && adapterHistory.tracks.size > 0
+                hasFocus && binding.editSearchText.text.isEmpty() && adapterHistory.itemCount > 0
         }
 
         textWatcher = object : TextWatcher {
@@ -90,7 +80,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 temporaryEditText = s.toString()
                 binding.clearSearchButton.isVisible = !s.isNullOrEmpty()
-                if (binding.editSearchText.hasFocus() && binding.editSearchText.text.isEmpty() && adapterHistory.tracks.size > 0)
+                if (binding.editSearchText.hasFocus() && binding.editSearchText.text.isEmpty() && adapterHistory.itemCount > 0)
                     showHistory()
                 if (s.toString().isNotEmpty()) {
                     viewModel.searchDebounce(s.toString())
@@ -116,7 +106,7 @@ class SearchActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-        adapterHistory.tracks = viewModel.getHistory() as MutableList<Track>
+        adapterHistory.setTrackList(viewModel.getHistory())
     }
 
     override fun onDestroy() {
@@ -155,20 +145,28 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun errorLoadTracks(value: String) {
-        showRecyclerSearch()
-        binding.recyclerSearch.adapter =
-            adapterSearchNotCall.apply { text = value }
+        showProgressBar(false)
+        binding.viewGroupHistory.isVisible = false
+        binding.notCall.isVisible = true
+        binding.textNotCall.text = value
+        binding.notTrack.isVisible = false
+        binding.notCallButton.setOnClickListener {
+            viewModel.searchDebounce()
+        }
     }
 
     private fun emptyLoadTracks() {
-        showRecyclerSearch()
-        binding.recyclerSearch.adapter =
-            adapterSearchNotTrack
+        binding.notCall.isVisible = false
+        binding.notTrack.isVisible = true
     }
 
     private fun successLoadTracks(list: List<Track>) {
-        showRecyclerSearch()
-        binding.recyclerSearch.adapter = adapterSearch.apply { tracks = list as MutableList<Track> }
+        showProgressBar(false)
+        binding.notCall.isVisible = false
+        binding.notTrack.isVisible = false
+        binding.viewGroupHistory.isVisible = false
+        adapterSearch.setTrackList(list)
+        binding.recyclerSearch.adapter = adapterSearch
     }
 
     private fun goAudioPlayer(track: Track) {
@@ -183,11 +181,6 @@ class SearchActivity : AppCompatActivity() {
 
     private fun addTrackHistory(track: Track) {
         viewModel.addTrackHistory(track)
-    }
-
-    private fun showRecyclerSearch() {
-        showProgressBar(false)
-        binding.viewGroupHistory.isVisible = false
     }
 
     private fun showProgressBar(value: Boolean) {
@@ -209,5 +202,8 @@ class SearchActivity : AppCompatActivity() {
             isClickAllowed = true
         }, CLICK_DEBOUNCE_DELAY)
         return isClickAllowed
+    }
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

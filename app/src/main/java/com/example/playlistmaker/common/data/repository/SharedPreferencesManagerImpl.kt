@@ -44,10 +44,10 @@ class SharedPreferencesManagerImpl: SharedPreferencesManager {
     }
 
     override fun getTrackList(key: String): List<Track> {
-        val sp = sharedPreferences.getString(key, null) ?: return emptyList()
+        val sp = sharedPreferences.getString(key, null) ?: return mutableListOf()
         val itemType = object : TypeToken<List<Track>>() {}.type
         val trackList = gson.fromJson<List<Track>>(sp, itemType)
-        return trackList ?: emptyList()
+        return trackList ?: mutableListOf()
     }
 
     override fun setTrackList(key: String, data:List<Track>) {

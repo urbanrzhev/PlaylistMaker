@@ -8,12 +8,10 @@ import com.example.playlistmaker.search.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.common.data.repository.SharedPreferencesManagerImpl
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.api.MediaPlayerRepository
-import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.player.domain.impl.MediaPlayerInteractorImpl
-import com.example.playlistmaker.search.domain.interactorImpl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.interactorImpl.TracksInteractorImpl
 import com.example.playlistmaker.player.domain.use_case.GetActiveTrackUseCase
 import com.example.playlistmaker.main.domain.use_case.GetStartActivityUseCase
@@ -21,6 +19,8 @@ import com.example.playlistmaker.common.domain.use_case.GetThemeUseCase
 import com.example.playlistmaker.search.domain.use_case.SetActiveTrackUseCase
 import com.example.playlistmaker.player.domain.use_case.SetStartActivityUseCase
 import com.example.playlistmaker.app.domain.use_case.SetThemeUseCase
+import com.example.playlistmaker.search.domain.api.HistoryInteractor
+import com.example.playlistmaker.search.domain.interactorImpl.HistoryInteractorImpl
 import com.example.playlistmaker.sharing.data.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
@@ -46,8 +46,8 @@ object Creator {
     fun provideTracksInteractor(): TracksInteractor {
         return TracksInteractorImpl(getTracksRepository())
     }
-    fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
-        return SearchHistoryInteractorImpl(SharedPreferencesManagerImpl())
+    fun provideSearchHistoryInteractor(): HistoryInteractor {
+        return HistoryInteractorImpl(SharedPreferencesManagerImpl())
     }
     fun provideGetActiveTrackUseCase(): GetActiveTrackUseCase {
         return GetActiveTrackUseCase(getPreferencesRepository())

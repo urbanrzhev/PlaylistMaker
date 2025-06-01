@@ -1,14 +1,14 @@
 package com.example.playlistmaker.search.domain.interactorImpl
 
-import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.common.domain.models.Track
+import com.example.playlistmaker.search.domain.api.HistoryInteractor
 
 private const val KEY_HISTORY_TRACK_LIST = "key_history_track_"
 
-class SearchHistoryInteractorImpl(private val sharedPreferencesManager: SharedPreferencesManager):
-    SearchHistoryInteractor {
-    override fun addTrack(track: Track?, consumer: SearchHistoryInteractor.Consumer) {
+class HistoryInteractorImpl(private val sharedPreferencesManager: SharedPreferencesManager):
+    HistoryInteractor {
+    override fun addTrack(track: Track?, consumer: HistoryInteractor.Consumer) {
         var trackList = sharedPreferencesManager.getTrackList(KEY_HISTORY_TRACK_LIST)
         if(track != null){
             trackList = trackList.filter {

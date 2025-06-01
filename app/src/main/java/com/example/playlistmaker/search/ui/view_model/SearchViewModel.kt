@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.domain.use_case.SetActiveTrackUseCase
@@ -17,7 +17,7 @@ class SearchViewModel : ViewModel() {
     private val setActiveTrackUseCase: SetActiveTrackUseCase =
         Creator.provideSetActiveTrackUseCase()
     private val tracksInteractor: TracksInteractor = Creator.provideTracksInteractor()
-    private val searchHistoryInteractor: SearchHistoryInteractor =
+    private val searchHistoryInteractor: HistoryInteractor =
         Creator.provideSearchHistoryInteractor()
     private val handler = Handler(Looper.getMainLooper())
     private var temporaryTextRequest = ""
@@ -27,11 +27,6 @@ class SearchViewModel : ViewModel() {
     fun observeState(): LiveData<State<List<Track>>> = stateLiveData
     private var historyLiveData = MutableLiveData(getHistory())
     fun observeHistory(): LiveData<List<Track>> = historyLiveData
-
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY: Long = 2000L
-        private val SEARCH_REQUEST_TOKEN = Any()
-    }
 
     override fun onCleared() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
@@ -95,5 +90,9 @@ class SearchViewModel : ViewModel() {
             }
             progressBarLiveData.postValue(false)
         })
+    }
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY: Long = 2000L
+        private val SEARCH_REQUEST_TOKEN = Any()
     }
 }
