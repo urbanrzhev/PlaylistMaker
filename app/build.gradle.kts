@@ -10,13 +10,15 @@ android {
     defaultConfig {
         applicationId = "com.example.playlistmaker"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    buildFeatures{
+        viewBinding = true
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -36,6 +38,7 @@ android {
 }
 
 dependencies {
+    implementation (libs.androidx.core.ktx.v190)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
     implementation (libs.glide)

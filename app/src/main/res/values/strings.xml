@@ -11,8 +11,10 @@
     <string name="load_error_for_search">Проблемы со связью</string>
     <string name="you_were_looking_for">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
-    <string name="load_error_one_for_search">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="load_error_one_for_search">Загрузка не удалась.</string>
+    <string name="load_error_one_for_search_double">Проверьте подключение к интернету</string>
     <string name="load_error_two_for_search">На сервере произошла ошибка</string>
+    <string name="load_error_two_for_search_double">Ошибка сервера</string>
     <string name="illegal_state_exception">no my holder</string>
     <string name="crash_error">Внутренняя ошибка приложения. Обратитесь к разработчику</string>
     <string name="share_one">выберите приложение</string>

@@ -23,7 +23,7 @@
         app:icon="@drawable/search_icon" />
 
     <Button
-        android:id="@+id/button_media_library"
+        android:id="@+id/button_audio_player"
         style="@style/buttonMainActivity"
         android:layout_marginBottom="@dimen/main_layout_padding"
         android:text="@string/media_library"

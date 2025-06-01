@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="media_library_background" format="color"/>
+    <attr name="like_background" format="color"/>
+    <attr name="pause_play_color" format="color"/>
+    <attr name="title_and_group_color" format="color"/>
+    <attr name="value_text_media_library_color" format="color"/>
+    <attr name="media_library_description_data_track_color" format="color"/>
+    <attr name="media_library_value_data_track_color" format="color"/>
+    <style name="base_text_oneline_ellipsize_gravityvertical">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAppearance">@style/textAppearanceRegular13sp400w</item>
+    </style>
+    <style name="title_and_group" parent="base_text_oneline_ellipsize_gravityvertical">
+        <item name="android:textColor">?attr/title_and_group_color</item>
+    </style>
+    <style name="media_library_description_data_track" parent="base_text_oneline_ellipsize_gravityvertical">
+        <item name="android:textColor">@color/little_white</item>
+    </style>
+    <style name="media_library_value_data_track" parent="base_text_oneline_ellipsize_gravityvertical">
+        <item name="android:textColor">?attr/value_text_media_library_color</item>
+    </style>
+</resources>

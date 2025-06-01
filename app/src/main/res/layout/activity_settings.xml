@@ -4,10 +4,11 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/my_background"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar_settings"
+        android:id="@+id/toolbar_back"
         style="@style/my_toolbars"
         app:title="@string/settings"/>
 

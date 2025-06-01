@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="my_background" format="color"/>
     <attr name="search_icon_edittext" format="color"/>
     <attr name="search_text_hint_edittext" format="color"/>
     <attr name="punkt_for_recycler_search_color" format="color"/>
