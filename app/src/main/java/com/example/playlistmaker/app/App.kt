@@ -2,9 +2,9 @@ package com.example.playlistmaker.app
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.common.domain.use_case.GetThemeUseCase
+import com.example.playlistmaker.app.domain.api.SetThemeUseCase
 import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.app.domain.use_case.SetThemeUseCase
+import com.example.playlistmaker.common.domain.api.GetThemeUseCase
 
 class App : Application() {
     private var darkTheme = false

@@ -5,16 +5,8 @@ import com.example.playlistmaker.player.domain.api.MediaPlayerRepository
 
 class MediaPlayerRepositoryImpl(private val player: MediaPlayer): MediaPlayerRepository {
     private var playerState = STATE_DEFAULT
-    private var endListener: () -> Unit = {}
-    companion object {
-        const val STATE_DEFAULT = 0
-        const val STATE_PREPARED = 1
-        const val STATE_PLAYING = 2
-        const val STATE_PAUSED = 3
-    }
 
-    override fun preparePlayer(url:String, setOnPreparedListener:()->Unit, setOnCompletionListener:()->Unit, endListener: () -> Unit) {
-        this.endListener = endListener
+    override fun preparePlayer(url:String, setOnPreparedListener:()->Unit, setOnCompletionListener:()->Unit) {
         player.setDataSource(url)
         player.prepareAsync()
         player.setOnPreparedListener {
@@ -29,10 +21,6 @@ class MediaPlayerRepositoryImpl(private val player: MediaPlayer): MediaPlayerRep
 
     private fun startPlayer() {
         player.start()
-        player.setOnCompletionListener {
-            pausePlayer()
-            endListener.invoke()
-        }
         playerState = STATE_PLAYING
     }
     override fun getCurrentPosition():Int {
@@ -44,7 +32,8 @@ class MediaPlayerRepositoryImpl(private val player: MediaPlayer): MediaPlayerRep
     }
 
     override fun pausePlayer() {
-        player.pause()
+        if(player.isPlaying)
+            player.pause()
         playerState = STATE_PAUSED
     }
 
@@ -60,5 +49,11 @@ class MediaPlayerRepositoryImpl(private val player: MediaPlayer): MediaPlayerRep
             }
         }
         return false
+    }
+    companion object {
+        const val STATE_DEFAULT = 0
+        const val STATE_PREPARED = 1
+        const val STATE_PLAYING = 2
+        const val STATE_PAUSED = 3
     }
 }

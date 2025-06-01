@@ -1,7 +1,7 @@
 package com.example.playlistmaker.player.domain.api
 
 interface MediaPlayerInteractor {
-    fun prepare(url:String, consumerPrepared: Consumer, consumerCompleted: Consumer, consumerEnd: Consumer)
+    fun prepare(url:String, consumerPrepared: Consumer, consumerCompleted: Consumer)
     fun release()
     fun pause()
     fun currentPosition():Int

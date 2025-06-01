@@ -5,13 +5,11 @@ import com.example.playlistmaker.player.domain.api.MediaPlayerRepository
 
 class MediaPlayerInteractorImpl(private val repositoryImpl: MediaPlayerRepository):
     MediaPlayerInteractor {
-    override fun prepare(url: String, consumerPrepared: MediaPlayerInteractor.Consumer, consumerCompleted: MediaPlayerInteractor.Consumer, consumerEnd: MediaPlayerInteractor.Consumer) {
+    override fun prepare(url: String, consumerPrepared: MediaPlayerInteractor.Consumer, consumerCompleted: MediaPlayerInteractor.Consumer) {
         repositoryImpl.preparePlayer(url, setOnPreparedListener = {
             consumerPrepared.consume()
         }, setOnCompletionListener = {
             consumerCompleted.consume()
-        }, endListener = {
-            consumerEnd.consume()
         })
     }
 

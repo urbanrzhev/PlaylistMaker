@@ -5,29 +5,31 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.common.util.TimeFormat
+import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
+import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
+import com.example.playlistmaker.player.domain.api.SetStartActivityUseCase
 
-class AudioPlayerViewModel: ViewModel() {
-    private val getActiveTrackUseCase = Creator.provideGetActiveTrackUseCase()
-    private val mediaPlayer = Creator.provideMediaPlayerInteractor()
-    private val setStartActivityUseCase = Creator.provideSetStartActivityUseCase()
+class AudioPlayerViewModel(
+    private val getActiveTrackUseCase: GetActiveTrackUseCase,
+    private val mediaPlayer: MediaPlayerInteractor,
+    private val setStartActivityUseCase: SetStartActivityUseCase
+) : ViewModel() {
     private var enablePlayButton = MutableLiveData(false)
     private val activeTrack = getActiveTrackUseCase.execute()
     private var backgroundPlayButton = MutableLiveData(R.drawable.play_play)
     private lateinit var playStopRunnable: Runnable
-    private var timeProgressLiveData = MutableLiveData(TimeFormat(DELAY_NULL).getTimeMM_SS())
+    private var timeProgressLiveData = MutableLiveData(activeTrack.trackTimeNormal)
     private val mainThreadHandler: Handler = Handler(Looper.getMainLooper())
     fun observeEnablePlayButton(): LiveData<Boolean> = enablePlayButton
     fun observeBackgroundPlayButton(): LiveData<Int> = backgroundPlayButton
     fun observeTimeProgressLiveData(): LiveData<String> = timeProgressLiveData
-
-    companion object {
-        private const val DELAY = 400L
-        private const val DELAY_NULL = 0L
-    }
 
     init {
         val url = activeTrack.previewUrl
@@ -35,8 +37,6 @@ class AudioPlayerViewModel: ViewModel() {
             mediaPlayer.prepare(url, consumerPrepared = {
                 enablePlayButton.value = true
             }, consumerCompleted = {
-                enablePlayButton.value = true
-            }, consumerEnd = {
                 backgroundPlayButton.value = R.drawable.play_play
                 timeProgressLiveData.value = TimeFormat(DELAY_NULL).getTimeMM_SS()
                 timeProgress(false)
@@ -48,7 +48,7 @@ class AudioPlayerViewModel: ViewModel() {
         }
     }
 
-    fun getActiveTrack():Track{
+    fun getActiveTrack(): Track {
         return activeTrack
     }
 
@@ -63,7 +63,7 @@ class AudioPlayerViewModel: ViewModel() {
     }
 
     fun setThisStartActivity(value: Boolean) {
-        setStartActivityUseCase.setActivity(value)
+        setStartActivityUseCase.execute(value)
     }
 
     fun control() {
@@ -84,5 +84,19 @@ class AudioPlayerViewModel: ViewModel() {
     override fun onCleared() {
         mediaPlayer.release()
         timeProgress(false)
+    }
+
+    companion object {
+        private const val DELAY = 400L
+        private const val DELAY_NULL = 0L
+        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                AudioPlayerViewModel(
+                    getActiveTrackUseCase = Creator.provideGetActiveTrackUseCase(),
+                    mediaPlayer = Creator.provideMediaPlayerInteractor(),
+                    setStartActivityUseCase = Creator.provideSetStartActivityUseCase()
+                )
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/my_background"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -55,6 +56,20 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
+        <FrameLayout
+            android:id="@+id/progress_circular"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="140dp"
+                android:indeterminateTint="@color/blue_from_figma" />
+        </FrameLayout>
+
         <LinearLayout
             android:id="@+id/not_track"
             android:layout_width="match_parent"
@@ -64,7 +79,7 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                style="@style/nothing_image_search"
+                app:srcCompat="@drawable/not_track"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -89,7 +104,7 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                style="@style/load_error_image_search"
+                app:srcCompat="@drawable/not_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -112,20 +127,6 @@
                 android:layout_marginTop="24dp"
                 android:text="@string/update" />
         </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/progress_circular"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <ProgressBar
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="140dp"
-                android:indeterminateTint="@color/blue_from_figma" />
-        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/viewGroupHistory"

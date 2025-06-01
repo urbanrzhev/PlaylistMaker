@@ -1,12 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <!--
-    <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-
-    </style>
-    -->
+<resources>
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
+        <item name="not_track_background">@color/white</item>
+        <item name="media_library_background">@color/white</item>
+        <item name="like_background">@color/white</item>
         <item name="colorPrimary">@color/white</item>
+        <item name="my_background">@color/black_from_figma</item>
         <item name="search_text_hint_edittext">@color/black_from_figma</item>
         <item name="search_icon_edittext">@color/black_from_figma</item>
         <item name="pause_play_color">@color/white</item>

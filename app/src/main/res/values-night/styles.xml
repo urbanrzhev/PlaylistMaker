@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="nothing_image_search">
-        <item name="srcCompat">@drawable/nothing_dark_for_search</item>
-    </style>
-    <style name="load_error_image_search">
-        <item name="srcCompat">@drawable/load_error_dark_for_search</item>
-    </style>
     <style name="my_toolbars" parent="Widget.MaterialComponents.Toolbar">
         <item name="android:layout_height">56dp</item>
         <item name="android:layout_width">match_parent</item>

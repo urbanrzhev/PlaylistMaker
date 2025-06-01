@@ -19,7 +19,10 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
-        viewModel = ViewModelProvider(this)[AudioPlayerViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            AudioPlayerViewModel.getViewModelFactory()
+        )[AudioPlayerViewModel::class.java]
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -63,7 +66,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private fun loadTrack(model: Track) {
-        ShowActiveTrack(this, binding, model    )
+        ShowActiveTrack(this, binding, model)
             .show()
     }
 

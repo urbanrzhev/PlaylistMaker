@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="media_library_background" format="color"/>
+    <attr name="like_background" format="color"/>
     <attr name="pause_play_color" format="color"/>
     <attr name="title_and_group_color" format="color"/>
     <attr name="value_text_media_library_color" format="color"/>

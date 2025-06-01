@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="61dp"
+    android:background="?attr/my_background"
     android:foreground="?attr/selectableItemBackground">
 
     <ImageView

@@ -6,33 +6,41 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.app.App
+import com.example.playlistmaker.common.domain.api.GetThemeUseCase
 import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 
 class SettingsViewModel(
-    private val app:App
-):ViewModel() {
-    private val getThemeUseCase = Creator.provideGetThemeUseCase()
-    private val sharingInteractor = Creator.provideSharingInteractor()
+    private val app: App,
+    private val getThemeUseCase: GetThemeUseCase,
+    private val sharingInteractor: SharingInteractor
+) : ViewModel() {
+    fun getTheme(): Boolean = getThemeUseCase.execute()
+    fun setTheme(value: Boolean) {
+        app.switchTheme(value)
+    }
+
+    fun share(callback: (String?) -> Unit) {
+        callback(sharingInteractor.shareApp())
+    }
+
+    fun email() {
+        sharingInteractor.openSupport()
+    }
+
+    fun terms() {
+        sharingInteractor.openTerms()
+    }
+
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 SettingsViewModel(
                     app = (this[APPLICATION_KEY] as App),
+                    getThemeUseCase = Creator.provideGetThemeUseCase(),
+                    sharingInteractor = Creator.provideSharingInteractor()
                 )
             }
         }
-    }
-    fun getTheme():Boolean = getThemeUseCase.execute()
-    fun setTheme(value:Boolean){
-        app.switchTheme(value)
-    }
-    fun share(callback:(String?)->Unit){
-        callback(sharingInteractor.shareApp())
-    }
-    fun email(){
-        sharingInteractor.openSupport()
-    }
-    fun terms(){
-        sharingInteractor.openTerms()
     }
 }

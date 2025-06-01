@@ -12,9 +12,6 @@ class SharedPreferencesManagerImpl: SharedPreferencesManager {
     private val gson = Gson()
     private val sharedPreferences =
         context.getSharedPreferences(MY_ALL_PREFERENCES, Context.MODE_PRIVATE)
-    companion object{
-        private const val MY_ALL_PREFERENCES = "my_all_preferences"
-    }
     override fun getBoolean(key: String): Boolean =
         sharedPreferences.getBoolean(key, false)
 
@@ -64,5 +61,8 @@ class SharedPreferencesManagerImpl: SharedPreferencesManager {
         if (clear)
             sharedPreferences.edit().remove(key)
                 .apply()
+    }
+    companion object{
+        private const val MY_ALL_PREFERENCES = "my_all_preferences"
     }
 }

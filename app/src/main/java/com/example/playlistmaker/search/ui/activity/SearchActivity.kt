@@ -43,7 +43,10 @@ class SearchActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivitySearchBinding.inflate(layoutInflater)
         viewModel =
-            ViewModelProvider(this)[SearchViewModel::class.java]
+            ViewModelProvider(
+                this,
+                SearchViewModel.getViewModelFactory()
+            )[SearchViewModel::class.java]
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -84,7 +87,10 @@ class SearchActivity : AppCompatActivity() {
                     showHistory()
                 if (s.toString().isNotEmpty()) {
                     viewModel.searchDebounce(s.toString())
-                } else binding.recyclerSearch.adapter = null
+                } else {
+                    viewModel.clearSearchDebounce()
+                    binding.recyclerSearch.adapter = null
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -189,6 +195,8 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showHistory() {
         showProgressBar(false)
+        binding.notCall.isVisible = false
+        binding.notTrack.isVisible = false
         binding.viewGroupHistory.isVisible = true
     }
 
@@ -203,6 +211,7 @@ class SearchActivity : AppCompatActivity() {
         }, CLICK_DEBOUNCE_DELAY)
         return isClickAllowed
     }
+
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }

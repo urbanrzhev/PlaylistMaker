@@ -7,7 +7,7 @@ import com.example.playlistmaker.common.domain.models.Track
 class TracksHistoryAdapter(
     private val clickListener: TrackClickListener
 ) : RecyclerView.Adapter<TrackViewHolder>() {
-    private var tracks:MutableList<Track> = mutableListOf()
+    private var tracks: MutableList<Track> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(parent)
     }
@@ -19,7 +19,8 @@ class TracksHistoryAdapter(
             clickListener.onClick(tracks[position])
         }
     }
-    fun setTrackList(list:List<Track>){
+
+    fun setTrackList(list: List<Track>) {
         tracks.clear()
         tracks.addAll(list)
         notifyDataSetChanged()

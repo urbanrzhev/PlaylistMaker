@@ -5,20 +5,22 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
+import com.example.playlistmaker.search.domain.api.SetActiveTrackUseCase
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Resource
-import com.example.playlistmaker.search.domain.use_case.SetActiveTrackUseCase
 import com.example.playlistmaker.search.domain.models.State
 
-class SearchViewModel : ViewModel() {
-    private val setActiveTrackUseCase: SetActiveTrackUseCase =
-        Creator.provideSetActiveTrackUseCase()
-    private val tracksInteractor: TracksInteractor = Creator.provideTracksInteractor()
-    private val searchHistoryInteractor: HistoryInteractor =
-        Creator.provideSearchHistoryInteractor()
+class SearchViewModel(
+    private val setActiveTrackUseCase: SetActiveTrackUseCase,
+    private val tracksInteractor: TracksInteractor,
+    private val searchHistoryInteractor: HistoryInteractor
+) : ViewModel() {
     private val handler = Handler(Looper.getMainLooper())
     private var temporaryTextRequest = ""
     private val progressBarLiveData = MutableLiveData(false)
@@ -34,6 +36,10 @@ class SearchViewModel : ViewModel() {
 
     fun searchDebounce() {
         searchDebounce(temporaryTextRequest)
+    }
+
+    fun clearSearchDebounce() {
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
     fun searchDebounce(requestText: String) {
@@ -91,8 +97,20 @@ class SearchViewModel : ViewModel() {
             progressBarLiveData.postValue(false)
         })
     }
+
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY: Long = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
+        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                SearchViewModel(
+                    setActiveTrackUseCase =
+                    Creator.provideSetActiveTrackUseCase(),
+                    tracksInteractor = Creator.provideTracksInteractor(),
+                    searchHistoryInteractor =
+                    Creator.provideSearchHistoryInteractor()
+                )
+            }
+        }
     }
 }
