@@ -84,7 +84,10 @@ class SearchActivity : AppCompatActivity() {
                     showHistory()
                 if (s.toString().isNotEmpty()) {
                     viewModel.searchDebounce(s.toString())
-                } else binding.recyclerSearch.adapter = null
+                } else {
+                    viewModel.clearSearchDebounce()
+                    binding.recyclerSearch.adapter = null
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {

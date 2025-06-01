@@ -36,6 +36,10 @@ class SearchViewModel : ViewModel() {
         searchDebounce(temporaryTextRequest)
     }
 
+    fun clearSearchDebounce(){
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+    }
+
     fun searchDebounce(requestText: String) {
         temporaryTextRequest = requestText
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
