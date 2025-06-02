@@ -32,3 +32,4 @@ class App : Application() {
         themeSet.execute(darkTheme)
     }
 }
+
