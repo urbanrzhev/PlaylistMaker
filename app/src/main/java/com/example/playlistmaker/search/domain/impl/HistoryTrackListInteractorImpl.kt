@@ -1,10 +1,8 @@
-package com.example.playlistmaker.search.domain.interactorImpl
+package com.example.playlistmaker.search.domain.impl
 
 import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
-
-private const val KEY_HISTORY_TRACK_LIST = "key_history_track_"
 
 class HistoryInteractorImpl(private val sharedPreferencesManager: SharedPreferencesManager):
     HistoryInteractor {
@@ -31,5 +29,8 @@ class HistoryInteractorImpl(private val sharedPreferencesManager: SharedPreferen
 
     override fun count(): Int {
         return sharedPreferencesManager.getTrackList(KEY_HISTORY_TRACK_LIST).size
+    }
+    companion object{
+        private const val KEY_HISTORY_TRACK_LIST = "key_history_track_"
     }
 }

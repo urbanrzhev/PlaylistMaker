@@ -12,20 +12,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.main.ui.activity.MainActivity
 import com.example.playlistmaker.search.ui.adapters_holders.TracksAdapter
 import com.example.playlistmaker.search.ui.adapters_holders.TracksHistoryAdapter
-import com.example.playlistmaker.player.ui.activity.AudioPlayerActivity
+import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.State
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel()
     private lateinit var binding: ActivitySearchBinding
     private var temporaryEditText = ""
     private lateinit var textWatcher: TextWatcher
@@ -42,11 +42,6 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivitySearchBinding.inflate(layoutInflater)
-        viewModel =
-            ViewModelProvider(
-                this,
-                SearchViewModel.getViewModelFactory()
-            )[SearchViewModel::class.java]
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -150,11 +145,11 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun errorLoadTracks(value: String) {
+    private fun errorLoadTracks(message: Int) {
         showProgressBar(false)
         binding.viewGroupHistory.isVisible = false
         binding.notCall.isVisible = true
-        binding.textNotCall.text = value
+        binding.textNotCall.text = getString(message)
         binding.notTrack.isVisible = false
         binding.notCallButton.setOnClickListener {
             viewModel.searchDebounce()
@@ -177,7 +172,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun goAudioPlayer(track: Track) {
         if (!clickDebounce()) {
-            val intent = Intent(this, AudioPlayerActivity::class.java).apply {
+            val intent = Intent(this, MediaPlayerActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             }
             startActivity(intent)

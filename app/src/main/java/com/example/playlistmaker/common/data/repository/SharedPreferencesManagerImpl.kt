@@ -1,17 +1,15 @@
 package com.example.playlistmaker.common.data.repository
 
-import android.content.Context
+import android.content.SharedPreferences
 import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.common.domain.models.Track
-import com.example.playlistmaker.creator.Creator
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SharedPreferencesManagerImpl: SharedPreferencesManager {
-    private val context: Context = Creator.getAppContext()
-    private val gson = Gson()
-    private val sharedPreferences =
-        context.getSharedPreferences(MY_ALL_PREFERENCES, Context.MODE_PRIVATE)
+class SharedPreferencesManagerImpl(
+    private val sharedPreferences: SharedPreferences,
+    private val gson:Gson
+): SharedPreferencesManager {
     override fun getBoolean(key: String): Boolean =
         sharedPreferences.getBoolean(key, false)
 
@@ -61,8 +59,5 @@ class SharedPreferencesManagerImpl: SharedPreferencesManager {
         if (clear)
             sharedPreferences.edit().remove(key)
                 .apply()
-    }
-    companion object{
-        private const val MY_ALL_PREFERENCES = "my_all_preferences"
     }
 }
