@@ -20,6 +20,9 @@ import com.example.playlistmaker.search.di.searchInteractorModule
 import com.example.playlistmaker.search.di.searchRepositoryModule
 import com.example.playlistmaker.search.di.searchUseCaseModule
 import com.example.playlistmaker.search.di.searchViewModelModule
+import com.example.playlistmaker.settings.ui.di.settingsViewModelModule
+import com.example.playlistmaker.sharing.di.sharingDataModule
+import com.example.playlistmaker.sharing.di.sharingInteractorModule
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -49,7 +52,10 @@ class App : Application() {
                 searchRepositoryModule,
                 searchInteractorModule,
                 searchViewModelModule,
-                searchUseCaseModule
+                searchUseCaseModule,
+                settingsViewModelModule,
+                sharingDataModule,
+                sharingInteractorModule
             )
         }
         darkTheme = themeGet.execute()

@@ -8,25 +8,33 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.sharing.domain.model.EmailData
 
 class ExternalNavigator(
-    private val appContext:Context
-){
+    private val appContext: Context,
+    private val intent: Intent
+) {
     @SuppressLint("QueryPermissionsNeeded")
-    fun shareLink(value:String): String? {
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            putExtra(Intent.EXTRA_TEXT,  value)
+    fun shareLink(value: String): String? {
+        intent.apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, value)
             setType("text/plain")
         }
         if (intent.resolveActivity(appContext.packageManager) != null) {
-            appContext.startActivity(Intent.createChooser(intent, appContext.getString(R.string.share_one)).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            })
+            appContext.startActivity(
+                Intent.createChooser(
+                    intent,
+                    appContext.getString(R.string.sharing_select_an_application)
+                ).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                })
             return null
-        }else{
-            return appContext.getString(R.string.share_no)
+        } else {
+            return appContext.getString(R.string.sharing_there_are_no_apps)
         }
     }
-    fun openEmail(emailData:EmailData){
-        val intent = Intent(Intent.ACTION_SENDTO).apply {
+
+    fun openEmail(emailData: EmailData) {
+        intent.apply {
+            action = Intent.ACTION_SENDTO
             data = Uri.parse(emailData.uriMailto)
             putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.mailAddress))
             putExtra(Intent.EXTRA_SUBJECT, emailData.mailTheme)
@@ -35,8 +43,10 @@ class ExternalNavigator(
         }
         appContext.startActivity(intent)
     }
-    fun openTerms(value:String){
-        val intent = Intent(Intent.ACTION_VIEW).apply {
+
+    fun openTerms(value: String) {
+        intent.apply {
+            action = Intent.ACTION_VIEW
             data = Uri.parse(value)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }

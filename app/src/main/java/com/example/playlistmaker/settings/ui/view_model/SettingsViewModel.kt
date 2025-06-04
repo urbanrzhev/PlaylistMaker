@@ -17,6 +17,7 @@ class SettingsViewModel(
 
     fun share(callback: (String?) -> Unit) {
         callback(sharingInteractor.shareApp())
+        //callback(sharingInteractor.go())
     }
 
     fun email() {

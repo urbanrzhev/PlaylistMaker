@@ -2,6 +2,7 @@ package com.example.playlistmaker.creator
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.net.ConnectivityManager
@@ -50,28 +51,33 @@ object Creator {
     }
 
     fun getAppContext(): Context = applicationContext
-    private fun getITunesApiService():ITunesApiService{
+    private fun getITunesApiService(): ITunesApiService {
         return Retrofit.Builder()
             .baseUrl("https://itunes.apple.com")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ITunesApiService::class.java)
     }
-    private fun getConnectivityManager():ConnectivityManager{
+
+    private fun getConnectivityManager(): ConnectivityManager {
         return CheckInternetManager(applicationContext)
             .getSystemService()
     }
+
     private fun getTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(
             getNetwokrClient()
         )
     }
-    private fun getNetwokrClient():NetworkClient{
-        return RetrofitNetworkClient(getITunesApiService(),getConnectivityManager())
+
+    private fun getNetwokrClient(): NetworkClient {
+        return RetrofitNetworkClient(getITunesApiService(), getConnectivityManager())
     }
-    private fun getSharedPreferences(key:String):SharedPreferences{
-        return applicationContext.getSharedPreferences("my_all_preferences",MODE_PRIVATE)
+
+    private fun getSharedPreferences(key: String): SharedPreferences {
+        return applicationContext.getSharedPreferences(key, MODE_PRIVATE)
     }
+
     private fun getPreferencesRepository(): SharedPreferencesManager {
         return SharedPreferencesManagerImpl(getSharedPreferences("my_all_preferences"), Gson())
     }
@@ -79,8 +85,13 @@ object Creator {
     private fun getMediaPlayerRepository(): MediaPlayerRepository {
         return MediaPlayerRepositoryImpl(getMediaPlayer())
     }
-    private fun getExecutor():Executor{
+
+    private fun getExecutor(): Executor {
         return Executors.newCachedThreadPool()
+    }
+
+    private fun getExternalNavigator(): ExternalNavigator {
+        return ExternalNavigator(applicationContext, Intent())
     }
 
     fun provideTracksInteractor(): TracksInteractor {
@@ -122,6 +133,6 @@ object Creator {
     }
 
     fun provideSharingInteractor(): SharingInteractor {
-        return SharingInteractorImpl(getAppContext(), ExternalNavigator(getAppContext()))
+        return SharingInteractorImpl(getAppContext(), getExternalNavigator())
     }
 }

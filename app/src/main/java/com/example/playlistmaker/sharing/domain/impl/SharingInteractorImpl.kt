@@ -10,6 +10,7 @@ class SharingInteractorImpl(
     private val context: Context,
     private val externalNavigator: ExternalNavigator,
 ) : SharingInteractor {
+
     override fun shareApp(): String? {
         return externalNavigator.shareLink(getShareAppLink())
     }
@@ -28,9 +29,9 @@ class SharingInteractorImpl(
 
     private fun getSupportEmailData(): EmailData = EmailData(
         uriMailto = context.getString(R.string.uri_mailto),
-        mailAddress = context.getString(R.string.my_mail_adress),
-        mailTheme = context.getString(R.string.my_mail_thema),
-        mailMessage = context.getString(R.string.my_mail_message)
+        mailAddress = context.getString(R.string.mail_adress),
+        mailTheme = context.getString(R.string.mail_thema),
+        mailMessage = context.getString(R.string.mail_message)
     )
 
     private fun getTermsLink(): String {
