@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
+import androidx.core.view.ViewCompatpl
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.main.ui.activity.MainActivity
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
@@ -33,14 +33,15 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
         installThemeSwitcher(binding.themeSwitcher)
+        viewModel.observeShare.observe(this){
+                if (it != null)
+                    showMessage(it)
+        }
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
             viewModel.setTheme(checked)
         }
         binding.buttonTextShareTheApp.setOnClickListener {
-            viewModel.share {
-                if (it != null)
-                    showMessage(it)
-            }
+            viewModel.share() 
         }
         binding.buttonTextWriteToSupport.setOnClickListener {
             viewModel.email()
