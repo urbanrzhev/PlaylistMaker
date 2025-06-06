@@ -1,5 +1,7 @@
 package com.example.playlistmaker.settings.ui.view_model
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.app.App
 import com.example.playlistmaker.common.domain.api.GetThemeUseCase
@@ -10,23 +12,27 @@ class SettingsViewModel(
     private val getThemeUseCase: GetThemeUseCase,
     private val sharingInteractor: SharingInteractor
 ) : ViewModel() {
-    private var errorShare = MutableLiveData<String>(null)
-    fun observeShare():LiveData<String> = errorShare
+    private var errors = MutableLiveData<String?>(null)
+    fun observeErrors(): LiveData<String?> = errors
     fun getTheme(): Boolean = getThemeUseCase.execute()
     fun setTheme(value: Boolean) {
         app.switchTheme(value)
     }
 
     fun share() {
-        val error = sharingInteractor.shareApp()
-        error?: errorShare.value = error
+        errorMessage(sharingInteractor.shareApp())
     }
 
     fun email() {
-        sharingInteractor.openSupport()
+        errorMessage(sharingInteractor.openEmail())
     }
 
     fun terms() {
-        sharingInteractor.openTerms()
+        errorMessage(sharingInteractor.openTerms())
+    }
+
+    private fun errorMessage(error:String?){
+        if(error!=null)
+            errors.value = error
     }
 }

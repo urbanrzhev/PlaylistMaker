@@ -15,12 +15,12 @@ class SharingInteractorImpl(
         return externalNavigator.shareLink(getShareAppLink())
     }
 
-    override fun openTerms() {
-        externalNavigator.openTerms(getTermsLink())
+    override fun openTerms():String? {
+        return externalNavigator.openTerms(getTermsLink())
     }
 
-    override fun openSupport() {
-        externalNavigator.openEmail(getSupportEmailData())
+    override fun openEmail():String? {
+        return externalNavigator.openEmail(getSupportEmailData())
     }
 
     private fun getShareAppLink(): String {

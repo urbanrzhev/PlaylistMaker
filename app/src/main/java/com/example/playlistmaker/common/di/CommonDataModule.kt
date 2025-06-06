@@ -7,7 +7,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val commonDataModule = module{
-    factory<Gson> {
+    single<Gson> {
         Gson()
     }
     single<SharedPreferences>{

@@ -33,14 +33,15 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
         installThemeSwitcher(binding.themeSwitcher)
+        viewModel.observeErrors().observe(this){
+                if (it != null)
+                    showMessage(it)
+        }
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
             viewModel.setTheme(checked)
         }
         binding.buttonTextShareTheApp.setOnClickListener {
-            viewModel.share {
-                if (it != null)
-                    showMessage(it)
-            }
+            viewModel.share() 
         }
         binding.buttonTextWriteToSupport.setOnClickListener {
             viewModel.email()

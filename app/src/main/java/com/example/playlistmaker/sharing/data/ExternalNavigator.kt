@@ -32,7 +32,7 @@ class ExternalNavigator(
         }
     }
 
-    fun openEmail(emailData: EmailData) {
+    fun openEmail(emailData: EmailData):String? {
         intent.apply {
             action = Intent.ACTION_SENDTO
             data = Uri.parse(emailData.uriMailto)
@@ -41,15 +41,24 @@ class ExternalNavigator(
             putExtra(Intent.EXTRA_TEXT, emailData.mailMessage)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        appContext.startActivity(intent)
+        return startApp(intent)
     }
 
-    fun openTerms(value: String) {
+    fun openTerms(value: String):String? {
         intent.apply {
             action = Intent.ACTION_VIEW
             data = Uri.parse(value)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        appContext.startActivity(intent)
+        return startApp(intent)
+    }
+
+    private fun startApp(intent:Intent):String?{
+        try{
+            appContext.startActivity(intent)
+        }catch (e:Exception){
+            return appContext.getString(R.string.sharing_there_are_no_apps)
+        }
+        return null
     }
 }
