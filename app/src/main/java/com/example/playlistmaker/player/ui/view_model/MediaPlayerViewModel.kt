@@ -11,6 +11,8 @@ import com.example.playlistmaker.common.util.TimeFormat
 import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.api.SetStartActivityUseCase
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.getKoin
 
 class MediaPlayerViewModel(
     private val getActiveTrackUseCase: GetActiveTrackUseCase,
@@ -34,12 +36,16 @@ class MediaPlayerViewModel(
                 enablePlayButton.value = true
             }, consumerCompleted = {
                 backgroundPlayButton.value = R.drawable.play_play
-                timeProgressLiveData.value = TimeFormat(DELAY_NULL).getTimeMM_SS()
+                timeProgressLiveData.value = getKoin().get<TimeFormat> {
+                    parametersOf(DELAY_NULL)
+                }.getTimeMM_SS()
                 timeProgress(false)
             })
         }
         playStopRunnable = Runnable {
-            timeProgressLiveData.value = TimeFormat(mediaPlayer.currentPosition()).getTimeMM_SS()
+            timeProgressLiveData.value = getKoin().get<TimeFormat> {
+                parametersOf(mediaPlayer.currentPosition())
+            }.getTimeMM_SS()
             mainThreadHandler.postDelayed(playStopRunnable, DELAY)
         }
     }

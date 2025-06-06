@@ -7,6 +7,8 @@ import com.example.playlistmaker.common.util.TimeFormat
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.search.domain.models.Resource
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.getKoin
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
 
@@ -18,7 +20,9 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                 Track(
                     trackName = it.trackName,
                     artistName = it.artistName,
-                    trackTimeNormal = TimeFormat(it.trackTimeMillis).getTimeMM_SS(),
+                    trackTimeNormal =  getKoin().get<TimeFormat> {
+                        parametersOf(it.trackTimeMillis)
+                    }.getTimeMM_SS(),
                     artworkUrl100 = it.artworkUrl100,
                     previewUrl = it.previewUrl,
                     collectionName = it.collectionName,

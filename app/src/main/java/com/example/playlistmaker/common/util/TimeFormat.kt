@@ -2,15 +2,14 @@ package com.example.playlistmaker.common.util
 
 import java.text.SimpleDateFormat
 import java.util.IllegalFormatException
-import java.util.Locale
 
-class TimeFormat(private val timeMillis: String) {
-    constructor(timeMillisLong: Long) : this(timeMillisLong.toString())
-    constructor(timeMillisInt: Int) : this(timeMillisInt.toString())
+class TimeFormat(private val timeMillis: String,private val simpleDateFormat: SimpleDateFormat) {
+    constructor(timeMillisLong: Long,  simpleDateFormat: SimpleDateFormat) : this(timeMillisLong.toString(),simpleDateFormat)
+    constructor(timeMillisInt: Int,  simpleDateFormat: SimpleDateFormat) : this(timeMillisInt.toString(),simpleDateFormat)
 
     fun getTimeMM_SS(): String {
         return try {
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(timeMillis.toInt())
+            simpleDateFormat.format(timeMillis.toInt())
         } catch (e: Exception) {
             when (e) {
                 is NullPointerException -> "error01"
