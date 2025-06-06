@@ -5,7 +5,6 @@ import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
-import android.net.ConnectivityManager
 import com.example.playlistmaker.app.domain.api.SetThemeUseCase
 import com.example.playlistmaker.player.data.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -27,7 +26,6 @@ import com.example.playlistmaker.common.domain.api.GetThemeUseCase
 import com.example.playlistmaker.main.domain.api.GetStartActivityUseCase
 import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
 import com.example.playlistmaker.player.domain.api.SetStartActivityUseCase
-import com.example.playlistmaker.search.data.network.CheckInternetManager
 import com.example.playlistmaker.search.data.network.ITunesApiService
 import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
@@ -59,11 +57,6 @@ object Creator {
             .create(ITunesApiService::class.java)
     }
 
-    private fun getConnectivityManager(): ConnectivityManager {
-        return CheckInternetManager(applicationContext)
-            .getSystemService()
-    }
-
     private fun getTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(
             getNetwokrClient()
@@ -71,7 +64,7 @@ object Creator {
     }
 
     private fun getNetwokrClient(): NetworkClient {
-        return RetrofitNetworkClient(getITunesApiService(), getConnectivityManager())
+        return RetrofitNetworkClient(getITunesApiService(), applicationContext)
     }
 
     private fun getSharedPreferences(key: String): SharedPreferences {

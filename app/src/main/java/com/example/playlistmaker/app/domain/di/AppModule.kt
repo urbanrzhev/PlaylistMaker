@@ -4,7 +4,7 @@ import com.example.playlistmaker.app.domain.api.SetThemeUseCase
 import com.example.playlistmaker.app.domain.use_case.SetThemeUseCaseImpl
 import org.koin.dsl.module
 
-val appUseCaseModule = module{
+val appModule = module{
     single<SetThemeUseCase> {
         SetThemeUseCaseImpl(get())
     }
