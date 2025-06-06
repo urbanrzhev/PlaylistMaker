@@ -10,14 +10,16 @@ class SettingsViewModel(
     private val getThemeUseCase: GetThemeUseCase,
     private val sharingInteractor: SharingInteractor
 ) : ViewModel() {
+    private var errorShare = MutableLiveData<String>(null)
+    fun observeShare():LiveData<String> = errorShare
     fun getTheme(): Boolean = getThemeUseCase.execute()
     fun setTheme(value: Boolean) {
         app.switchTheme(value)
     }
 
-    fun share(callback: (String?) -> Unit) {
-        callback(sharingInteractor.shareApp())
-        //callback(sharingInteractor.go())
+    fun share() {
+        val error = sharingInteractor.shareApp()
+        error?: errorShare.value = error
     }
 
     fun email() {
