@@ -1,6 +1,9 @@
 package com.example.playlistmaker.creator
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.Intent
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import com.example.playlistmaker.app.domain.api.SetThemeUseCase
 import com.example.playlistmaker.player.data.MediaPlayerRepositoryImpl
@@ -13,7 +16,7 @@ import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.player.domain.impl.MediaPlayerInteractorImpl
-import com.example.playlistmaker.search.domain.interactorImpl.TracksInteractorImpl
+import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.player.domain.use_case.GetActiveTrackUseCaseImpl
 import com.example.playlistmaker.main.domain.use_case.GetStartActivityUseCaseImpl
 import com.example.playlistmaker.common.domain.use_case.GetThemeUseCaseImpl
@@ -23,13 +26,20 @@ import com.example.playlistmaker.common.domain.api.GetThemeUseCase
 import com.example.playlistmaker.main.domain.api.GetStartActivityUseCase
 import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
 import com.example.playlistmaker.player.domain.api.SetStartActivityUseCase
+import com.example.playlistmaker.search.data.network.ITunesApiService
+import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.SetActiveTrackUseCase
-import com.example.playlistmaker.search.domain.interactorImpl.HistoryInteractorImpl
+import com.example.playlistmaker.search.domain.impl.HistoryInteractorImpl
 import com.example.playlistmaker.search.domain.use_case.SetActiveTrackUseCaseImpl
 import com.example.playlistmaker.sharing.data.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
+import com.google.gson.Gson
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 object Creator {
     private lateinit var applicationContext: Context
@@ -39,26 +49,50 @@ object Creator {
     }
 
     fun getAppContext(): Context = applicationContext
+    private fun getITunesApiService(): ITunesApiService {
+        return Retrofit.Builder()
+            .baseUrl("https://itunes.apple.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ITunesApiService::class.java)
+    }
+
     private fun getTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(
-            RetrofitNetworkClient(getAppContext())
+            getNetwokrClient()
         )
     }
 
-    fun getPreferencesRepository(): SharedPreferencesManager {
-        return SharedPreferencesManagerImpl()
+    private fun getNetwokrClient(): NetworkClient {
+        return RetrofitNetworkClient(getITunesApiService(), applicationContext)
+    }
+
+    private fun getSharedPreferences(key: String): SharedPreferences {
+        return applicationContext.getSharedPreferences(key, MODE_PRIVATE)
+    }
+
+    private fun getPreferencesRepository(): SharedPreferencesManager {
+        return SharedPreferencesManagerImpl(getSharedPreferences("my_all_preferences"), Gson())
     }
 
     private fun getMediaPlayerRepository(): MediaPlayerRepository {
         return MediaPlayerRepositoryImpl(getMediaPlayer())
     }
 
+    private fun getExecutor(): Executor {
+        return Executors.newCachedThreadPool()
+    }
+
+    private fun getExternalNavigator(): ExternalNavigator {
+        return ExternalNavigator(applicationContext, Intent())
+    }
+
     fun provideTracksInteractor(): TracksInteractor {
-        return TracksInteractorImpl(getTracksRepository())
+        return TracksInteractorImpl(getTracksRepository(), getExecutor())
     }
 
     fun provideSearchHistoryInteractor(): HistoryInteractor {
-        return HistoryInteractorImpl(SharedPreferencesManagerImpl())
+        return HistoryInteractorImpl(getPreferencesRepository())
     }
 
     fun provideGetActiveTrackUseCase(): GetActiveTrackUseCase {
@@ -92,6 +126,6 @@ object Creator {
     }
 
     fun provideSharingInteractor(): SharingInteractor {
-        return SharingInteractorImpl(getAppContext(), ExternalNavigator(getAppContext()))
+        return SharingInteractorImpl(getAppContext(), getExternalNavigator())
     }
 }

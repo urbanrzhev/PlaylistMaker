@@ -22,4 +22,11 @@
     <style name="media_library_value_data_track" parent="base_text_oneline_ellipsize_gravityvertical">
         <item name="android:textColor">?attr/value_text_media_library_color</item>
     </style>
+    <string name="country">Страна  </string>
+    <string name="ghanr">Жанр  </string>
+    <string name="lengthTrack">Длительность  </string>
+    <string name="album">Альбом  </string>
+    <string name="year">Год  </string>
+    <string name="crash_error">Внутренняя ошибка приложения. Обратитесь к разработчику</string>
+    <string name="clear_search" translatable="false">Очистить</string>
 </resources>

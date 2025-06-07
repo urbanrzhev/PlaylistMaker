@@ -1,39 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="country">Страна  </string>
-    <string name="ghanr">Жанр  </string>
-    <string name="lengthTrack">Длительность  </string>
-    <string name="album">Альбом  </string>
-    <string name="year">Год  </string>
-    <string name="punkt_bold">\u2022  \u26AB</string>
-    <string name="secret_code">myCode</string>
-    <string name="nothing_for_search">Ничего не нашлось</string>
-    <string name="load_error_for_search">Проблемы со связью</string>
-    <string name="you_were_looking_for">Вы искали</string>
-    <string name="clear_history">Очистить историю</string>
-    <string name="load_error_one_for_search">Загрузка не удалась.</string>
-    <string name="load_error_one_for_search_double">Проверьте подключение к интернету</string>
-    <string name="load_error_two_for_search">На сервере произошла ошибка</string>
-    <string name="load_error_two_for_search_double">Ошибка сервера</string>
-    <string name="illegal_state_exception">no my holder</string>
-    <string name="crash_error">Внутренняя ошибка приложения. Обратитесь к разработчику</string>
-    <string name="share_one">выберите приложение</string>
-    <string name="share_no">Нет доступных приложений</string>
-    <string name="practicum_android_link">https://practicum.yandex.ru/profile/android-developer/</string>
-    <string name="app_name" translatable="false">Playlist maker</string>
-    <string name="search" translatable="false">Поиск</string>
-    <string name="media_library" translatable="false">Медиатека</string>
     <string name="settings" translatable="false">Настройки</string>
+    <string name="secret_code">myCode</string>
+    <string name="illegal_state_exception">no my holder</string>
+    <string name="app_name" translatable="false">Playlist maker</string>
     <string name="default_image" translatable="false">картинка</string>
-    <string name="share" translatable="false">Поделиться приложением</string>
-    <string name="support" translatable="false">Написать в поддержку</string>
-    <string name="forward" translatable="false">Пользовательское соглашение</string>
-    <string name="night_theme" translatable="false">Темная тема</string>
-    <string name="clear_search" translatable="false">Очистить</string>
-    <string name="update" translatable="false">Обновить</string>
-    <string name="practicum_offer" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
-    <string name="uri_mailto" translatable="false">mailto:</string>
-    <string name="my_mail_adress" translatable="false">frolovcite@yandex.ru</string>
-    <string name="my_mail_thema" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
-    <string name="my_mail_message" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
 </resources>

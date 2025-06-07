@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sharing_select_an_application">выберите приложение</string>
+    <string name="sharing_there_are_no_apps">Нет доступных приложений</string>
+    <string name="uri_mailto" translatable="false">mailto:</string>
+    <string name="mail_adress" translatable="false">frolovcite@yandex.ru</string>
+    <string name="mail_thema" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="mail_message" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="practicum_android_link">https://practicum.yandex.ru/profile/android-developer/</string>
+    <string name="practicum_offer" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
+</resources>

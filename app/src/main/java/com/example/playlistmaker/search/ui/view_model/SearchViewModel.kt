@@ -5,15 +5,10 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.common.domain.models.Track
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.SetActiveTrackUseCase
 import com.example.playlistmaker.search.domain.api.TracksInteractor
-import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.domain.models.State
 
 class SearchViewModel(
@@ -78,22 +73,7 @@ class SearchViewModel(
     private fun searchTracks(expression: String) {
         progressBarLiveData.value = true
         tracksInteractor.searchTracks(expression = expression, TracksInteractor.TracksConsumer {
-            when (it) {
-                is Resource.Success -> {
-                    if (it.data.isNotEmpty())
-                        stateLiveData.postValue(State.Success(it.data))
-                    else
-                        stateLiveData.postValue(State.Empty())
-                }
-
-                is Resource.Error -> {
-                    stateLiveData.postValue(
-                        State.Error(
-                            Creator.getAppContext().getString(it.message)
-                        )
-                    )
-                }
-            }
+            stateLiveData.postValue(it)
             progressBarLiveData.postValue(false)
         })
     }
@@ -101,16 +81,5 @@ class SearchViewModel(
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY: Long = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SearchViewModel(
-                    setActiveTrackUseCase =
-                    Creator.provideSetActiveTrackUseCase(),
-                    tracksInteractor = Creator.provideTracksInteractor(),
-                    searchHistoryInteractor =
-                    Creator.provideSearchHistoryInteractor()
-                )
-            }
-        }
     }
 }

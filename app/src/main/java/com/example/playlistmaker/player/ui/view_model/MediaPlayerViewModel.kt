@@ -5,18 +5,16 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.common.util.TimeFormat
 import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.api.SetStartActivityUseCase
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.getKoin
 
-class AudioPlayerViewModel(
+class MediaPlayerViewModel(
     private val getActiveTrackUseCase: GetActiveTrackUseCase,
     private val mediaPlayer: MediaPlayerInteractor,
     private val setStartActivityUseCase: SetStartActivityUseCase
@@ -38,12 +36,16 @@ class AudioPlayerViewModel(
                 enablePlayButton.value = true
             }, consumerCompleted = {
                 backgroundPlayButton.value = R.drawable.play_play
-                timeProgressLiveData.value = TimeFormat(DELAY_NULL).getTimeMM_SS()
+                timeProgressLiveData.value = getKoin().get<TimeFormat> {
+                    parametersOf(DELAY_NULL)
+                }.getTimeMM_SS()
                 timeProgress(false)
             })
         }
         playStopRunnable = Runnable {
-            timeProgressLiveData.value = TimeFormat(mediaPlayer.currentPosition()).getTimeMM_SS()
+            timeProgressLiveData.value = getKoin().get<TimeFormat> {
+                parametersOf(mediaPlayer.currentPosition())
+            }.getTimeMM_SS()
             mainThreadHandler.postDelayed(playStopRunnable, DELAY)
         }
     }
@@ -89,14 +91,5 @@ class AudioPlayerViewModel(
     companion object {
         private const val DELAY = 400L
         private const val DELAY_NULL = 0L
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                AudioPlayerViewModel(
-                    getActiveTrackUseCase = Creator.provideGetActiveTrackUseCase(),
-                    mediaPlayer = Creator.provideMediaPlayerInteractor(),
-                    setStartActivityUseCase = Creator.provideSetStartActivityUseCase()
-                )
-            }
-        }
     }
 }
