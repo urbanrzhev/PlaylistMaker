@@ -8,6 +8,7 @@ import com.example.playlistmaker.app.domain.use_case.SetThemeUseCaseImpl
 import com.example.playlistmaker.common.di.commonModule
 import com.example.playlistmaker.common.domain.api.GetThemeUseCase
 import com.example.playlistmaker.main.di.mainModule
+import com.example.playlistmaker.media_library.di.mediaLibraryModule
 import com.example.playlistmaker.player.di.mediaPlayerModule
 import com.example.playlistmaker.search.di.searchModule
 import com.example.playlistmaker.settings.ui.di.settingsModule
@@ -33,7 +34,8 @@ class App : Application() {
                 mediaPlayerModule,
                 searchModule,
                 settingsModule,
-                sharingModule
+                sharingModule,
+                mediaLibraryModule
             )
         }
         darkTheme = themeGet.execute()

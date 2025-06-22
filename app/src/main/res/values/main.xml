@@ -22,5 +22,4 @@
     </style>
     <dimen name="main_layout_padding">16dp</dimen>
     <string name="search" translatable="false">Поиск</string>
-    <string name="media_library" translatable="false">Медиатека</string>
 </resources>

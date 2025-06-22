@@ -38,6 +38,7 @@ android {
 }
 
 dependencies {
+    implementation (libs.material.v180)
     implementation (libs.insert.koin.koin.android)
     implementation (libs.androidx.core.ktx.v190)
     implementation (libs.retrofit)

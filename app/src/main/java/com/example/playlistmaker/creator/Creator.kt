@@ -5,6 +5,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
+import android.net.ConnectivityManager
 import com.example.playlistmaker.app.domain.api.SetThemeUseCase
 import com.example.playlistmaker.player.data.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -62,9 +63,13 @@ object Creator {
             getNetwokrClient()
         )
     }
-
+    private fun getConnectivityManager():ConnectivityManager{
+        return applicationContext.getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+    }
     private fun getNetwokrClient(): NetworkClient {
-        return RetrofitNetworkClient(getITunesApiService(), applicationContext)
+        return RetrofitNetworkClient(getITunesApiService(), getConnectivityManager())
     }
 
     private fun getSharedPreferences(key: String): SharedPreferences {
