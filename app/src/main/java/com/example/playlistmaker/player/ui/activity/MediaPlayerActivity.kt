@@ -44,7 +44,7 @@ class MediaPlayerActivity : AppCompatActivity() {
             viewModel.control()
         }
         binding.vectorBack.setOnClickListener {
-            onBackPressed()
+            this.onBackPressedDispatcher.onBackPressed()
         }
         loadTrack(viewModel.getActiveTrack())
         setStartActivity(true)

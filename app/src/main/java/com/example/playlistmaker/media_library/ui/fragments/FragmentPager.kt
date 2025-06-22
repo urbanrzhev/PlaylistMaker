@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.playlistmaker.common.util.BindingFragment
-import com.example.playlistmaker.databinding.FragmentMediaLibraryHostBinding
+import com.example.playlistmaker.databinding.FragmentMediaLibraryPagerBinding
 import com.example.playlistmaker.media_library.ui.adapters.MediaLibraryAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
-class FragmentContainer:BindingFragment<FragmentMediaLibraryHostBinding>() {
+class FragmentPager:BindingFragment<FragmentMediaLibraryPagerBinding>() {
     private val mediator:TabLayoutMediator by lazy {
         TabLayoutMediator(binding.tabLayout,binding.pager){tab,position->
             when(position){
@@ -21,8 +21,8 @@ class FragmentContainer:BindingFragment<FragmentMediaLibraryHostBinding>() {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentMediaLibraryHostBinding {
-        return FragmentMediaLibraryHostBinding.inflate(inflater, container, false)
+    ): FragmentMediaLibraryPagerBinding {
+        return FragmentMediaLibraryPagerBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,6 +36,6 @@ class FragmentContainer:BindingFragment<FragmentMediaLibraryHostBinding>() {
         mediator.detach()
     }
     companion object{
-        fun getInstance() = FragmentContainer()
+        fun getInstance() = FragmentPager()
     }
 }

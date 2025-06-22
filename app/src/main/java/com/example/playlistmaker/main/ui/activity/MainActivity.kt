@@ -41,9 +41,6 @@ class MainActivity : AppCompatActivity() {
         }
         val listenerButtonMediaLibrary: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                /*val intent = Intent(this@MainActivity, MediaPlayerActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                }*/
                 val intent = Intent(this@MainActivity, ActivityMediaLibrary::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 }

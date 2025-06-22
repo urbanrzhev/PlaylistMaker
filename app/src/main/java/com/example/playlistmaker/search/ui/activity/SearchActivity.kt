@@ -14,7 +14,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
-import com.example.playlistmaker.main.ui.activity.MainActivity
 import com.example.playlistmaker.search.ui.adapters_holders.TracksAdapter
 import com.example.playlistmaker.search.ui.adapters_holders.TracksHistoryAdapter
 import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
@@ -104,8 +103,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.toolbarSearch.setNavigationOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            this.onBackPressedDispatcher.onBackPressed()
         }
         adapterHistory.setTrackList(viewModel.getHistory())
     }

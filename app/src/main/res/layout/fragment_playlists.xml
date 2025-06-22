@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/text"
-        style="@style/fragment_empty"
+        style="@style/fragment_empty_playlists"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -33,7 +33,7 @@
         style="@style/button_system"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:text="@string/new_playlist"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
