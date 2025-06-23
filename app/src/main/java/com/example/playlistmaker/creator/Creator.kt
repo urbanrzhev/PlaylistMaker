@@ -19,14 +19,12 @@ import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.player.domain.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.player.domain.use_case.GetActiveTrackUseCaseImpl
-import com.example.playlistmaker.main.domain.use_case.GetStartActivityUseCaseImpl
+import com.example.playlistmaker.common.domain.use_case.SetStartActivityUseCaseImpl
 import com.example.playlistmaker.common.domain.use_case.GetThemeUseCaseImpl
-import com.example.playlistmaker.player.domain.use_case.SetStartActivityUseCaseImpl
 import com.example.playlistmaker.app.domain.use_case.SetThemeUseCaseImpl
 import com.example.playlistmaker.common.domain.api.GetThemeUseCase
-import com.example.playlistmaker.main.domain.api.GetStartActivityUseCase
+import com.example.playlistmaker.common.domain.api.SetStartActivityUseCase
 import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
-import com.example.playlistmaker.player.domain.api.SetStartActivityUseCase
 import com.example.playlistmaker.search.data.network.ITunesApiService
 import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
@@ -104,8 +102,10 @@ object Creator {
         return GetActiveTrackUseCaseImpl(getPreferencesRepository())
     }
 
-    fun provideGetStartActivityUseCase(): GetStartActivityUseCase {
-        return GetStartActivityUseCaseImpl(getPreferencesRepository())
+    fun provideGetStartActivityUseCase(): SetStartActivityUseCase {
+        return SetStartActivityUseCaseImpl(
+            getPreferencesRepository()
+        )
     }
 
     fun provideGetThemeUseCase(): GetThemeUseCase {

@@ -10,6 +10,15 @@ class SharedPreferencesManagerImpl(
     private val sharedPreferences: SharedPreferences,
     private val gson:Gson
 ): SharedPreferencesManager {
+    override fun getString(key: String): String =
+        sharedPreferences.getString(key, "").toString()
+
+    override fun setString(key: String, data: String) {
+        sharedPreferences.edit()
+            .putString(key, data)
+            .apply()
+    }
+
     override fun getBoolean(key: String): Boolean =
         sharedPreferences.getBoolean(key, false)
 

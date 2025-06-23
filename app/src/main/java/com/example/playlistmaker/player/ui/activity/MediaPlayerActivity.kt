@@ -47,7 +47,6 @@ class MediaPlayerActivity : AppCompatActivity() {
             this.onBackPressedDispatcher.onBackPressed()
         }
         loadTrack(viewModel.getActiveTrack())
-        setStartActivity(true)
     }
 
     override fun onPause() {
@@ -56,17 +55,13 @@ class MediaPlayerActivity : AppCompatActivity() {
         viewModel.pause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        setStartActivity(false)
+    override fun onResume() {
+        super.onResume()
+        viewModel.setStartActivity()
     }
 
     private fun loadTrack(model: Track) {
         ShowActiveTrack(this, binding, model)
             .show()
-    }
-
-    private fun setStartActivity(value: Boolean) {
-        viewModel.setThisStartActivity(value)
     }
 }

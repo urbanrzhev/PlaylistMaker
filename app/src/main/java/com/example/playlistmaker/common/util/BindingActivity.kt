@@ -3,7 +3,6 @@ package com.example.playlistmaker.common.util
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
 import androidx.viewbinding.ViewBinding
 
 abstract class BindingActivity<T : ViewBinding>(
@@ -20,7 +19,7 @@ abstract class BindingActivity<T : ViewBinding>(
         _binding = createBinding(layoutInflater)
         setContentView(binding.root)
     }
-    //abstract fun getLifeCycle():Lifecycle
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
