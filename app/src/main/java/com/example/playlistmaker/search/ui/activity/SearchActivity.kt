@@ -117,8 +117,8 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         textWatcher.let { binding.editSearchText.removeTextChangedListener(it) }
+        super.onDestroy()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
