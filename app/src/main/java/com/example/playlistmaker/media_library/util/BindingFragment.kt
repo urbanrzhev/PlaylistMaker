@@ -1,4 +1,4 @@
-package com.example.playlistmaker.common.util
+package com.example.playlistmaker.media_library.util
 
 import android.os.Bundle
 import android.view.LayoutInflater

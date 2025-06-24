@@ -1,24 +1,27 @@
 package com.example.playlistmaker.player.ui.activity
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
+import com.example.playlistmaker.common.util.BindingActivity
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MediaPlayerActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityAudioPlayerBinding
+class MediaPlayerActivity : BindingActivity<ActivityAudioPlayerBinding>() {
     private val viewModel: MediaPlayerViewModel by viewModel()
+
+    override fun createBinding(inflater: LayoutInflater): ActivityAudioPlayerBinding {
+        return ActivityAudioPlayerBinding.inflate(inflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

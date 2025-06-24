@@ -6,14 +6,15 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
+import com.example.playlistmaker.common.util.BindingActivity
 import com.example.playlistmaker.search.ui.adapters_holders.TracksAdapter
 import com.example.playlistmaker.search.ui.adapters_holders.TracksHistoryAdapter
 import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
@@ -22,10 +23,9 @@ import com.example.playlistmaker.search.domain.models.State
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : BindingActivity<ActivitySearchBinding>() {
     private val handler = Handler(Looper.getMainLooper())
     private val viewModel: SearchViewModel by viewModel()
-    private lateinit var binding: ActivitySearchBinding
     private var temporaryEditText = ""
     private lateinit var textWatcher: TextWatcher
     private var isClickAllowed = true
@@ -37,10 +37,13 @@ class SearchActivity : AppCompatActivity() {
         goAudioPlayer(it)
     }
 
+    override fun createBinding(inflater: LayoutInflater): ActivitySearchBinding {
+        return ActivitySearchBinding.inflate(inflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -106,6 +109,11 @@ class SearchActivity : AppCompatActivity() {
             this.onBackPressedDispatcher.onBackPressed()
         }
         adapterHistory.setTrackList(viewModel.getHistory())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.setStartActivity()
     }
 
     override fun onDestroy() {

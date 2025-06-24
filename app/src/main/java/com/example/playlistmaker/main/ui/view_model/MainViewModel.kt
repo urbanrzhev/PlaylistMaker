@@ -17,7 +17,7 @@ class MainViewModel(
         setStartActivityUseCase.execute(MAIN_ACTIVITY)
     }
 
-    fun executeActivity() {
+    fun initActivity() {
         val intent:Intent? = when (getStartActivityUseCase.execute()) {
             PLAYER_ACTIVITY -> Intent(appContext, MediaPlayerActivity::class.java)
             MEDIA_LIBRARY_ACTIVITY -> Intent(appContext, MediaLibraryActivity::class.java)
