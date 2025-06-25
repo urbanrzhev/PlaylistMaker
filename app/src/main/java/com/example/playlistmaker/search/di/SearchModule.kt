@@ -1,5 +1,7 @@
 package com.example.playlistmaker.search.di
 
+import android.content.Context
+import android.net.ConnectivityManager
 import com.example.playlistmaker.search.data.network.ITunesApiService
 import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -22,7 +24,7 @@ import java.util.concurrent.Executors
 
 val searchModule = module {
     viewModel{
-        SearchViewModel(get(),get(),get())
+        SearchViewModel(get(),get(),get(),get())
     }
     factory<TracksRepository> {
         TracksRepositoryImpl(get())
@@ -31,7 +33,7 @@ val searchModule = module {
         SetActiveTrackUseCaseImpl(get())
     }
     factory<NetworkClient>{
-        RetrofitNetworkClient(get(),androidContext())
+        RetrofitNetworkClient(get(),get())
     }
     factory<ITunesApiService> {
         Retrofit.Builder()
@@ -48,5 +50,10 @@ val searchModule = module {
     }
     factory<Executor> {
         Executors.newCachedThreadPool()
+    }
+    factory<ConnectivityManager> {
+        androidContext().getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
     }
 }

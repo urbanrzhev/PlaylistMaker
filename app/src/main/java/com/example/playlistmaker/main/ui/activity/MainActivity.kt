@@ -2,21 +2,26 @@ package com.example.playlistmaker.main.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker.common.util.BindingActivity
 import com.example.playlistmaker.databinding.ActivityMainBinding
 import com.example.playlistmaker.main.ui.view_model.MainViewModel
-import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
+import com.example.playlistmaker.media_library.ui.activity.MediaLibraryActivity
 import com.example.playlistmaker.search.ui.activity.SearchActivity
 import com.example.playlistmaker.settings.ui.activity.SettingsActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BindingActivity<ActivityMainBinding>() {
     private lateinit var viewBinding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModel()
+    override fun createBinding(inflater: LayoutInflater): ActivityMainBinding {
+        return ActivityMainBinding.inflate(inflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -33,14 +38,14 @@ class MainActivity : AppCompatActivity() {
             )
             insets
         }
-        selectStartActivity()
+        viewModel.initActivity()
         viewBinding.buttonSearch.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
         val listenerButtonMediaLibrary: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val intent = Intent(this@MainActivity, MediaPlayerActivity::class.java).apply {
+                val intent = Intent(this@MainActivity, MediaLibraryActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 }
                 startActivity(intent)
@@ -55,12 +60,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun selectStartActivity(){
-        if(viewModel.startPlayerActivity()){
-            val intent = Intent(this, MediaPlayerActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            }
-            startActivity(intent)
-        }
+    override fun onResume() {
+        super.onResume()
+        setStartActivity()
+    }
+
+    private fun setStartActivity() {
+        viewModel.setStartActivity()
     }
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="textMediator" format="color"/>
+    <string name="media_library">Медиатека</string>
+    <string name="yours_media_library_empty">Ваша медиатека пуста</string>
+    <string name="yours_playlists_empty">Вы не создали \n ни одного плейлиста</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <style name="fragment_empty_playlists">
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@style/textAppearanceMedium19sp500w</item>
+    </style>
+    <style name="fragment_empty_favorites_track">
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@style/textAppearanceMedium19sp400w</item>
+    </style>
+</resources>
