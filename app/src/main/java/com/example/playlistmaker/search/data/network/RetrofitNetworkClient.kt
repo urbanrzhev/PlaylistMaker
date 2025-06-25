@@ -8,7 +8,7 @@ import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 
 class RetrofitNetworkClient(
     private val iTunesApiService: ITunesApiService,
-    private val context: Context
+    private val connectivityManager: ConnectivityManager
 ) : NetworkClient {
     override fun doRequest(dto: Any): Response {
         if (!isConnected()) {
@@ -28,9 +28,6 @@ class RetrofitNetworkClient(
     }
 
     private fun isConnected(): Boolean {
-        val connectivityManager = context.getSystemService(
-                Context.CONNECTIVITY_SERVICE
-            ) as ConnectivityManager
         val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         if (capabilities != null) {
             when {

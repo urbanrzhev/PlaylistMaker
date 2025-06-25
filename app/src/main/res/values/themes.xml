@@ -1,5 +1,6 @@
 <resources>
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
+        <item name="textMediator">@color/black_from_figma</item>
         <item name="not_track_background">@color/black_from_figma</item>
         <item name="media_library_background">@color/black_from_figma</item>
         <item name="like_background">@color/black_from_figma</item>
@@ -19,7 +20,7 @@
         <item name="media_library_description_data_track_color">@color/little_white</item>
         <item name="media_library_value_data_track_color">@color/black_from_figma</item>
         <item name="value_text_media_library_color">@color/black_from_figma</item>
-        <item name="search_activity_background_tint_clear_history_button">@color/black_from_figma</item>
+        <item name="button_system_background">@color/black_from_figma</item>
     </style>
     <style name="Theme.MySwitch" parent="Theme.AppCompat.DayNight">
         <item name="colorControlActivated">@color/switch_circle_active</item>

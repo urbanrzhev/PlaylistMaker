@@ -6,10 +6,10 @@ import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.domain.models.State
 import java.util.concurrent.Executor
 
-class TracksInteractorImpl(private val repository: TracksRepository,
+class TracksInteractorImpl(
+    private val repository: TracksRepository,
     private val executor: Executor
 ) :TracksInteractor {
-
     override fun searchTracks(expression: String, consumer: TracksInteractor.TracksConsumer) {
         executor.execute {
             when (val data = repository.searchTracks(expression)) {

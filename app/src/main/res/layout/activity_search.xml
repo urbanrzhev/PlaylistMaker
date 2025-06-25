@@ -120,7 +120,7 @@
 
             <Button
                 android:id="@+id/not_call_button"
-                style="@style/button_system_search_activity"
+                style="@style/button_system"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -157,7 +157,7 @@
 
             <Button
                 android:id="@+id/clearHistoryButton"
-                style="@style/button_system_search_activity"
+                style="@style/button_system"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

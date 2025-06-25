@@ -5,6 +5,7 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.playlistmaker.common.domain.api.SetStartActivityUseCase
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.SetActiveTrackUseCase
@@ -14,7 +15,8 @@ import com.example.playlistmaker.search.domain.models.State
 class SearchViewModel(
     private val setActiveTrackUseCase: SetActiveTrackUseCase,
     private val tracksInteractor: TracksInteractor,
-    private val searchHistoryInteractor: HistoryInteractor
+    private val searchHistoryInteractor: HistoryInteractor,
+    private val setStartActivityUseCase: SetStartActivityUseCase
 ) : ViewModel() {
     private val handler = Handler(Looper.getMainLooper())
     private var temporaryTextRequest = ""
@@ -44,6 +46,9 @@ class SearchViewModel(
         handler.postDelayed(searchRunnable, SEARCH_REQUEST_TOKEN, SEARCH_DEBOUNCE_DELAY)
     }
 
+    fun setStartActivity(){
+        setStartActivityUseCase.execute(MAIN_ACTIVITY)
+    }
     private fun searchRequest(
         requestText: String
     ) {
@@ -79,6 +84,7 @@ class SearchViewModel(
     }
 
     companion object {
+        private const val MAIN_ACTIVITY = "main"
         private const val SEARCH_DEBOUNCE_DELAY: Long = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
     }

@@ -20,7 +20,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                 Track(
                     trackName = it.trackName,
                     artistName = it.artistName,
-                    trackTimeNormal =  getKoin().get<TimeFormat> {
+                    trackTimeNormal = getKoin().get<TimeFormat> {
                         parametersOf(it.trackTimeMillis)
                     }.getTimeMM_SS(),
                     artworkUrl100 = it.artworkUrl100,

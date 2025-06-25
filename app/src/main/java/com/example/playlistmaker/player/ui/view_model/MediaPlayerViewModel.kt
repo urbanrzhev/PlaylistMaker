@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.R
+import com.example.playlistmaker.common.domain.api.SetStartActivityUseCase
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.TimeFormat
 import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
-import com.example.playlistmaker.player.domain.api.SetStartActivityUseCase
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getKoin
 
@@ -50,6 +50,10 @@ class MediaPlayerViewModel(
         }
     }
 
+    fun setStartActivity() {
+        setStartActivityUseCase.execute(PLAYER_ACTIVITY)
+    }
+
     fun getActiveTrack(): Track {
         return activeTrack
     }
@@ -62,10 +66,6 @@ class MediaPlayerViewModel(
         } else {
             mainThreadHandler.removeCallbacks(playStopRunnable)
         }
-    }
-
-    fun setThisStartActivity(value: Boolean) {
-        setStartActivityUseCase.execute(value)
     }
 
     fun control() {
@@ -91,5 +91,6 @@ class MediaPlayerViewModel(
     companion object {
         private const val DELAY = 400L
         private const val DELAY_NULL = 0L
+        private const val PLAYER_ACTIVITY = "player"
     }
 }
