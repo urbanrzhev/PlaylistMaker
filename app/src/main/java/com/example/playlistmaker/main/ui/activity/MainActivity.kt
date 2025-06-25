@@ -40,7 +40,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         }
         viewModel.initActivity()
         viewBinding.buttonSearch.setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java)
+            val intent = Intent(this, SearchActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            }
             startActivity(intent)
         }
         val listenerButtonMediaLibrary: View.OnClickListener = object : View.OnClickListener {
