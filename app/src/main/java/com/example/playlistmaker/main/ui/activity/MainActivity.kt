@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,16 +17,16 @@ import com.example.playlistmaker.settings.ui.activity.SettingsActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
-    private lateinit var viewBinding: ActivityMainBinding
+    private lateinit var viewBinding: ActivityMain2Binding
     private val viewModel: MainViewModel by viewModel()
-    override fun createBinding(inflater: LayoutInflater): ActivityMainBinding {
-        return ActivityMainBinding.inflate(inflater)
+    override fun createBinding(inflater: LayoutInflater): ActivityMain2Binding {
+        return ActivityMain2Binding.inflate(inflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        viewBinding = ActivityMainBinding.inflate(layoutInflater)
+        viewBinding = ActivityMain2Binding.inflate(layoutInflater)
         setContentView(viewBinding.root)
         ViewCompat.setOnApplyWindowInsetsListener(viewBinding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

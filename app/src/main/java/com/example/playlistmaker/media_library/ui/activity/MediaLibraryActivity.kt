@@ -1,6 +1,7 @@
 package com.example.playlistmaker.media_library.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
@@ -49,6 +50,8 @@ class MediaLibraryActivity :
         binding.pager.adapter = adapter
         viewModel.getStartFragment()
         mediator.attach()
+        MediaLibraryActivity.k++
+        Log.v("my", MediaLibraryActivity.k.toString())
     }
 
     override fun onResume() {
@@ -64,5 +67,8 @@ class MediaLibraryActivity :
     override fun onDestroy() {
         super.onDestroy()
         mediator.detach()
+    }
+    companion object{
+        var k = 0
     }
 }

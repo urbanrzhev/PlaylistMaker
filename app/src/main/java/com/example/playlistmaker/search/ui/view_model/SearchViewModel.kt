@@ -10,7 +10,7 @@ import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.SetActiveTrackUseCase
 import com.example.playlistmaker.search.domain.api.TracksInteractor
-import com.example.playlistmaker.search.domain.models.State
+import com.example.playlistmaker.search.ui.models.SearchState
 
 class SearchViewModel(
     private val setActiveTrackUseCase: SetActiveTrackUseCase,
@@ -22,8 +22,8 @@ class SearchViewModel(
     private var temporaryTextRequest = ""
     private val progressBarLiveData = MutableLiveData(false)
     fun observerProgressBarLiveData(): LiveData<Boolean> = progressBarLiveData
-    private var stateLiveData = MutableLiveData<State<List<Track>>>(State.Else())
-    fun observeState(): LiveData<State<List<Track>>> = stateLiveData
+    private var searchStateLiveData = MutableLiveData<SearchState<List<Track>>>(SearchState.Loaded())
+    fun observeState(): LiveData<SearchState<List<Track>>> = searchStateLiveData
     private var historyLiveData = MutableLiveData(getHistory())
     fun observeHistory(): LiveData<List<Track>> = historyLiveData
 
@@ -78,7 +78,7 @@ class SearchViewModel(
     private fun searchTracks(expression: String) {
         progressBarLiveData.value = true
         tracksInteractor.searchTracks(expression = expression, TracksInteractor.TracksConsumer {
-            stateLiveData.postValue(it)
+            searchStateLiveData.postValue(it)
             progressBarLiveData.postValue(false)
         })
     }

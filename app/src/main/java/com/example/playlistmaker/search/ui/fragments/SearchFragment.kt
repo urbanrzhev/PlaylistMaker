@@ -1,31 +1,30 @@
-package com.example.playlistmaker.search.ui.activity
+package com.example.playlistmaker.search.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.enableEdgeToEdge
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
-import com.example.playlistmaker.common.util.BindingActivity
+import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.ui.adapters_holders.TracksAdapter
 import com.example.playlistmaker.search.ui.adapters_holders.TracksHistoryAdapter
-import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
-import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.ui.models.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : BindingActivity<ActivitySearchBinding>() {
-    private val handler = Handler(Looper.getMainLooper())
+class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
+    private lateinit var binding: ActivitySearchBinding
+    private val handler = Handler(Looper.getMainLooper())
     private var temporaryEditText = ""
     private lateinit var textWatcher: TextWatcher
     private var isClickAllowed = true
@@ -37,30 +36,20 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>() {
         goAudioPlayer(it)
     }
 
-    override fun createBinding(inflater: LayoutInflater): ActivitySearchBinding {
-        return ActivitySearchBinding.inflate(inflater)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            val bottomPadding = if (ime.bottom > 0) ime.bottom else systemBars.bottom
-            v.setPadding(systemBars.left, systemBars.top + ime.top, systemBars.right, bottomPadding)
-            insets
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = ActivitySearchBinding.inflate(layoutInflater, container, false)
         binding.recyclerSearch.adapter = adapterSearch
         binding.recyclerSearchHistory.adapter = adapterHistory
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-        viewModel.observeHistory().observe(this) {
+        viewModel.observeHistory().observe(viewLifecycleOwner) {
             adapterHistory.setTrackList(it)
         }
-        viewModel.observerProgressBarLiveData().observe(this) {
+        viewModel.observerProgressBarLiveData().observe(viewLifecycleOwner) {
             showProgressBar(it)
         }
         binding.clearHistoryButton.setOnClickListener {
@@ -98,7 +87,7 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>() {
         binding.clearSearchButton.setOnClickListener {
             binding.editSearchText.text = null
             val inputMethodManager =
-                getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+                context?.getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(
                 binding.clearSearchButton.windowToken,
                 0
@@ -106,9 +95,10 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>() {
         }
 
         binding.toolbarSearch.setNavigationOnClickListener {
-            this.onBackPressedDispatcher.onBackPressed()
+            //onBackPressedDispatcher.onBackPressed()
         }
         adapterHistory.setTrackList(viewModel.getHistory())
+        return binding.root
     }
 
     override fun onResume() {
@@ -126,11 +116,11 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>() {
         outState.putString(getString(R.string.secret_code), temporaryEditText)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+    /*override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val textEdit = savedInstanceState.getString(getString(R.string.secret_code))
         binding.editSearchText.setText(textEdit)
-    }
+    }*/
 
     private fun render(searchState: SearchState<List<Track>>) {
         when (searchState) {
@@ -179,10 +169,10 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>() {
 
     private fun goAudioPlayer(track: Track) {
         if (!clickDebounce()) {
-            val intent = Intent(this, MediaPlayerActivity::class.java).apply {
+            /*val intent = Intent(this, MediaPlayerActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             }
-            startActivity(intent)
+            startActivity(intent)*/
             setActiveTrack(track)
         }
     }
