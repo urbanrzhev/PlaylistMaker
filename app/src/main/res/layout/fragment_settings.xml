@@ -23,15 +23,15 @@
         android:id="@+id/buttonTextShareTheApp"
         style="@style/textSettingActivity"
         android:text="@string/share"
-        android:drawableEnd="@drawable/share"/>
+        android:drawableEnd="@drawable/share_icon"/>
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/buttonTextWriteToSupport"
         style="@style/textSettingActivity"
         android:text="@string/support"
-        android:drawableEnd="@drawable/support"/>
+        android:drawableEnd="@drawable/support_icon"/>
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/buttonUserAgreement"
         style="@style/textSettingActivity"
         android:text="@string/forward"
-        android:drawableEnd="@drawable/forward"/>
+        android:drawableEnd="@drawable/forward_icon"/>
 </LinearLayout>
