@@ -5,8 +5,8 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.common.domain.api.SetStartActivityUseCase
 import com.example.playlistmaker.common.domain.models.Track
+import com.example.playlistmaker.common.util.SingleLiveEvent
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.SetActiveTrackUseCase
 import com.example.playlistmaker.search.domain.api.TracksInteractor
@@ -15,46 +15,62 @@ import com.example.playlistmaker.search.ui.models.SearchState
 class SearchViewModel(
     private val setActiveTrackUseCase: SetActiveTrackUseCase,
     private val tracksInteractor: TracksInteractor,
-    private val searchHistoryInteractor: HistoryInteractor,
-    private val setStartActivityUseCase: SetStartActivityUseCase
+    private val searchHistoryInteractor: HistoryInteractor
 ) : ViewModel() {
     private val handler = Handler(Looper.getMainLooper())
     private var temporaryTextRequest = ""
-    private val progressBarLiveData = MutableLiveData(false)
-    fun observerProgressBarLiveData(): LiveData<Boolean> = progressBarLiveData
-    private var searchStateLiveData = MutableLiveData<SearchState<List<Track>>>(SearchState.Loaded())
+    private var focusEditText = MutableLiveData<Boolean>()
+    fun observeFocusEditTextLiveData():LiveData<Boolean> = focusEditText
+    private var temporaryEditText = MutableLiveData<String>()
+    fun observeTemporaryEditTextLiveData():LiveData<String> = temporaryEditText
+    private var searchStateLiveData = MutableLiveData<SearchState<List<Track>>>()
     fun observeState(): LiveData<SearchState<List<Track>>> = searchStateLiveData
-    private var historyLiveData = MutableLiveData(getHistory())
+    private var historyLiveData = SingleLiveEvent<List<Track>>()
     fun observeHistory(): LiveData<List<Track>> = historyLiveData
 
     override fun onCleared() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
+    fun setFocusEditText(value:Boolean){
+        focusEditText.value = value
+    }
+
+    fun setTemporaryEditText(value:String){
+        temporaryEditText.value = value
+    }
+
     fun searchDebounce() {
-        searchDebounce(temporaryTextRequest)
+        searchDebounce(temporaryTextRequest,true)
     }
 
     fun clearSearchDebounce() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
-    fun searchDebounce(requestText: String) {
-        temporaryTextRequest = requestText
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        val searchRunnable = Runnable { searchRequest(requestText) }
-        handler.postDelayed(searchRunnable, SEARCH_REQUEST_TOKEN, SEARCH_DEBOUNCE_DELAY)
+    fun searchDebounce(requestText: String, reload:Boolean = false) {
+        if(temporaryTextRequest != requestText || reload) {
+            temporaryTextRequest = requestText
+            handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+            val searchRunnable = Runnable { searchRequest(requestText) }
+            handler.postDelayed(searchRunnable, SEARCH_REQUEST_TOKEN, SEARCH_DEBOUNCE_DELAY)
+        }
     }
 
-    fun setStartActivity(){
-        setStartActivityUseCase.execute(MAIN_ACTIVITY)
+    fun clearTemporaryTextRequest(){
+        temporaryTextRequest = ""
     }
+
     private fun searchRequest(
         requestText: String
     ) {
-        if (requestText.isNotEmpty()) {
+        if (requestText.trim().isNotEmpty()) {
             searchTracks(requestText)
         }
+    }
+
+    fun visibleHistory(){
+        searchStateLiveData.value = SearchState.History()
     }
 
     fun getHistory(): List<Track> {
@@ -76,15 +92,13 @@ class SearchViewModel(
     }
 
     private fun searchTracks(expression: String) {
-        progressBarLiveData.value = true
+        searchStateLiveData.value = SearchState.Loaded()
         tracksInteractor.searchTracks(expression = expression, TracksInteractor.TracksConsumer {
             searchStateLiveData.postValue(it)
-            progressBarLiveData.postValue(false)
         })
     }
 
     companion object {
-        private const val MAIN_ACTIVITY = "main"
         private const val SEARCH_DEBOUNCE_DELAY: Long = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
     }
