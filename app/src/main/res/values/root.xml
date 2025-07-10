@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="backgroundMainActivity">
-        <item name="android:background">@color/main_background</item>
+    <attr name="border_root" format="color"/>
+    <attr name="bottom_navigation_item_tint" format="color"/>
+    <style name="blueTextReqular12sp400w" parent="textAppearanceRegular12sp400w">
+        <item name="textFillColor">@color/blue_from_figma</item>
     </style>
     <style name="buttonMainActivity" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:backgroundTint">@color/white</item>

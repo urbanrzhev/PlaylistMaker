@@ -5,10 +5,8 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.playlistmaker.common.data.repository.SharedPreferencesManagerImpl
 import com.example.playlistmaker.common.domain.api.GetThemeUseCase
-import com.example.playlistmaker.common.domain.api.SetStartActivityUseCase
 import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.common.domain.use_case.GetThemeUseCaseImpl
-import com.example.playlistmaker.common.domain.use_case.SetStartActivityUseCaseImpl
 import com.example.playlistmaker.common.util.TimeFormat
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
@@ -40,8 +38,5 @@ val commonModule = module {
     }
     factory<GetThemeUseCase>{
         GetThemeUseCaseImpl(get())
-    }
-    factory<SetStartActivityUseCase>{
-        SetStartActivityUseCaseImpl(get())
     }
 }

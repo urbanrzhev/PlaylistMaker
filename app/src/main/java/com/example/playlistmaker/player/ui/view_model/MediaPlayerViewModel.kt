@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.R
-import com.example.playlistmaker.common.domain.api.SetStartActivityUseCase
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.TimeFormat
 import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
@@ -16,8 +15,7 @@ import org.koin.java.KoinJavaComponent.getKoin
 
 class MediaPlayerViewModel(
     private val getActiveTrackUseCase: GetActiveTrackUseCase,
-    private val mediaPlayer: MediaPlayerInteractor,
-    private val setStartActivityUseCase: SetStartActivityUseCase
+    private val mediaPlayer: MediaPlayerInteractor
 ) : ViewModel() {
     private var enablePlayButton = MutableLiveData(false)
     private val activeTrack = getActiveTrackUseCase.execute()
@@ -48,10 +46,6 @@ class MediaPlayerViewModel(
             }.getTimeMM_SS()
             mainThreadHandler.postDelayed(playStopRunnable, DELAY)
         }
-    }
-
-    fun setStartActivity() {
-        setStartActivityUseCase.execute(PLAYER_ACTIVITY)
     }
 
     fun getActiveTrack(): Track {
@@ -91,6 +85,5 @@ class MediaPlayerViewModel(
     companion object {
         private const val DELAY = 400L
         private const val DELAY_NULL = 0L
-        private const val PLAYER_ACTIVITY = "player"
     }
 }

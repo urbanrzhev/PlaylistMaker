@@ -5,6 +5,8 @@
     <string name="yours_media_library_empty">Ваша медиатека пуста</string>
     <string name="yours_playlists_empty">Вы не создали \n ни одного плейлиста</string>
     <string name="new_playlist">Новый плейлист</string>
+    <string name="favorites_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
     <style name="fragment_empty_playlists">
         <item name="android:gravity">center</item>
         <item name="android:textAppearance">@style/textAppearanceMedium19sp500w</item>

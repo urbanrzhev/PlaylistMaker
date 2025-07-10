@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.activity
+package com.example.playlistmaker.player.ui.fragments
 
 import android.content.Context
 import android.view.View
@@ -9,12 +9,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
-import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.common.util.MyDisplayMetrics
+import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 
 class ShowActiveTrack(
     private val context: Context,
-    private val binding: ActivityAudioPlayerBinding,
+    private val binding: FragmentAudioPlayerBinding,
     private val model: Track
 ) {
     fun show() {
