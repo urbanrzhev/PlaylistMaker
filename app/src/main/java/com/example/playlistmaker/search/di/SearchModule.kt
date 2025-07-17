@@ -24,7 +24,7 @@ import java.util.concurrent.Executors
 
 val searchModule = module {
     viewModel{
-        SearchViewModel(get(),get(),get(),get())
+        SearchViewModel(get(),get(),get())
     }
     factory<TracksRepository> {
         TracksRepositoryImpl(get())

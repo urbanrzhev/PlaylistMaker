@@ -9,9 +9,10 @@ import com.example.playlistmaker.media_library.ui.fragments.PlaylistsFragment
 
 class MediaLibraryAdapter(hostFragment: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(hostFragment, lifecycle) {
+
     override fun getItemCount(): Int = 2
+
     override fun createFragment(position: Int): Fragment {
         return if (position == 0) FavoritesTracksFragment.newInstance() else PlaylistsFragment.newInstance()
     }
-
 }

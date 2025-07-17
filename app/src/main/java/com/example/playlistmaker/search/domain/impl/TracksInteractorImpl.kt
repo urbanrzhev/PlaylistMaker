@@ -3,7 +3,7 @@ package com.example.playlistmaker.search.domain.impl
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.models.Resource
-import com.example.playlistmaker.search.domain.models.State
+import com.example.playlistmaker.search.ui.models.SearchState
 import java.util.concurrent.Executor
 
 class TracksInteractorImpl(
@@ -15,14 +15,14 @@ class TracksInteractorImpl(
             when (val data = repository.searchTracks(expression)) {
                 is Resource.Success -> {
                     if (data.data.isNotEmpty())
-                        consumer.consume(State.Success(data.data))
+                        consumer.consume(SearchState.Success(data.data))
                     else
-                        consumer.consume(State.Empty())
+                        consumer.consume(SearchState.Empty())
                 }
 
                 is Resource.Error -> {
                     consumer.consume(
-                        State.Error(
+                        SearchState.Error(
                             data.message
                         )
                     )

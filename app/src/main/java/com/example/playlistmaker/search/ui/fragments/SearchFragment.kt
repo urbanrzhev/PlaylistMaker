@@ -1,76 +1,75 @@
-package com.example.playlistmaker.search.ui.activity
+package com.example.playlistmaker.search.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.enableEdgeToEdge
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
-import com.example.playlistmaker.common.util.BindingActivity
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.ui.adapters_holders.TracksAdapter
 import com.example.playlistmaker.search.ui.adapters_holders.TracksHistoryAdapter
-import com.example.playlistmaker.player.ui.activity.MediaPlayerActivity
-import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.search.domain.models.State
+import com.example.playlistmaker.search.ui.models.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : BindingActivity<ActivitySearchBinding>() {
-    private val handler = Handler(Looper.getMainLooper())
+class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
+    private lateinit var binding: FragmentSearchBinding
+    private val handler = Handler(Looper.getMainLooper())
     private var temporaryEditText = ""
-    private lateinit var textWatcher: TextWatcher
+    private var textWatcher: TextWatcher? = null
     private var isClickAllowed = true
-    private val adapterSearch = TracksAdapter {
+    private val searchAdapter = TracksAdapter {
         addTrackHistory(it)
         goAudioPlayer(it)
     }
-    private val adapterHistory = TracksHistoryAdapter {
+    private val historyAdapter = TracksHistoryAdapter {
+        viewModel.visibleHistory()
         goAudioPlayer(it)
     }
 
-    override fun createBinding(inflater: LayoutInflater): ActivitySearchBinding {
-        return ActivitySearchBinding.inflate(inflater)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            val bottomPadding = if (ime.bottom > 0) ime.bottom else systemBars.bottom
-            v.setPadding(systemBars.left, systemBars.top + ime.top, systemBars.right, bottomPadding)
-            insets
-        }
-        binding.recyclerSearch.adapter = adapterSearch
-        binding.recyclerSearchHistory.adapter = adapterHistory
-        viewModel.observeState().observe(this) {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
+        binding.recyclerSearch.adapter = searchAdapter
+        binding.recyclerSearchHistory.adapter = historyAdapter
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-        viewModel.observeHistory().observe(this) {
-            adapterHistory.setTrackList(it)
+        viewModel.observeHistory().observe(viewLifecycleOwner) {
+            historyAdapter.setTrackList(it)
         }
-        viewModel.observerProgressBarLiveData().observe(this) {
-            showProgressBar(it)
+        viewModel.observeFocusEditTextLiveData().observe(viewLifecycleOwner) {
+            if (it) {
+                binding.editSearchText.requestFocus()
+            }
+        }
+        viewModel.observeTemporaryEditTextLiveData().observe(viewLifecycleOwner) {
+            temporaryEditText = it
         }
         binding.clearHistoryButton.setOnClickListener {
             viewModel.clearTrackListHistory()
+            historyAdapter.setTrackList(mutableListOf())
             binding.viewGroupHistory.isVisible = false
         }
 
         binding.editSearchText.setOnFocusChangeListener { _, hasFocus ->
-            binding.viewGroupHistory.isVisible =
-                hasFocus && binding.editSearchText.text.isEmpty() && adapterHistory.itemCount > 0
+            if (hasFocus && binding.editSearchText.text.isEmpty() && historyAdapter.itemCount > 0) {
+                viewModel.visibleHistory()
+                viewModel.setFocusEditText(hasFocus)
+            }
         }
 
         textWatcher = object : TextWatcher {
@@ -78,13 +77,17 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                temporaryEditText = s.toString()
                 binding.clearSearchButton.isVisible = !s.isNullOrEmpty()
-                if (binding.editSearchText.hasFocus() && binding.editSearchText.text.isEmpty() && adapterHistory.itemCount > 0)
-                    showHistory()
-                if (s.toString().isNotEmpty()) {
+                viewModel.setTemporaryEditText(s.toString())
+                if (binding.editSearchText.hasFocus() && binding.editSearchText.text.trim()
+                        .isEmpty() && historyAdapter.itemCount > 0
+                ) {
+                    viewModel.visibleHistory()
+                }
+                if (s.toString().trim().isNotEmpty()) {
                     viewModel.searchDebounce(s.toString())
                 } else {
+                    viewModel.clearTemporaryTextRequest()
                     viewModel.clearSearchDebounce()
                     binding.recyclerSearch.adapter = null
                 }
@@ -96,63 +99,59 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>() {
         textWatcher.let { binding.editSearchText.addTextChangedListener(it) }
 
         binding.clearSearchButton.setOnClickListener {
+            viewModel.visibleHistory()
             binding.editSearchText.text = null
             val inputMethodManager =
-                getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+                requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(
                 binding.clearSearchButton.windowToken,
                 0
             )
         }
-
-        binding.toolbarSearch.setNavigationOnClickListener {
-            this.onBackPressedDispatcher.onBackPressed()
-        }
-        adapterHistory.setTrackList(viewModel.getHistory())
+        historyAdapter.setTrackList(viewModel.getHistory())
+        return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.setStartActivity()
+        binding.editSearchText.setText(temporaryEditText)
+        binding.editSearchText.setSelection(binding.editSearchText.text.length)
     }
 
     override fun onDestroy() {
-        textWatcher.let { binding.editSearchText.removeTextChangedListener(it) }
+        textWatcher?.let { binding.editSearchText.removeTextChangedListener(it) }
         super.onDestroy()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(getString(R.string.secret_code), temporaryEditText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        val textEdit = savedInstanceState.getString(getString(R.string.secret_code))
-        binding.editSearchText.setText(textEdit)
-    }
-
-    private fun render(state: State<List<Track>>) {
-        when (state) {
-            is State.Else -> {
+    private fun render(searchState: SearchState<List<Track>>) {
+        when (searchState) {
+            is SearchState.History -> {
+                showProgressBar(false)
+                showHistory()
             }
 
-            is State.Empty -> {
+            is SearchState.Loaded -> {
+                showProgressBar(true)
+            }
+
+            is SearchState.Empty -> {
+                showProgressBar(false)
                 emptyLoadTracks()
             }
 
-            is State.Success -> {
-                successLoadTracks(state.data)
+            is SearchState.Success -> {
+                showProgressBar(false)
+                successLoadTracks(searchState.data)
             }
 
-            is State.Error -> {
-                errorLoadTracks(state.message)
+            is SearchState.Error -> {
+                showProgressBar(false)
+                errorLoadTracks(searchState.message)
             }
         }
     }
 
     private fun errorLoadTracks(message: Int) {
-        showProgressBar(false)
         binding.viewGroupHistory.isVisible = false
         binding.notCall.isVisible = true
         binding.textNotCall.text = getString(message)
@@ -168,20 +167,16 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>() {
     }
 
     private fun successLoadTracks(list: List<Track>) {
-        showProgressBar(false)
         binding.notCall.isVisible = false
         binding.notTrack.isVisible = false
         binding.viewGroupHistory.isVisible = false
-        adapterSearch.setTrackList(list)
-        binding.recyclerSearch.adapter = adapterSearch
+        searchAdapter.setTrackList(list)
+        binding.recyclerSearch.adapter = searchAdapter
     }
 
     private fun goAudioPlayer(track: Track) {
         if (!clickDebounce()) {
-            val intent = Intent(this, MediaPlayerActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            }
-            startActivity(intent)
+            findNavController().navigate(R.id.action_searchFragment_to_mediaPlayerFragment)
             setActiveTrack(track)
         }
     }
@@ -195,10 +190,10 @@ class SearchActivity : BindingActivity<ActivitySearchBinding>() {
     }
 
     private fun showHistory() {
-        showProgressBar(false)
         binding.notCall.isVisible = false
         binding.notTrack.isVisible = false
-        binding.viewGroupHistory.isVisible = true
+        if (historyAdapter.itemCount > 0)
+            binding.viewGroupHistory.isVisible = true
     }
 
     private fun setActiveTrack(track: Track) {
