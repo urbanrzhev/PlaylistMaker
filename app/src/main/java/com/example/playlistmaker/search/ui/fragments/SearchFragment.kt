@@ -29,11 +29,11 @@ class SearchFragment : Fragment() {
     private var temporaryEditText = ""
     private var textWatcher: TextWatcher? = null
     private var isClickAllowed = true
-    private val adapterSearch = TracksAdapter {
+    private val searchAdapter = TracksAdapter {
         addTrackHistory(it)
         goAudioPlayer(it)
     }
-    private val adapterHistory = TracksHistoryAdapter {
+    private val historyAdapter = TracksHistoryAdapter {
         viewModel.visibleHistory()
         goAudioPlayer(it)
     }
@@ -43,13 +43,13 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
-        binding.recyclerSearch.adapter = adapterSearch
-        binding.recyclerSearchHistory.adapter = adapterHistory
+        binding.recyclerSearch.adapter = searchAdapter
+        binding.recyclerSearchHistory.adapter = historyAdapter
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
         viewModel.observeHistory().observe(viewLifecycleOwner) {
-            adapterHistory.setTrackList(it)
+            historyAdapter.setTrackList(it)
         }
         viewModel.observeFocusEditTextLiveData().observe(viewLifecycleOwner) {
             if (it) {
@@ -61,12 +61,12 @@ class SearchFragment : Fragment() {
         }
         binding.clearHistoryButton.setOnClickListener {
             viewModel.clearTrackListHistory()
-            adapterHistory.setTrackList(mutableListOf())
+            historyAdapter.setTrackList(mutableListOf())
             binding.viewGroupHistory.isVisible = false
         }
 
         binding.editSearchText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && binding.editSearchText.text.isEmpty() && adapterHistory.itemCount > 0) {
+            if (hasFocus && binding.editSearchText.text.isEmpty() && historyAdapter.itemCount > 0) {
                 viewModel.visibleHistory()
                 viewModel.setFocusEditText(hasFocus)
             }
@@ -80,7 +80,7 @@ class SearchFragment : Fragment() {
                 binding.clearSearchButton.isVisible = !s.isNullOrEmpty()
                 viewModel.setTemporaryEditText(s.toString())
                 if (binding.editSearchText.hasFocus() && binding.editSearchText.text.trim()
-                        .isEmpty() && adapterHistory.itemCount > 0
+                        .isEmpty() && historyAdapter.itemCount > 0
                 ) {
                     viewModel.visibleHistory()
                 }
@@ -102,13 +102,13 @@ class SearchFragment : Fragment() {
             viewModel.visibleHistory()
             binding.editSearchText.text = null
             val inputMethodManager =
-                context?.getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+                requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(
                 binding.clearSearchButton.windowToken,
                 0
             )
         }
-        adapterHistory.setTrackList(viewModel.getHistory())
+        historyAdapter.setTrackList(viewModel.getHistory())
         return binding.root
     }
 
@@ -170,8 +170,8 @@ class SearchFragment : Fragment() {
         binding.notCall.isVisible = false
         binding.notTrack.isVisible = false
         binding.viewGroupHistory.isVisible = false
-        adapterSearch.setTrackList(list)
-        binding.recyclerSearch.adapter = adapterSearch
+        searchAdapter.setTrackList(list)
+        binding.recyclerSearch.adapter = searchAdapter
     }
 
     private fun goAudioPlayer(track: Track) {
@@ -192,7 +192,7 @@ class SearchFragment : Fragment() {
     private fun showHistory() {
         binding.notCall.isVisible = false
         binding.notTrack.isVisible = false
-        if (adapterHistory.itemCount > 0)
+        if (historyAdapter.itemCount > 0)
             binding.viewGroupHistory.isVisible = true
     }
 

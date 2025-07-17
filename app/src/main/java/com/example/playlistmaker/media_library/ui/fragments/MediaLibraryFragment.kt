@@ -5,7 +5,6 @@ import com.example.playlistmaker.media_library.ui.adapters.MediaLibraryAdapter
 import com.example.playlistmaker.media_library.ui.view_model.MediaLibraryViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,20 +15,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaLibraryFragment : BindingFragment<FragmentMediaLibraryBinding>() {
     private val viewModel: MediaLibraryViewModel by viewModel()
-        //private lateinit var mediator: TabLayoutMediator
-    //private lateinit var adapter: MediaLibraryAdapter
-    val mediator:TabLayoutMediator by lazy{
-            TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
-                when (position) {
-                    0 -> tab.text = getString(R.string.favorites_tracks)
-                    1 -> tab.text = getString(R.string.playlists)
-                }
-            }
-        }
-    val adapter:MediaLibraryAdapter by lazy{
-        MediaLibraryAdapter(childFragmentManager, lifecycle)
-    }
-    private lateinit var pageChangeCallback:ViewPager2.OnPageChangeCallback
+    private lateinit var mediator: TabLayoutMediator
+    private lateinit var adapter: MediaLibraryAdapter
+    private lateinit var pageChangeCallback: ViewPager2.OnPageChangeCallback
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -44,7 +32,7 @@ class MediaLibraryFragment : BindingFragment<FragmentMediaLibraryBinding>() {
             binding.pager.setCurrentItem(it)
         }
         viewModel.startFragment()
-        /*adapter = MediaLibraryAdapter(childFragmentManager, lifecycle)*/
+        adapter = MediaLibraryAdapter(childFragmentManager, lifecycle)
         pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -54,12 +42,12 @@ class MediaLibraryFragment : BindingFragment<FragmentMediaLibraryBinding>() {
         binding.pager.adapter = adapter
         binding.pager.registerOnPageChangeCallback(pageChangeCallback)
 
-        /*mediator = TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
+        mediator = TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             when (position) {
                 0 -> tab.text = getString(R.string.favorites_tracks)
-                    1 -> tab.text = getString(R.string.playlists)
+                1 -> tab.text = getString(R.string.playlists)
             }
-        }*/
+        }
         mediator.attach()
     }
 
