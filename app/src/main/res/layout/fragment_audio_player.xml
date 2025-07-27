@@ -70,7 +70,7 @@
         android:layout_width="84dp"
         android:layout_height="84dp"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/play_play"
+        android:background="@drawable/play_button"
         android:enabled="false"
         android:theme="@style/Theme.PlaylistMaker"
         app:layout_constraintBottom_toTopOf="@+id/textProgress"

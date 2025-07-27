@@ -5,18 +5,23 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.SingleLiveEvent
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.SetActiveTrackUseCase
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.ui.models.SearchState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val setActiveTrackUseCase: SetActiveTrackUseCase,
     private val tracksInteractor: TracksInteractor,
     private val searchHistoryInteractor: HistoryInteractor
 ) : ViewModel() {
+    private var job: Job? = null
     private val handler = Handler(Looper.getMainLooper())
     private var temporaryTextRequest = ""
     private var focusEditText = MutableLiveData<Boolean>()
@@ -27,10 +32,6 @@ class SearchViewModel(
     fun observeState(): LiveData<SearchState<List<Track>>> = searchStateLiveData
     private var historyLiveData = SingleLiveEvent<List<Track>>()
     fun observeHistory(): LiveData<List<Track>> = historyLiveData
-
-    override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
 
     fun setFocusEditText(value:Boolean){
         focusEditText.value = value
@@ -51,9 +52,11 @@ class SearchViewModel(
     fun searchDebounce(requestText: String, reload:Boolean = false) {
         if(temporaryTextRequest != requestText || reload) {
             temporaryTextRequest = requestText
-            handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-            val searchRunnable = Runnable { searchRequest(requestText) }
-            handler.postDelayed(searchRunnable, SEARCH_REQUEST_TOKEN, SEARCH_DEBOUNCE_DELAY)
+            job?.cancel()
+            job = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                searchRequest(requestText)
+            }
         }
     }
 

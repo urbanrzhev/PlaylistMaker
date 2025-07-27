@@ -3,9 +3,13 @@ package com.example.playlistmaker.player.domain.impl
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.api.MediaPlayerRepository
 
-class MediaPlayerInteractorImpl(private val repositoryImpl: MediaPlayerRepository):
+class MediaPlayerInteractorImpl(private val repositoryImpl: MediaPlayerRepository) :
     MediaPlayerInteractor {
-    override fun prepare(url: String, consumerPrepared: MediaPlayerInteractor.Consumer, consumerCompleted: MediaPlayerInteractor.Consumer) {
+    override fun prepare(
+        url: String,
+        consumerPrepared: MediaPlayerInteractor.Consumer,
+        consumerCompleted: MediaPlayerInteractor.Consumer
+    ) {
         repositoryImpl.preparePlayer(url, setOnPreparedListener = {
             consumerPrepared.consume()
         }, setOnCompletionListener = {
@@ -21,15 +25,19 @@ class MediaPlayerInteractorImpl(private val repositoryImpl: MediaPlayerRepositor
         repositoryImpl.pausePlayer()
     }
 
-    override fun currentPosition():Int {
+    override fun isPlaying() = repositoryImpl.isPlaying()
+
+    override fun currentPosition(): Int {
         return repositoryImpl.getCurrentPosition()
     }
 
-    override fun control(start: MediaPlayerInteractor.Consumer, pause: MediaPlayerInteractor.Consumer) {
-        if(repositoryImpl.playbackControl()){
+    override fun control(
+        start: MediaPlayerInteractor.Consumer,
+        pause: MediaPlayerInteractor.Consumer
+    ) {
+        if (repositoryImpl.playbackControl()) {
             start.consume()
-        }
-        else{
+        } else {
             pause.consume()
         }
     }

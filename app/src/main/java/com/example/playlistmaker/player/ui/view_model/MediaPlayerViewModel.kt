@@ -1,15 +1,17 @@
 package com.example.playlistmaker.player.ui.view_model
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.R
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.TimeFormat
 import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
+import com.example.playlistmaker.player.ui.models.PlayerState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getKoin
 
@@ -17,34 +19,19 @@ class MediaPlayerViewModel(
     private val getActiveTrackUseCase: GetActiveTrackUseCase,
     private val mediaPlayer: MediaPlayerInteractor
 ) : ViewModel() {
-    private var enablePlayButton = MutableLiveData(false)
+    private var job: Job? = null
+    private var playerState = MutableLiveData<PlayerState>(PlayerState.Default())
     private val activeTrack = getActiveTrackUseCase.execute()
-    private var backgroundPlayButton = MutableLiveData(R.drawable.play_play)
-    private lateinit var playStopRunnable: Runnable
-    private var timeProgressLiveData = MutableLiveData(activeTrack.trackTimeNormal)
-    private val mainThreadHandler: Handler = Handler(Looper.getMainLooper())
-    fun observeEnablePlayButton(): LiveData<Boolean> = enablePlayButton
-    fun observeBackgroundPlayButton(): LiveData<Int> = backgroundPlayButton
-    fun observeTimeProgressLiveData(): LiveData<String> = timeProgressLiveData
+    fun observePlayerState(): LiveData<PlayerState> = playerState
 
     init {
         val url = activeTrack.previewUrl
         if (url.isNotEmpty()) {
             mediaPlayer.prepare(url, consumerPrepared = {
-                enablePlayButton.value = true
+                playerState.value = PlayerState.Prepared()
             }, consumerCompleted = {
-                backgroundPlayButton.value = R.drawable.play_play
-                timeProgressLiveData.value = getKoin().get<TimeFormat> {
-                    parametersOf(DELAY_NULL)
-                }.getTimeMM_SS()
-                timeProgress(false)
+                playerState.value = PlayerState.Prepared()
             })
-        }
-        playStopRunnable = Runnable {
-            timeProgressLiveData.value = getKoin().get<TimeFormat> {
-                parametersOf(mediaPlayer.currentPosition())
-            }.getTimeMM_SS()
-            mainThreadHandler.postDelayed(playStopRunnable, DELAY)
         }
     }
 
@@ -52,38 +39,40 @@ class MediaPlayerViewModel(
         return activeTrack
     }
 
-    private fun timeProgress(value: Boolean) {
-        if (value) {
-            mainThreadHandler.post(
-                playStopRunnable
-            )
-        } else {
-            mainThreadHandler.removeCallbacks(playStopRunnable)
+    private fun timeProgress() {
+        job = viewModelScope.launch {
+            while (mediaPlayer.isPlaying()) {
+                playerState.value = PlayerState.Playing(getCurrentPosition())
+                delay(DELAY)
+            }
         }
     }
 
     fun control() {
         mediaPlayer.control(start = {
-            backgroundPlayButton.value = R.drawable.pause_play
-            timeProgress(true)
+            playerState.value = PlayerState.Playing(progress = getCurrentPosition())
+            timeProgress()
         }, pause = {
-            backgroundPlayButton.value = R.drawable.play_play
-            timeProgress(false)
+            playerState.value = PlayerState.Paused(progress = getCurrentPosition())
         })
     }
 
     fun pause() {
         mediaPlayer.pause()
-        backgroundPlayButton.value = R.drawable.play_play
+        playerState.value = PlayerState.Paused(getCurrentPosition())
     }
 
     override fun onCleared() {
         mediaPlayer.release()
-        timeProgress(false)
+    }
+
+    private fun getCurrentPosition(): String {
+        return getKoin().get<TimeFormat> {
+            parametersOf(mediaPlayer.currentPosition())
+        }.getTimeMM_SS()
     }
 
     companion object {
-        private const val DELAY = 400L
-        private const val DELAY_NULL = 0L
+        private const val DELAY = 300L
     }
 }

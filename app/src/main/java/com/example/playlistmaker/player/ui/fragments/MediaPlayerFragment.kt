@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.example.playlistmaker.common.util.BindingFragment
@@ -23,14 +22,10 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.observeTimeProgressLiveData().observe(viewLifecycleOwner) { time ->
-            binding.textProgress.text = time
-        }
-        viewModel.observeBackgroundPlayButton().observe(viewLifecycleOwner) { background ->
-            binding.buttonPause.setBackgroundResource(background)
-        }
-        viewModel.observeEnablePlayButton().observe(viewLifecycleOwner) { enabled ->
-            binding.buttonPause.isEnabled = enabled
+        viewModel.observePlayerState().observe(viewLifecycleOwner) { state ->
+            binding.textProgress.text = state.progress
+            binding.buttonPause.isEnabled = state.isPlayButtonEnabled
+            binding.buttonPause.setBackgroundResource(state.playButtonBackground)
         }
         binding.buttonPause.setOnClickListener {
             viewModel.control()
@@ -43,7 +38,6 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
 
     override fun onPause() {
         super.onPause()
-        binding.buttonPause.setBackgroundResource(R.drawable.play_play)
         viewModel.pause()
     }
 
