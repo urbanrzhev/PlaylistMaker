@@ -5,10 +5,10 @@ import com.example.playlistmaker.media_library.ui.adapters.MediaLibraryAdapter
 import com.example.playlistmaker.media_library.ui.view_model.MediaLibraryViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager2.widget.ViewPager2
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.util.BindingFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -17,7 +17,6 @@ class MediaLibraryFragment : BindingFragment<FragmentMediaLibraryBinding>() {
     private val viewModel: MediaLibraryViewModel by viewModel()
     private lateinit var mediator: TabLayoutMediator
     private lateinit var adapter: MediaLibraryAdapter
-    private lateinit var pageChangeCallback: ViewPager2.OnPageChangeCallback
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -33,14 +32,7 @@ class MediaLibraryFragment : BindingFragment<FragmentMediaLibraryBinding>() {
         }
         viewModel.startFragment()
         adapter = MediaLibraryAdapter(childFragmentManager, lifecycle)
-        pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                viewModel.setStartFragment(binding.pager.currentItem)
-            }
-        }
         binding.pager.adapter = adapter
-        binding.pager.registerOnPageChangeCallback(pageChangeCallback)
 
         mediator = TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             when (position) {
@@ -51,9 +43,9 @@ class MediaLibraryFragment : BindingFragment<FragmentMediaLibraryBinding>() {
         mediator.attach()
     }
 
-    override fun onStop() {
-        super.onStop()
-        binding.pager.unregisterOnPageChangeCallback(pageChangeCallback)
+    override fun onPause() {
+        super.onPause()
+        viewModel.setStartFragment(binding.pager.currentItem)
     }
 
     override fun onDestroyView() {
