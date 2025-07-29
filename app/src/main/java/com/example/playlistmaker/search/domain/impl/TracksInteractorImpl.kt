@@ -1,30 +1,29 @@
 package com.example.playlistmaker.search.domain.impl
 
+import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.ui.models.SearchState
-import java.util.concurrent.Executor
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class TracksInteractorImpl(
-    private val repository: TracksRepository,
-    private val executor: Executor
-) :TracksInteractor {
-    override fun searchTracks(expression: String, consumer: TracksInteractor.TracksConsumer) {
-        executor.execute {
-            when (val data = repository.searchTracks(expression)) {
+    private val repository: TracksRepository
+) : TracksInteractor {
+    override suspend fun searchTracksSuspend(expression: String): Flow<SearchState<List<Track>>> {
+        return repository.searchTracksSuspend(expression).map {
+            when (it) {
                 is Resource.Success -> {
-                    if (data.data.isNotEmpty())
-                        consumer.consume(SearchState.Success(data.data))
+                    if (it.data.isNotEmpty())
+                        SearchState.Success(it.data)
                     else
-                        consumer.consume(SearchState.Empty())
+                        SearchState.Empty()
                 }
 
                 is Resource.Error -> {
-                    consumer.consume(
-                        SearchState.Error(
-                            data.message
-                        )
+                    SearchState.Error(
+                        it.message
                     )
                 }
             }
