@@ -22,7 +22,7 @@ class RetrofitNetworkClient(
                     val resp = iTunesApiService.searchTracksSuspend(dto.expression)
                     resp.apply { resultCode = 200 }
                 } catch (e: Exception) {
-                    Response().apply { resultCode = 400 }
+                    Response().apply { resultCode = 500 }
                 }
             } else {
                 Response().apply { resultCode = 400 }

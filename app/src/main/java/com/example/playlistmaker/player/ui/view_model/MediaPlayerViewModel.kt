@@ -9,8 +9,9 @@ import com.example.playlistmaker.common.util.TimeFormat
 import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.ui.models.PlayerState
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getKoin
@@ -19,9 +20,10 @@ class MediaPlayerViewModel(
     private val getActiveTrackUseCase: GetActiveTrackUseCase,
     private val mediaPlayer: MediaPlayerInteractor
 ) : ViewModel() {
-    private var job: Job? = null
-    private var playerState = MutableLiveData<PlayerState>(PlayerState.Default())
     private val activeTrack = getActiveTrackUseCase.execute()
+    private val _playerProgressFlow = MutableStateFlow(activeTrack.trackTimeNormal)
+    val playerProgressFlow = _playerProgressFlow.asStateFlow()
+    private var playerState = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observePlayerState(): LiveData<PlayerState> = playerState
 
     init {
@@ -30,6 +32,7 @@ class MediaPlayerViewModel(
             mediaPlayer.prepare(url, consumerPrepared = {
                 playerState.value = PlayerState.Prepared()
             }, consumerCompleted = {
+                _playerProgressFlow.value = TIME_DEFAULT
                 playerState.value = PlayerState.Prepared()
             })
         }
@@ -40,9 +43,9 @@ class MediaPlayerViewModel(
     }
 
     private fun timeProgress() {
-        job = viewModelScope.launch {
+        viewModelScope.launch {
             while (mediaPlayer.isPlaying()) {
-                playerState.value = PlayerState.Playing(getCurrentPosition())
+                _playerProgressFlow.value = getCurrentPosition()
                 delay(DELAY)
             }
         }
@@ -50,16 +53,16 @@ class MediaPlayerViewModel(
 
     fun control() {
         mediaPlayer.control(start = {
-            playerState.value = PlayerState.Playing(progress = getCurrentPosition())
+            playerState.value = PlayerState.Playing()
             timeProgress()
         }, pause = {
-            playerState.value = PlayerState.Paused(progress = getCurrentPosition())
+            playerState.value = PlayerState.Paused()
         })
     }
 
     fun pause() {
         mediaPlayer.pause()
-        playerState.value = PlayerState.Paused(getCurrentPosition())
+        playerState.value = PlayerState.Paused()
     }
 
     override fun onCleared() {
@@ -74,5 +77,6 @@ class MediaPlayerViewModel(
 
     companion object {
         private const val DELAY = 300L
+        private const val TIME_DEFAULT = "00:00"
     }
 }

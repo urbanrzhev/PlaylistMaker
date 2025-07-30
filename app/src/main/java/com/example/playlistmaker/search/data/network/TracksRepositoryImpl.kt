@@ -18,24 +18,27 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
         return flow {
             when (response.resultCode) {
                 -1 -> emit(Resource.Error(message = R.string.load_error_one_for_search_double))
-                200 -> emit(Resource.Success(data = (response as TracksSearchResponse).results.map {
-                    Track(
-                        trackName = it.trackName,
-                        artistName = it.artistName,
-                        trackTimeNormal = getKoin().get<TimeFormat> {
-                            parametersOf(it.trackTimeMillis)
-                        }.getTimeMM_SS(),
-                        artworkUrl100 = it.artworkUrl100,
-                        previewUrl = it.previewUrl,
-                        collectionName = it.collectionName,
-                        releaseDate = it.releaseDate,
-                        primaryGenreName = it.primaryGenreName,
-                        country = it.country,
-                        trackId = it.trackId
+                200 ->
+                    emit(Resource.Success(data = (response as TracksSearchResponse).results.map {
+                        with(it) {
+                            Track(
+                                trackName = trackName,
+                                artistName = artistName,
+                                trackTimeNormal = getKoin().get<TimeFormat> {
+                                    parametersOf(trackTimeMillis)
+                                }.getTimeMM_SS(),
+                                artworkUrl100 = artworkUrl100,
+                                previewUrl = previewUrl,
+                                collectionName = collectionName,
+                                releaseDate = releaseDate,
+                                primaryGenreName = primaryGenreName,
+                                country = country,
+                                trackId = trackId
+                            )
+                        }
+                    }
                     )
-                }
-                )
-                )
+                    )
 
                 else -> emit(Resource.Error(message = R.string.load_error_two_for_search_double))
             }
