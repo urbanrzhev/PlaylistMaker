@@ -5,5 +5,5 @@ import com.example.playlistmaker.search.domain.models.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface TracksRepository {
-    suspend fun searchTracksSuspend(expression: String): Flow<Resource<List<Track>>>
+    fun searchTracks(expression: String): Flow<Resource<List<Track>>>
 }

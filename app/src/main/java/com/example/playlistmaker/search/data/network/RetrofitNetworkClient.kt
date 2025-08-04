@@ -5,29 +5,31 @@ import android.net.NetworkCapabilities
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class RetrofitNetworkClient(
     private val iTunesApiService: ITunesApiService,
     private val connectivityManager: ConnectivityManager
 ) : NetworkClient {
 
-    override suspend fun doRequestSuspend(dto: Any): Response {
-        return withContext(Dispatchers.IO) {
+    override fun doRequest(dto: Any): Flow<Response> {
+        return flow {
             if (!isConnected()) {
-                Response().apply { resultCode = -1 }
+                emit(Response().apply { resultCode = -1 })
             }
             if (dto is TracksSearchRequest) {
                 try {
                     val resp = iTunesApiService.searchTracksSuspend(dto.expression)
-                    resp.apply { resultCode = 200 }
+                    emit(resp.apply { resultCode = 200 })
                 } catch (e: Exception) {
-                    Response().apply { resultCode = 500 }
+                    emit(Response().apply { resultCode = 500 })
                 }
             } else {
-                Response().apply { resultCode = 400 }
+                emit(Response().apply { resultCode = 400 })
             }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     private fun isConnected(): Boolean {

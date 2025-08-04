@@ -97,7 +97,7 @@ class SearchViewModel(
     private fun searchTracks(expression: String) {
         searchStateLiveData.value = SearchState.Loaded()
         viewModelScope.launch {
-            tracksInteractor.searchTracksSuspend(expression).collect {
+            tracksInteractor.searchTracks(expression).collect {
                 searchStateLiveData.postValue(it)
             }
         }

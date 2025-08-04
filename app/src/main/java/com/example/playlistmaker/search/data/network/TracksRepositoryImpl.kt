@@ -8,25 +8,21 @@ import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.search.domain.models.Resource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.getKoin
+import kotlinx.coroutines.flow.map
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
-    override suspend fun searchTracksSuspend(expression: String): Flow<Resource<List<Track>>> {
-        val response = networkClient.doRequestSuspend(TracksSearchRequest(expression))
-        return flow {
-            when (response.resultCode) {
-                -1 -> emit(Resource.Error(message = R.string.load_error_one_for_search_double))
+class TracksRepositoryImpl(private val networkClient: NetworkClient, private val timeFormat: TimeFormat) : TracksRepository {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> {
+        val response = networkClient.doRequest(TracksSearchRequest(expression))
+        return response.map { result ->
+            when (result.resultCode) {
+                -1 -> Resource.Error(message = R.string.load_error_one_for_search_double)
                 200 ->
-                    emit(Resource.Success(data = (response as TracksSearchResponse).results.map {
+                    Resource.Success(data = (result as TracksSearchResponse).results.map {
                         with(it) {
                             Track(
                                 trackName = trackName,
                                 artistName = artistName,
-                                trackTimeNormal = getKoin().get<TimeFormat> {
-                                    parametersOf(trackTimeMillis)
-                                }.getTimeMM_SS(),
+                                trackTimeNormal = timeFormat.getTimeMM_SS(trackTimeMillis),
                                 artworkUrl100 = artworkUrl100,
                                 previewUrl = previewUrl,
                                 collectionName = collectionName,
@@ -36,11 +32,9 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                                 trackId = trackId
                             )
                         }
-                    }
-                    )
-                    )
+                    })
 
-                else -> emit(Resource.Error(message = R.string.load_error_two_for_search_double))
+                else -> Resource.Error(message = R.string.load_error_two_for_search_double)
             }
         }
     }

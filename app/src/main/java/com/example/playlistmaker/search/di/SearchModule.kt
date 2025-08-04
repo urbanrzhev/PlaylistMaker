@@ -25,7 +25,7 @@ val searchModule = module {
         SearchViewModel(get(),get(),get())
     }
     factory<TracksRepository> {
-        TracksRepositoryImpl(get())
+        TracksRepositoryImpl(get(),get())
     }
     factory<SetActiveTrackUseCase>{
         SetActiveTrackUseCaseImpl(get())

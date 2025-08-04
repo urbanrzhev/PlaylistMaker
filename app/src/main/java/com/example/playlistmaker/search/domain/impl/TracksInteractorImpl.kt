@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.map
 class TracksInteractorImpl(
     private val repository: TracksRepository
 ) : TracksInteractor {
-    override suspend fun searchTracksSuspend(expression: String): Flow<SearchState<List<Track>>> {
-        return repository.searchTracksSuspend(expression).map {
+    override fun searchTracks(expression: String): Flow<SearchState<List<Track>>> {
+        return repository.searchTracks(expression).map {
             when (it) {
                 is Resource.Success -> {
                     if (it.data.isNotEmpty())

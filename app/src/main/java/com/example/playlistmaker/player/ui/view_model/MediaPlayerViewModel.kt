@@ -9,17 +9,18 @@ import com.example.playlistmaker.common.util.TimeFormat
 import com.example.playlistmaker.player.domain.api.GetActiveTrackUseCase
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.ui.models.PlayerState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.getKoin
 
 class MediaPlayerViewModel(
     private val getActiveTrackUseCase: GetActiveTrackUseCase,
-    private val mediaPlayer: MediaPlayerInteractor
+    private val mediaPlayer: MediaPlayerInteractor,
+    private val timeFormat: TimeFormat
 ) : ViewModel() {
+    private var job: Job? = null
     private val activeTrack = getActiveTrackUseCase.execute()
     private val _playerProgressFlow = MutableStateFlow(activeTrack.trackTimeNormal)
     val playerProgressFlow = _playerProgressFlow.asStateFlow()
@@ -43,7 +44,8 @@ class MediaPlayerViewModel(
     }
 
     private fun timeProgress() {
-        viewModelScope.launch {
+        job?.cancel()
+        job = viewModelScope.launch {
             while (mediaPlayer.isPlaying()) {
                 _playerProgressFlow.value = getCurrentPosition()
                 delay(DELAY)
@@ -70,9 +72,7 @@ class MediaPlayerViewModel(
     }
 
     private fun getCurrentPosition(): String {
-        return getKoin().get<TimeFormat> {
-            parametersOf(mediaPlayer.currentPosition())
-        }.getTimeMM_SS()
+        return timeFormat.getTimeMM_SS(mediaPlayer.currentPosition())
     }
 
     companion object {

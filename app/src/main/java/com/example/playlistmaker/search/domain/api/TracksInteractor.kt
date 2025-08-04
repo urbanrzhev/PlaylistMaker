@@ -5,5 +5,5 @@ import com.example.playlistmaker.search.ui.models.SearchState
 import kotlinx.coroutines.flow.Flow
 
 interface TracksInteractor {
-    suspend fun searchTracksSuspend(expression: String): Flow<SearchState<List<Track>>>
+    fun searchTracks(expression: String): Flow<SearchState<List<Track>>>
 }
