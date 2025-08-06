@@ -19,15 +19,13 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 
 val searchModule = module {
     viewModel{
         SearchViewModel(get(),get(),get())
     }
     factory<TracksRepository> {
-        TracksRepositoryImpl(get())
+        TracksRepositoryImpl(get(),get())
     }
     factory<SetActiveTrackUseCase>{
         SetActiveTrackUseCaseImpl(get())
@@ -43,13 +41,10 @@ val searchModule = module {
             .create(ITunesApiService::class.java)
     }
     factory<TracksInteractor> {
-        TracksInteractorImpl(get(),get())
+        TracksInteractorImpl(get())
     }
     factory<HistoryInteractor>{
         HistoryInteractorImpl(get())
-    }
-    factory<Executor> {
-        Executors.newCachedThreadPool()
     }
     factory<ConnectivityManager> {
         androidContext().getSystemService(

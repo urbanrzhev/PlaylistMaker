@@ -22,13 +22,8 @@ val commonModule = module {
     single<SharedPreferences> {
         androidContext().getSharedPreferences("my_all_preferences", MODE_PRIVATE)
     }
-    factory<TimeFormat> { (param: Any) ->
-        when (param) {
-            is Long -> TimeFormat(timeMillisLong = param, get())
-            is Int -> TimeFormat(timeMillisInt = param, get())
-            is String -> TimeFormat(timeMillis = param, get())
-            else -> throw IllegalArgumentException("Unsupported parameter type")
-        }
+    factory<TimeFormat> {
+        TimeFormat(get())
     }
     factory<SimpleDateFormat> {
         SimpleDateFormat("mm:ss", Locale.getDefault())

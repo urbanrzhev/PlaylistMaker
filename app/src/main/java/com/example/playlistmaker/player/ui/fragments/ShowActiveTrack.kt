@@ -47,7 +47,6 @@ class ShowActiveTrack(
         binding.textArtistName.text = model.artistName
         binding.lengthTrack.text = model.trackTimeNormal
         try {
-            binding.textProgress.text = binding.lengthTrack.text
             Glide.with(context)
                 .load(getCoverArtwork(model.artworkUrl100))
                 .transform(RoundedCorners(MyDisplayMetrics().dpToPx(2f, context)))

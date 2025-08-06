@@ -3,11 +3,12 @@ package com.example.playlistmaker.common.util
 import java.text.SimpleDateFormat
 import java.util.IllegalFormatException
 
-class TimeFormat(private val timeMillis: String,private val simpleDateFormat: SimpleDateFormat) {
-    constructor(timeMillisLong: Long,  simpleDateFormat: SimpleDateFormat) : this(timeMillisLong.toString(),simpleDateFormat)
-    constructor(timeMillisInt: Int,  simpleDateFormat: SimpleDateFormat) : this(timeMillisInt.toString(),simpleDateFormat)
+class TimeFormat(private val simpleDateFormat: SimpleDateFormat) {
 
-    fun getTimeMM_SS(): String {
+    fun getTimeMM_SS(timeMillis: Long) = getTimeMM_SS(timeMillis.toString())
+    fun getTimeMM_SS(timeMillis: Int) = getTimeMM_SS(timeMillis.toString())
+
+    fun getTimeMM_SS(timeMillis: String): String {
         return try {
             simpleDateFormat.format(timeMillis.toInt())
         } catch (e: Exception) {

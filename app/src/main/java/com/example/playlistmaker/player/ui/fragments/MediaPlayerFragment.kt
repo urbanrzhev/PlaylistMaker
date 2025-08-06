@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.example.playlistmaker.common.util.BindingFragment
+import com.example.playlistmaker.player.ui.models.PlayerState
 import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
@@ -23,14 +27,15 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.observeTimeProgressLiveData().observe(viewLifecycleOwner) { time ->
-            binding.textProgress.text = time
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.playerProgressFlow.collect { state ->
+                    binding.textProgress.text = state
+                }
+            }
         }
-        viewModel.observeBackgroundPlayButton().observe(viewLifecycleOwner) { background ->
-            binding.buttonPause.setBackgroundResource(background)
-        }
-        viewModel.observeEnablePlayButton().observe(viewLifecycleOwner) { enabled ->
-            binding.buttonPause.isEnabled = enabled
+        viewModel.observePlayerState().observe(viewLifecycleOwner) { state ->
+            renderUI(state)
         }
         binding.buttonPause.setOnClickListener {
             viewModel.control()
@@ -43,8 +48,12 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
 
     override fun onPause() {
         super.onPause()
-        binding.buttonPause.setBackgroundResource(R.drawable.play_play)
         viewModel.pause()
+    }
+
+    private fun renderUI(value: PlayerState) {
+        binding.buttonPause.isEnabled = value.isPlayButtonEnabled
+        binding.buttonPause.setBackgroundResource(value.playButtonBackground)
     }
 
     private fun loadTrack(model: Track) {

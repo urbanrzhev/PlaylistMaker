@@ -5,59 +5,62 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.SingleLiveEvent
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.SetActiveTrackUseCase
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.ui.models.SearchState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val setActiveTrackUseCase: SetActiveTrackUseCase,
     private val tracksInteractor: TracksInteractor,
     private val searchHistoryInteractor: HistoryInteractor
 ) : ViewModel() {
+    private var job: Job? = null
     private val handler = Handler(Looper.getMainLooper())
     private var temporaryTextRequest = ""
     private var focusEditText = MutableLiveData<Boolean>()
-    fun observeFocusEditTextLiveData():LiveData<Boolean> = focusEditText
+    fun observeFocusEditTextLiveData(): LiveData<Boolean> = focusEditText
     private var temporaryEditText = MutableLiveData<String>()
-    fun observeTemporaryEditTextLiveData():LiveData<String> = temporaryEditText
+    fun observeTemporaryEditTextLiveData(): LiveData<String> = temporaryEditText
     private var searchStateLiveData = MutableLiveData<SearchState<List<Track>>>()
     fun observeState(): LiveData<SearchState<List<Track>>> = searchStateLiveData
     private var historyLiveData = SingleLiveEvent<List<Track>>()
     fun observeHistory(): LiveData<List<Track>> = historyLiveData
 
-    override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
-
-    fun setFocusEditText(value:Boolean){
+    fun setFocusEditText(value: Boolean) {
         focusEditText.value = value
     }
 
-    fun setTemporaryEditText(value:String){
+    fun setTemporaryEditText(value: String) {
         temporaryEditText.value = value
     }
 
     fun searchDebounce() {
-        searchDebounce(temporaryTextRequest,true)
+        searchDebounce(temporaryTextRequest, true)
     }
 
     fun clearSearchDebounce() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
-    fun searchDebounce(requestText: String, reload:Boolean = false) {
-        if(temporaryTextRequest != requestText || reload) {
+    fun searchDebounce(requestText: String, reload: Boolean = false) {
+        if (temporaryTextRequest != requestText || reload) {
             temporaryTextRequest = requestText
-            handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-            val searchRunnable = Runnable { searchRequest(requestText) }
-            handler.postDelayed(searchRunnable, SEARCH_REQUEST_TOKEN, SEARCH_DEBOUNCE_DELAY)
+            job?.cancel()
+            job = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                searchRequest(requestText)
+            }
         }
     }
 
-    fun clearTemporaryTextRequest(){
+    fun clearTemporaryTextRequest() {
         temporaryTextRequest = ""
     }
 
@@ -69,7 +72,7 @@ class SearchViewModel(
         }
     }
 
-    fun visibleHistory(){
+    fun visibleHistory() {
         searchStateLiveData.value = SearchState.History()
     }
 
@@ -93,9 +96,11 @@ class SearchViewModel(
 
     private fun searchTracks(expression: String) {
         searchStateLiveData.value = SearchState.Loaded()
-        tracksInteractor.searchTracks(expression = expression, TracksInteractor.TracksConsumer {
-            searchStateLiveData.postValue(it)
-        })
+        viewModelScope.launch {
+            tracksInteractor.searchTracks(expression).collect {
+                searchStateLiveData.postValue(it)
+            }
+        }
     }
 
     companion object {
