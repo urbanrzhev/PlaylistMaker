@@ -13,7 +13,8 @@
         android:layout_height="45dp"
         android:layout_gravity="center_vertical|start"
         android:contentDescription="@string/default_image"
-        app:srcCompat="@drawable/placeholder_search" />
+        app:srcCompat="@drawable/placeholder_search"
+        tools:src="@tools:sample/avatars" />
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
