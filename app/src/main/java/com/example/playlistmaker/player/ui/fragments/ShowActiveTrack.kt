@@ -43,6 +43,7 @@ class ShowActiveTrack(
             getYear(model.releaseDate),
             binding.year
         )
+        binding.buttonLikeYes.isVisible = model.isFavorite
         binding.textBig.text = model.trackName
         binding.textArtistName.text = model.artistName
         binding.lengthTrack.text = model.trackTimeNormal

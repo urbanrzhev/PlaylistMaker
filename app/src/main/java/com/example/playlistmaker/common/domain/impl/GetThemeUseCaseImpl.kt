@@ -1,4 +1,4 @@
-package com.example.playlistmaker.common.domain.use_case
+package com.example.playlistmaker.common.domain.impl
 
 import com.example.playlistmaker.common.domain.api.GetThemeUseCase
 import com.example.playlistmaker.common.domain.api.SharedPreferencesManager

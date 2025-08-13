@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.example.playlistmaker.common.util.BindingFragment
+import com.example.playlistmaker.common.util.TrackBundleUtil
 import com.example.playlistmaker.player.ui.models.PlayerState
 import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
 import kotlinx.coroutines.launch
@@ -18,6 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
     private val viewModel: MediaPlayerViewModel by viewModel()
+    private var dataTrack:Track? = null
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -37,13 +40,28 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
         viewModel.observePlayerState().observe(viewLifecycleOwner) { state ->
             renderUI(state)
         }
+
         binding.buttonPause.setOnClickListener {
             viewModel.control()
         }
+
         binding.vectorBack.setOnClickListener {
             findNavController().navigateUp()
         }
-        loadTrack(viewModel.getActiveTrack())
+
+        binding.buttonLike.setOnClickListener {
+            viewModel.onFavoritesClicked(binding.buttonLikeYes.isVisible)
+            binding.buttonLikeYes.isVisible = !binding.buttonLikeYes.isVisible
+        }
+        dataTrack = TrackBundleUtil.rewriteBundle(requireArguments().getBundle(ARGS_KEY_TRACK))
+        (if(dataTrack != null)
+            dataTrack
+        else
+            viewModel.getActiveTrack())?.let {
+            loadTrack(
+                it
+            )
+        }
     }
 
     override fun onPause() {
@@ -59,5 +77,10 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
     private fun loadTrack(model: Track) {
         ShowActiveTrack(requireContext(), binding, model)
             .show()
+    }
+
+    companion object{
+        private const val ARGS_KEY_TRACK = "track"
+        fun createArgs(track:Track):Bundle = TrackBundleUtil.createBundle(ARGS_KEY_TRACK, track)
     }
 }

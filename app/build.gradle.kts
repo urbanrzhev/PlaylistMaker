@@ -39,10 +39,10 @@ android {
 }
 
 dependencies {
-    val room_version = "2.5.1"
-    implementation(libs.androidx.room.runtime.v251) // библиотека Room
-    kapt("androidx.room:room-compiler:$room_version") // Kotlin-кодогенератор
-    implementation(libs.androidx.room.ktx) // поддержка корутин
+    val room_version = "2.7.2"
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation(libs.androidx.room.ktx) 
     implementation (libs.androidx.navigation.fragment.ktx)
     implementation (libs.androidx.navigation.ui.ktx)
     implementation (libs.androidx.fragment.ktx)

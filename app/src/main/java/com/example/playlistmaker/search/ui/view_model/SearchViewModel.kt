@@ -9,15 +9,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.SingleLiveEvent
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
-import com.example.playlistmaker.search.domain.api.SetActiveTrackUseCase
 import com.example.playlistmaker.search.domain.api.TracksInteractor
+import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.ui.models.SearchState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val setActiveTrackUseCase: SetActiveTrackUseCase,
     private val tracksInteractor: TracksInteractor,
     private val searchHistoryInteractor: HistoryInteractor
 ) : ViewModel() {
@@ -90,15 +89,24 @@ class SearchViewModel(
         searchHistoryInteractor.clear()
     }
 
-    fun setActiveTrack(track: Track) {
-        setActiveTrackUseCase.execute(track)
-    }
-
     private fun searchTracks(expression: String) {
         searchStateLiveData.value = SearchState.Loaded()
         viewModelScope.launch {
             tracksInteractor.searchTracks(expression).collect {
-                searchStateLiveData.postValue(it)
+                when (it) {
+                    is Resource.Success -> {
+                        if (it.data.isNotEmpty())
+                            searchStateLiveData.postValue(SearchState.Success(it.data))
+                        else
+                            searchStateLiveData.postValue(SearchState.Idle())
+                    }
+
+                    is Resource.Error -> {
+                        searchStateLiveData.postValue(SearchState.Error(
+                            it.message
+                        ))
+                    }
+                }
             }
         }
     }
