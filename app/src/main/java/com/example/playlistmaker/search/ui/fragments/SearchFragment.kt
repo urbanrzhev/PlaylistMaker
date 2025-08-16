@@ -15,8 +15,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.search.ui.adapters_holders.TracksAdapter
-import com.example.playlistmaker.search.ui.adapters_holders.TracksHistoryAdapter
+import com.example.playlistmaker.common.ui.adapter_holder.TracksAdapter
+import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
+import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
 import com.example.playlistmaker.search.ui.models.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import kotlinx.coroutines.delay
@@ -32,8 +33,9 @@ class SearchFragment : Fragment() {
     private val searchAdapter = TracksAdapter {
         addTrackHistory(it)
         goAudioPlayer(it)
+
     }
-    private val historyAdapter = TracksHistoryAdapter {
+    private val historyAdapter = TracksAdapter {
         viewModel.visibleHistory()
         goAudioPlayer(it)
     }
@@ -135,7 +137,7 @@ class SearchFragment : Fragment() {
                 showProgressBar(true)
             }
 
-            is SearchState.Empty -> {
+            is SearchState.Idle -> {
                 showProgressBar(false)
                 emptyLoadTracks()
             }
@@ -176,9 +178,16 @@ class SearchFragment : Fragment() {
     }
 
     private fun goAudioPlayer(track: Track) {
+        val change = MediaPlayerViewModel.changesFavoriteTrack(track.trackId)
+        val newTrack:Track? = change?.let {
+            track.copy(
+                isFavorite = change
+            )
+        }
+
         if (clickDebounce()) {
-            findNavController().navigate(R.id.action_searchFragment_to_mediaPlayerFragment)
-            setActiveTrack(track)
+            findNavController().navigate(R.id.action_searchFragment_to_mediaPlayerFragment,
+                MediaPlayerFragment.createArgs(newTrack ?: track))
         }
     }
 
@@ -195,10 +204,6 @@ class SearchFragment : Fragment() {
         binding.notTrack.isVisible = false
         if (historyAdapter.itemCount > 0)
             binding.viewGroupHistory.isVisible = true
-    }
-
-    private fun setActiveTrack(track: Track) {
-        viewModel.setActiveTrack(track)
     }
 
     private fun clickDebounce(): Boolean {

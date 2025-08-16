@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.ui.adapters_holders
+package com.example.playlistmaker.common.ui.adapter_holder
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
