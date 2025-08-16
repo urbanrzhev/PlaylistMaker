@@ -8,19 +8,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.SingleLiveEvent
+import com.example.playlistmaker.common.util.debounce
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.ui.models.SearchState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val tracksInteractor: TracksInteractor,
     private val searchHistoryInteractor: HistoryInteractor
 ) : ViewModel() {
-    private var job: Job? = null
+    private val trackSearchDebounce = debounce<String>(SEARCH_DEBOUNCE_DELAY,viewModelScope,true){ text ->
+        searchRequest(text)
+    }
     private val handler = Handler(Looper.getMainLooper())
     private var temporaryTextRequest = ""
     private var focusEditText = MutableLiveData<Boolean>()
@@ -51,11 +53,7 @@ class SearchViewModel(
     fun searchDebounce(requestText: String, reload: Boolean = false) {
         if (temporaryTextRequest != requestText || reload) {
             temporaryTextRequest = requestText
-            job?.cancel()
-            job = viewModelScope.launch {
-                delay(SEARCH_DEBOUNCE_DELAY)
-                searchRequest(requestText)
-            }
+            trackSearchDebounce(requestText)
         }
     }
 

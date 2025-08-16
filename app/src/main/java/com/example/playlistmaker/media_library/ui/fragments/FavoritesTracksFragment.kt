@@ -23,7 +23,7 @@ class FavoritesTracksFragment : BindingFragment<FragmentFavoritesTracksBinding>(
     private val viewModel: FavoritesTracksViewModel by viewModel()
     private var isClickAllowed = true
     private val adapter = TracksAdapter {
-        goAudioPlayer(it)
+            goAudioPlayer(it)
     }
 
     override fun createBinding(
@@ -50,24 +50,13 @@ class FavoritesTracksFragment : BindingFragment<FragmentFavoritesTracksBinding>(
         }
     }
 
-    private fun renderUi(value: Boolean) {
-        binding.imageView3.isVisible = value
-        binding.text.isVisible = value
-        binding.recycler.isVisible = !value
-    }
-
     private fun goAudioPlayer(track: Track) {
         if (clickDebounce()) {
             findNavController().navigate(
                 R.id.action_mediaLibraryFragment_to_mediaPlayerFragment,
                 MediaPlayerFragment.createArgs(track)
             )
-            setActiveTrack(track)
         }
-    }
-
-    private fun setActiveTrack(track: Track) {
-        viewModel.setActiveTrack(track)
     }
 
     private fun clickDebounce(): Boolean {
@@ -78,6 +67,12 @@ class FavoritesTracksFragment : BindingFragment<FragmentFavoritesTracksBinding>(
             isClickAllowed = true
         }
         return current
+    }
+
+    private fun renderUi(value: Boolean) {
+        binding.imageView3.isVisible = value
+        binding.text.isVisible = value
+        binding.recycler.isVisible = !value
     }
 
     companion object {

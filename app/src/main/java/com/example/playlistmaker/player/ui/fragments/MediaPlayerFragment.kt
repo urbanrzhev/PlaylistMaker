@@ -19,8 +19,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
-    private val viewModel: MediaPlayerViewModel by viewModel()
-    private var dataTrack:Track? = null
+    private lateinit var dataTrack: Track
+    private val viewModel by viewModel<MediaPlayerViewModel>()
+
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -30,6 +31,9 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dataTrack = TrackBundleUtil.rewriteBundle(requireArguments().getBundle(ARGS_KEY_TRACK))!!
+        if(savedInstanceState == null)
+            viewModel.initTrack(dataTrack)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.playerProgressFlow.collect { state ->
@@ -53,15 +57,7 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
             viewModel.onFavoritesClicked(binding.buttonLikeYes.isVisible)
             binding.buttonLikeYes.isVisible = !binding.buttonLikeYes.isVisible
         }
-        dataTrack = TrackBundleUtil.rewriteBundle(requireArguments().getBundle(ARGS_KEY_TRACK))
-        (if(dataTrack != null)
-            dataTrack
-        else
-            viewModel.getActiveTrack())?.let {
-            loadTrack(
-                it
-            )
-        }
+        loadTrack(dataTrack)
     }
 
     override fun onPause() {
@@ -79,8 +75,8 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
             .show()
     }
 
-    companion object{
+    companion object {
         private const val ARGS_KEY_TRACK = "track"
-        fun createArgs(track:Track):Bundle = TrackBundleUtil.createBundle(ARGS_KEY_TRACK, track)
+        fun createArgs(track: Track): Bundle = TrackBundleUtil.createBundle(ARGS_KEY_TRACK, track)
     }
 }
