@@ -8,8 +8,6 @@ import com.example.playlistmaker.common.db.entity.TrackEntity
 
 @Dao
 interface TrackDao{
-    @Query("SELECT * FROM track_table_favorite WHERE track_id = :trackId")
-    suspend fun getFavoriteTrack(trackId:Int):TrackEntity
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun setFavoriteTrack(track:TrackEntity)
     @Query("DELETE FROM track_table_favorite WHERE track_id = :trackId")

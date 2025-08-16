@@ -1,6 +1,5 @@
 package com.example.playlistmaker.common.data.repository
 
-import android.util.Log
 import com.example.playlistmaker.common.db.AppDatabase
 import com.example.playlistmaker.common.db.converters.TrackDbConverter
 import com.example.playlistmaker.common.db.entity.TrackEntity
@@ -16,7 +15,6 @@ class DataBaseRepositoryImpl(
     private val converter: TrackDbConverter
 ) : DataBaseRepository {
     override suspend fun setFavoriteTrack(track: Track) {
-        Log.v("my", "repository setFavoriteTrack")
         withContext(Dispatchers.IO) {
             val trackEntity = converterFromTrack(track)
             db.getTrackDao().setFavoriteTrack(trackEntity)
@@ -34,10 +32,6 @@ class DataBaseRepositoryImpl(
             val list = db.getTrackDao().getAllFavoritesTracks()
             emit(converterAllFromTrackEntity(list))
         }
-    }
-
-    private fun converterFromTrackEntity(track: TrackEntity): Track {
-        return converter.map(track)
     }
 
     private fun converterFromTrack(track: Track): TrackEntity {
