@@ -7,12 +7,10 @@ import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.search.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
-import com.example.playlistmaker.search.domain.api.SetActiveTrackUseCase
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.impl.HistoryInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
-import com.example.playlistmaker.search.domain.use_case.SetActiveTrackUseCaseImpl
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -22,13 +20,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val searchModule = module {
     viewModel{
-        SearchViewModel(get(),get(),get())
+        SearchViewModel(get(),get())
     }
     factory<TracksRepository> {
-        TracksRepositoryImpl(get(),get())
-    }
-    factory<SetActiveTrackUseCase>{
-        SetActiveTrackUseCaseImpl(get())
+        TracksRepositoryImpl(get(),get(),get())
     }
     factory<NetworkClient>{
         RetrofitNetworkClient(get(),get())

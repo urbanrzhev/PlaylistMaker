@@ -10,13 +10,16 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.search.ui.adapters_holders.TracksAdapter
-import com.example.playlistmaker.search.ui.adapters_holders.TracksHistoryAdapter
+import com.example.playlistmaker.common.ui.adapter_holder.TracksAdapter
+import com.example.playlistmaker.common.ui.view_model.SharedViewModel
+import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
 import com.example.playlistmaker.search.ui.models.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import kotlinx.coroutines.delay
@@ -25,6 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
+    private val viewModelCommunicator: SharedViewModel by viewModel()
     private lateinit var binding: FragmentSearchBinding
     private var temporaryEditText = ""
     private var textWatcher: TextWatcher? = null
@@ -32,8 +36,9 @@ class SearchFragment : Fragment() {
     private val searchAdapter = TracksAdapter {
         addTrackHistory(it)
         goAudioPlayer(it)
+
     }
-    private val historyAdapter = TracksHistoryAdapter {
+    private val historyAdapter = TracksAdapter {
         viewModel.visibleHistory()
         goAudioPlayer(it)
     }
@@ -48,6 +53,15 @@ class SearchFragment : Fragment() {
         binding.recyclerSearchHistory.adapter = historyAdapter
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModelCommunicator.likeState.collect {
+                    searchAdapter.changeTrack(it)
+                    historyAdapter.changeTrack(it)
+                    viewModelCommunicator.clearFavoriteList()
+                }
+            }
         }
         viewModel.observeHistory().observe(viewLifecycleOwner) {
             historyAdapter.setTrackList(it)
@@ -135,7 +149,7 @@ class SearchFragment : Fragment() {
                 showProgressBar(true)
             }
 
-            is SearchState.Empty -> {
+            is SearchState.Idle -> {
                 showProgressBar(false)
                 emptyLoadTracks()
             }
@@ -177,8 +191,8 @@ class SearchFragment : Fragment() {
 
     private fun goAudioPlayer(track: Track) {
         if (clickDebounce()) {
-            findNavController().navigate(R.id.action_searchFragment_to_mediaPlayerFragment)
-            setActiveTrack(track)
+            findNavController().navigate(R.id.action_searchFragment_to_mediaPlayerFragment,
+                MediaPlayerFragment.createArgs(track))
         }
     }
 
@@ -195,10 +209,6 @@ class SearchFragment : Fragment() {
         binding.notTrack.isVisible = false
         if (historyAdapter.itemCount > 0)
             binding.viewGroupHistory.isVisible = true
-    }
-
-    private fun setActiveTrack(track: Track) {
-        viewModel.setActiveTrack(track)
     }
 
     private fun clickDebounce(): Boolean {

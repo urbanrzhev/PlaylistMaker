@@ -82,7 +82,19 @@
         android:layout_width="51dp"
         android:layout_height="51dp"
         android:layout_marginBottom="68dp"
-        android:background="@drawable/like_audio_player"
+        android:background="@drawable/like_not_audio_player"
+        app:layout_constraintBottom_toTopOf="@+id/lengthTrack"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/buttonPause" />
+
+    <View
+        android:id="@+id/buttonLikeYes"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:layout_marginBottom="68dp"
+        android:visibility="visible"
+        android:background="@drawable/like_yes_audio_player"
         app:layout_constraintBottom_toTopOf="@+id/lengthTrack"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="1.0"
