@@ -1,8 +1,7 @@
 package com.example.playlistmaker.search.data.network
 
 import com.example.playlistmaker.R
-import com.example.playlistmaker.common.db.AppDatabase
-import com.example.playlistmaker.common.db.entity.TrackEntity
+import com.example.playlistmaker.common.db.dao.TrackDao
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.data.dto.TracksSearchResponse
 import com.example.playlistmaker.common.util.TimeFormat
@@ -10,16 +9,13 @@ import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.search.data.dto.TrackDto
 import com.example.playlistmaker.search.domain.models.Resource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
     private val timeFormat: TimeFormat,
-    private val database: AppDatabase
+    private val database: TrackDao
 ) : TracksRepository {
     private var list: List<Int>? = null
 
@@ -29,7 +25,7 @@ class TracksRepositoryImpl(
             when (result.resultCode) {
                 -1 -> Resource.Error(message = R.string.load_error_one_for_search_double)
                 200 -> {
-                    list = database.getTrackDao().getFavoritesTrackIds()
+                    list = database.getFavoritesTrackIds()
                     Resource.Success(
                         data = (result as TracksSearchResponse).results.map {
                             trackMapper(it)

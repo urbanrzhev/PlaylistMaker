@@ -1,35 +1,29 @@
 package com.example.playlistmaker.common.data.repository
 
-import com.example.playlistmaker.common.db.AppDatabase
 import com.example.playlistmaker.common.db.converters.TrackDbConverter
+import com.example.playlistmaker.common.db.dao.TrackDao
 import com.example.playlistmaker.common.db.entity.TrackEntity
 import com.example.playlistmaker.common.domain.api.DataBaseRepository
 import com.example.playlistmaker.common.domain.models.Track
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 
 class DataBaseRepositoryImpl(
-    private val db: AppDatabase,
+    private val db: TrackDao,
     private val converter: TrackDbConverter
 ) : DataBaseRepository {
     override suspend fun setFavoriteTrack(track: Track) {
-        withContext(Dispatchers.IO) {
             val trackEntity = converterFromTrack(track)
-            db.getTrackDao().setFavoriteTrack(trackEntity)
-        }
+            db.setFavoriteTrack(trackEntity)
     }
 
     override suspend fun deleteFavoriteTrack(trackId: Int) {
-        withContext(Dispatchers.IO) {
-            db.getTrackDao().deleteFavoriteTrack(trackId)
-        }
+            db.deleteFavoriteTrack(trackId)
     }
 
     override fun getAllFavoritesTracks(): Flow<List<Track>> {
         return flow {
-            val list = db.getTrackDao().getAllFavoritesTracks()
+            val list = db.getAllFavoritesTracks()
             emit(converterAllFromTrackEntity(list))
         }
     }

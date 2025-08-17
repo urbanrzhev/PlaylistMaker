@@ -1,7 +1,7 @@
 package com.example.playlistmaker.common.data.repository
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.common.db.AppDatabase
+import com.example.playlistmaker.common.db.dao.TrackDao
 import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.common.domain.models.Track
 import com.google.gson.Gson
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class SharedPreferencesManagerImpl(
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson,
-    private val database: AppDatabase
+    private val database: TrackDao
 ) : SharedPreferencesManager {
     private var dbListFavoritesIds: List<Int>? = null
 
@@ -67,7 +67,7 @@ class SharedPreferencesManagerImpl(
 
     private fun getDbFavoritesTracks(){
         CoroutineScope(Dispatchers.IO).launch {
-            dbListFavoritesIds = database.getTrackDao().getFavoritesTrackIds()
+            dbListFavoritesIds = database.getFavoritesTrackIds()
         }
     }
 

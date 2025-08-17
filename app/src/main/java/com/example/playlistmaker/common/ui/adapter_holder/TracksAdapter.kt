@@ -25,6 +25,22 @@ class TracksAdapter(
         return tracks.size
     }
 
+    fun changeTrack(pairList: List<Pair<Int,Boolean>>){
+        val tempList = mutableListOf<Pair<Int,Boolean>>()
+        if(pairList.isNotEmpty()) {
+            tracks.forEachIndexed { i, t ->
+                pairList.forEach {
+                    if(it.first == t.trackId)
+                        tempList.add(Pair(i,it.second))
+                }
+            }
+            tempList.forEach {
+                tracks.set(it.first,tracks[it.first].copy(isFavorite = it.second))
+                notifyItemChanged(it.first)
+            }
+        }
+    }
+
     fun setTrackList(list: List<Track>) {
         tracks.clear()
         tracks.addAll(list)

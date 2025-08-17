@@ -10,14 +10,16 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.common.ui.adapter_holder.TracksAdapter
+import com.example.playlistmaker.common.ui.view_model.SharedViewModel
 import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
-import com.example.playlistmaker.player.ui.view_model.MediaPlayerViewModel
 import com.example.playlistmaker.search.ui.models.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import kotlinx.coroutines.delay
@@ -26,6 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
+    private val viewModelCommunicator: SharedViewModel by viewModel()
     private lateinit var binding: FragmentSearchBinding
     private var temporaryEditText = ""
     private var textWatcher: TextWatcher? = null
@@ -50,6 +53,15 @@ class SearchFragment : Fragment() {
         binding.recyclerSearchHistory.adapter = historyAdapter
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModelCommunicator.likeState.collect {
+                    searchAdapter.changeTrack(it)
+                    historyAdapter.changeTrack(it)
+                    viewModelCommunicator.clearFavoriteList()
+                }
+            }
         }
         viewModel.observeHistory().observe(viewLifecycleOwner) {
             historyAdapter.setTrackList(it)
@@ -178,16 +190,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun goAudioPlayer(track: Track) {
-        val change = MediaPlayerViewModel.changesFavoriteTrack(track.trackId)
-        val newTrack:Track? = change?.let {
-            track.copy(
-                isFavorite = change
-            )
-        }
-
         if (clickDebounce()) {
             findNavController().navigate(R.id.action_searchFragment_to_mediaPlayerFragment,
-                MediaPlayerFragment.createArgs(newTrack ?: track))
+                MediaPlayerFragment.createArgs(track))
         }
     }
 

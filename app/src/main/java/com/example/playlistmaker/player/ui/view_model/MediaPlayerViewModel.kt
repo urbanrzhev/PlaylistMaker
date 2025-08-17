@@ -83,32 +83,10 @@ class MediaPlayerViewModel(
                 databaseInteractor.setFavoriteTrack(activeTrack)
             }
         }
-        updateFavoriteLists(activeTrack.trackId, !value)
     }
 
     companion object {
         private const val DELAY = 300L
         private const val TIME_DEFAULT = "00:00"
-        private var favoriteList: MutableList<Pair<Int, Boolean>> = mutableListOf()
-        private fun updateFavoriteLists(trackId: Int, like: Boolean) {
-            var check: Int? = null
-            favoriteList.forEachIndexed { i, pair ->
-                if (pair.first == trackId) {
-                    check = i
-                }
-            }
-            check?.let {
-                favoriteList.removeAt(it)
-            }
-            favoriteList.add(Pair(trackId, like))
-        }
-
-        internal fun changesFavoriteTrack(trackId: Int):Boolean? {
-            favoriteList.forEach {
-                if(it.first == trackId)
-                    return it.second
-            }
-            return null
-        }
     }
 }

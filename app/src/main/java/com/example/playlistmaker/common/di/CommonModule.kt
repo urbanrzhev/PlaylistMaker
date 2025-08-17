@@ -7,12 +7,14 @@ import com.example.playlistmaker.common.data.repository.DataBaseRepositoryImpl
 import com.example.playlistmaker.common.data.repository.SharedPreferencesManagerImpl
 import com.example.playlistmaker.common.db.AppDatabase
 import com.example.playlistmaker.common.db.converters.TrackDbConverter
+import com.example.playlistmaker.common.db.dao.TrackDao
 import com.example.playlistmaker.common.domain.api.DataBaseInteractor
 import com.example.playlistmaker.common.domain.api.DataBaseRepository
 import com.example.playlistmaker.common.domain.api.GetThemeUseCase
 import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.common.domain.impl.DataBaseInteractorImpl
 import com.example.playlistmaker.common.domain.impl.GetThemeUseCaseImpl
+import com.example.playlistmaker.common.ui.view_model.SharedViewModel
 import com.example.playlistmaker.common.util.TimeFormat
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
@@ -21,6 +23,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 val commonModule = module {
+    single <SharedViewModel> {
+        SharedViewModel()
+    }
     single<Gson> {
         Gson()
     }
@@ -48,9 +53,10 @@ val commonModule = module {
     factory <DataBaseInteractor> {
         DataBaseInteractorImpl(get())
     }
-    single<AppDatabase>{
+    single<TrackDao>{
         Room.databaseBuilder(androidContext(),AppDatabase::class.java,"database.db")
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
+            .getTrackDao()
     }
 }
