@@ -43,7 +43,7 @@ class FavoritesTracksFragment : BindingFragment<FragmentFavoritesTracksBinding>(
                 is RecyclerState.Empty -> renderUi(true)
                 is RecyclerState.Success -> {
                     renderUi(false)
-                    adapter.setTrackList(it.data)
+                    adapter.updateList(it.data)
                 }
                 is RecyclerState.Idle -> {}
             }
