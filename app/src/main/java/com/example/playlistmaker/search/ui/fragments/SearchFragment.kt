@@ -70,14 +70,12 @@ class SearchFragment : Fragment() {
             historyAdapter.updateList(mutableListOf())
             binding.viewGroupHistory.isVisible = false
         }
-
         binding.editSearchText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.editSearchText.text.isEmpty() && historyAdapter.itemCount > 0) {
                 viewModel.visibleHistory()
                 viewModel.setFocusEditText(hasFocus)
             }
         }
-
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
