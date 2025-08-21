@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val searchModule = module {
     viewModel{
-        SearchViewModel(get(),get())
+        SearchViewModel(get(),get(),get())
     }
     factory<TracksRepository> {
         TracksRepositoryImpl(get(),get(),get())

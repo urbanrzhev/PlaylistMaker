@@ -6,23 +6,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.common.db.dao.TrackDao
 import com.example.playlistmaker.common.domain.models.Track
-import com.example.playlistmaker.common.util.SingleLiveEvent
 import com.example.playlistmaker.common.util.debounce
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.ui.models.SearchState
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val tracksInteractor: TracksInteractor,
-    private val searchHistoryInteractor: HistoryInteractor
+    private val searchHistoryInteractor: HistoryInteractor,
+    private val database: TrackDao
 ) : ViewModel() {
-    private val trackSearchDebounce = debounce<String>(SEARCH_DEBOUNCE_DELAY,viewModelScope,true){ text ->
-        searchRequest(text)
-    }
+    private val trackSearchDebounce =
+        debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) { text ->
+            searchRequest(text)
+        }
     private val handler = Handler(Looper.getMainLooper())
     private var temporaryTextRequest = ""
     private var focusEditText = MutableLiveData<Boolean>()
@@ -31,8 +32,39 @@ class SearchViewModel(
     fun observeTemporaryEditTextLiveData(): LiveData<String> = temporaryEditText
     private var searchStateLiveData = MutableLiveData<SearchState<List<Track>>>()
     fun observeState(): LiveData<SearchState<List<Track>>> = searchStateLiveData
-    private var historyLiveData = SingleLiveEvent<List<Track>>()
+    private var historyLiveData = MutableLiveData<List<Track>>(getHistory())
     fun observeHistory(): LiveData<List<Track>> = historyLiveData
+
+    fun updateListsRecycler() {
+        viewModelScope.launch {
+            val databaseFavoritesIdsList = database.getFavoritesTrackIds()
+            searchStateLiveData.value?.let { list ->
+                if (list is SearchState.Success) {
+                    val newList = newListIdsMapper(list.data, databaseFavoritesIdsList)
+                    searchStateLiveData.value = SearchState.Success(newList)
+                }
+            }
+            historyLiveData.value?.let { list ->
+                val newList = newListIdsMapper(list, databaseFavoritesIdsList)
+                historyLiveData.value = newList
+            }
+        }
+    }
+
+    private fun newListIdsMapper(list: List<Track>, ids: List<Int>): List<Track> {
+        return list.map { track ->
+            track.copy(
+                isFavorite = run {
+                    var check = false
+                    ids.forEach { id ->
+                        if (track.trackId == id)
+                            check = true
+                    }
+                    return@run check
+                }
+            )
+        }
+    }
 
     fun setFocusEditText(value: Boolean) {
         focusEditText.value = value
@@ -73,7 +105,7 @@ class SearchViewModel(
         searchStateLiveData.value = SearchState.History()
     }
 
-    fun getHistory(): List<Track> {
+    private fun getHistory(): List<Track> {
         return searchHistoryInteractor.getTracks()
     }
 
@@ -100,9 +132,11 @@ class SearchViewModel(
                     }
 
                     is Resource.Error -> {
-                        searchStateLiveData.postValue(SearchState.Error(
-                            it.message
-                        ))
+                        searchStateLiveData.postValue(
+                            SearchState.Error(
+                                it.message
+                            )
+                        )
                     }
                 }
             }

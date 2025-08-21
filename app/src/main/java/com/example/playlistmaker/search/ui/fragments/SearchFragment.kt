@@ -10,15 +10,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.common.ui.adapter_holder.TracksAdapter
-import com.example.playlistmaker.common.ui.view_model.SharedViewModel
 import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
 import com.example.playlistmaker.search.ui.models.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
@@ -28,7 +25,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
-    private val viewModelCommunicator: SharedViewModel by viewModel()
     private lateinit var binding: FragmentSearchBinding
     private var temporaryEditText = ""
     private var textWatcher: TextWatcher? = null
@@ -36,7 +32,6 @@ class SearchFragment : Fragment() {
     private val searchAdapter = TracksAdapter {
         addTrackHistory(it)
         goAudioPlayer(it)
-
     }
     private val historyAdapter = TracksAdapter {
         viewModel.visibleHistory()
@@ -47,24 +42,20 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        isClickAllowed = true
         binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        isClickAllowed = true
         binding.recyclerSearch.adapter = searchAdapter
         binding.recyclerSearchHistory.adapter = historyAdapter
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModelCommunicator.likeState.collect {
-                    searchAdapter.changeTrack(it)
-                    historyAdapter.changeTrack(it)
-                    viewModelCommunicator.clearFavoriteList()
-                }
-            }
-        }
         viewModel.observeHistory().observe(viewLifecycleOwner) {
-            historyAdapter.setTrackList(it)
+            historyAdapter.updateList(it)
         }
         viewModel.observeFocusEditTextLiveData().observe(viewLifecycleOwner) {
             if (it) {
@@ -76,7 +67,7 @@ class SearchFragment : Fragment() {
         }
         binding.clearHistoryButton.setOnClickListener {
             viewModel.clearTrackListHistory()
-            historyAdapter.setTrackList(mutableListOf())
+            historyAdapter.updateList(mutableListOf())
             binding.viewGroupHistory.isVisible = false
         }
 
@@ -123,8 +114,7 @@ class SearchFragment : Fragment() {
                 0
             )
         }
-        historyAdapter.setTrackList(viewModel.getHistory())
-        return binding.root
+        viewModel.updateListsRecycler()
     }
 
     override fun onResume() {
@@ -185,7 +175,7 @@ class SearchFragment : Fragment() {
         binding.notCall.isVisible = false
         binding.notTrack.isVisible = false
         binding.viewGroupHistory.isVisible = false
-        searchAdapter.setTrackList(list)
+        searchAdapter.updateList(list)
         binding.recyclerSearch.adapter = searchAdapter
     }
 

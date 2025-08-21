@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.common.domain.models.Track
-import com.example.playlistmaker.common.ui.view_model.SharedViewModel
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.example.playlistmaker.common.util.BindingFragment
 import com.example.playlistmaker.common.util.TrackBundleUtil
@@ -22,7 +21,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
     private lateinit var dataTrack: Track
     private val viewModel by viewModel<MediaPlayerViewModel>()
-    private val viewModelCommunicator by viewModel<SharedViewModel>()
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -58,7 +56,6 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
         binding.buttonLike.setOnClickListener {
             viewModel.onFavoritesClicked(binding.buttonLikeYes.isVisible)
             binding.buttonLikeYes.isVisible = !binding.buttonLikeYes.isVisible
-            viewModelCommunicator.setChange(dataTrack.trackId, binding.buttonLikeYes.isVisible)
         }
         loadTrack(dataTrack)
     }

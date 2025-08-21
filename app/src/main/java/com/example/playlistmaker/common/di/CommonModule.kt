@@ -14,7 +14,6 @@ import com.example.playlistmaker.common.domain.api.GetThemeUseCase
 import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.common.domain.impl.DataBaseInteractorImpl
 import com.example.playlistmaker.common.domain.impl.GetThemeUseCaseImpl
-import com.example.playlistmaker.common.ui.view_model.SharedViewModel
 import com.example.playlistmaker.common.util.TimeFormat
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
@@ -23,9 +22,6 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 val commonModule = module {
-    single <SharedViewModel> {
-        SharedViewModel()
-    }
     single<Gson> {
         Gson()
     }
