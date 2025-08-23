@@ -5,4 +5,5 @@
     <string name="illegal_state_exception">no my holder</string>
     <string name="app_name" translatable="false">Playlist maker</string>
     <string name="default_image" translatable="false">картинка</string>
+    <string name="new_playlist">Новый плейлист</string>
 </resources>

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation_host"
     app:startDestination="@id/mediaLibraryFragment">
-
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.playlistmaker.search.ui.fragments.SearchFragment"
@@ -19,6 +18,9 @@
         <action
             android:id="@+id/action_mediaLibraryFragment_to_mediaPlayerFragment"
             app:destination="@id/mediaPlayerFragment" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -28,4 +30,8 @@
         android:id="@+id/mediaPlayerFragment"
         android:name="com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment"
         android:label="MediaPlayerFragment" />
+    <fragment
+        android:id="@+id/newPlaylistFragment"
+        android:name="com.example.playlistmaker.new_playlist.ui.fragments.NewPlaylistFragment"
+        android:label="NewPlaylistFragment" />
 </navigation>
