@@ -30,6 +30,7 @@ class RootActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.mediaPlayerFragment -> bottomNavigationView.isVisible = false
+                R.id.newPlaylistFragment -> bottomNavigationView.isVisible = false
                 else -> bottomNavigationView.isVisible = true
             }
             findViewById<View>(R.id.view).isVisible = bottomNavigationView.isVisible
