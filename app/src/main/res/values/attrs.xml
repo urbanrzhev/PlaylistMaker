@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="text_color_white_1a1b22" format="color"/>
+    <attr name="text_color_white_1a1b22_inverse" format="color"/>
     <attr name="text_color_white_aeafb4" format="color"/>
     <attr name="button_system_background" format="color"/>
     <attr name="button_system" format="color"/>

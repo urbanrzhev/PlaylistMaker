@@ -1,11 +1,11 @@
-package com.example.playlistmaker.common.ui.adapter_holder
+package com.example.playlistmaker.common.ui.adapters_holder
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.common.domain.models.Track
 
-class TracksAdapter(
+class TrackAdapter(
     private val callback: TrackClickListener
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 

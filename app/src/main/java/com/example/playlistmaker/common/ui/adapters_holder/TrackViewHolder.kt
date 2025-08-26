@@ -1,4 +1,4 @@
-package com.example.playlistmaker.common.ui.adapter_holder
+package com.example.playlistmaker.common.ui.adapters_holder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -31,7 +31,7 @@ class TrackViewHolder(
                 .load(model.artworkUrl100)
                 .transform(RoundedCorners(MyDisplayMetrics().dpToPx(2f, itemView.context)))
                 .fitCenter()
-                .placeholder(R.drawable.placeholder_search)
+                .placeholder(R.drawable.placeholder)
                 .into(imageCover)
         } catch (e: Exception) {
             Toast.makeText(

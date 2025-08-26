@@ -6,4 +6,7 @@
     <string name="app_name" translatable="false">Playlist maker</string>
     <string name="default_image" translatable="false">картинка</string>
     <string name="new_playlist">Новый плейлист</string>
+    <string name="add_playlist">Добавить в плейлист</string>
+    <string name="success_add_playlist">Добавлено в плейлист</string>
+    <string name="before_add_playlist">Трек уже добавлен в плейлист</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui.fragments
 
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,12 +9,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.common.ui.adapter_holder.TracksAdapter
+import com.example.playlistmaker.common.ui.adapters_holder.TrackAdapter
 import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
 import com.example.playlistmaker.search.ui.models.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
@@ -29,11 +29,11 @@ class SearchFragment : Fragment() {
     private var temporaryEditText = ""
     private var textWatcher: TextWatcher? = null
     private var isClickAllowed = true
-    private val searchAdapter = TracksAdapter {
+    private val searchAdapter = TrackAdapter {
         addTrackHistory(it)
         goAudioPlayer(it)
     }
-    private val historyAdapter = TracksAdapter {
+    private val historyAdapter = TrackAdapter {
         viewModel.visibleHistory()
         goAudioPlayer(it)
     }
@@ -76,28 +76,20 @@ class SearchFragment : Fragment() {
                 viewModel.setFocusEditText(hasFocus)
             }
         }
-        textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        textWatcher = binding.editSearchText.doOnTextChanged { text, _, _, _ ->
+            binding.clearSearchButton.isVisible = !text.isNullOrEmpty()
+            viewModel.setTemporaryEditText(text.toString())
+            if (binding.editSearchText.hasFocus() && binding.editSearchText.text.trim()
+                    .isEmpty() && historyAdapter.itemCount > 0
+            ) {
+                viewModel.visibleHistory()
             }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.clearSearchButton.isVisible = !s.isNullOrEmpty()
-                viewModel.setTemporaryEditText(s.toString())
-                if (binding.editSearchText.hasFocus() && binding.editSearchText.text.trim()
-                        .isEmpty() && historyAdapter.itemCount > 0
-                ) {
-                    viewModel.visibleHistory()
-                }
-                if (s.toString().trim().isNotEmpty()) {
-                    viewModel.searchDebounce(s.toString())
-                } else {
-                    viewModel.clearTemporaryTextRequest()
-                    viewModel.clearSearchDebounce()
-                    binding.recyclerSearch.adapter = null
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
+            if (text.toString().trim().isNotEmpty()) {
+                viewModel.searchDebounce(text.toString())
+            } else {
+                viewModel.clearTemporaryTextRequest()
+                viewModel.clearSearchDebounce()
+                binding.recyclerSearch.adapter = null
             }
         }
         textWatcher.let { binding.editSearchText.addTextChangedListener(it) }
