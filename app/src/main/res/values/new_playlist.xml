@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="button_new_playlist_enabled" format="color" />
+    <attr name="edittext_background_new_playlist" format="color" />
+    <string name="name_playlist">Название*</string>
+    <string name="description_playlist">Описание</string>
+    <string name="create_playlist">Создать</string>
+    <string name="cancel">Отменить</string>
+    <string name="destroy">Завершить</string>
+    <string name="create_one">Плейлист</string>
+    <string name="create_two">создан</string>
+    <string name="photo_error">Фото не выбрано</string>
+    <string name="photo_picker_error">Функция не поддерживается</string>
+    <string name="alert_dialog">Завершить создание плейлиста?</string>
+    <string name="alert_dialog_message">Все несохраненные данные будут потеряны</string>
+
+    <style name="edit_text_new_list">
+        <item name="hintTextAppearance">@style/textAppearanceRegular16sp400w</item>
+        <item name="android:textColor">?attr/text_color_white_1a1b22</item>
+        <item name="android:textAppearance">@style/textAppearanceRegular16sp400w</item>
+        <item name="android:textSelectHandle">@drawable/cursor_select_handle</item>
+        <item name="android:textSelectHandleRight">@drawable/cursor_select_handle</item>
+        <item name="android:textSelectHandleLeft">@drawable/cursor_select_handle</item>
+        <item name="android:colorControlActivated">@color/red</item>
+    </style>
+
+    <style name="edit_layout_new_list" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:inputType">textCapWords</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="android:textColorHint">?attr/text_color_white_1a1b22</item>
+        <item name="hintTextColor">@color/blue_from_figma</item>
+        <item name="boxStrokeColor">@color/edittext_layout_colored</item>
+        <item name="cursorColor">@color/blue_from_figma</item>
+    </style>
+</resources>

@@ -11,6 +11,7 @@ class MediaPlayerRepositoryImpl(private val player: MediaPlayer) : MediaPlayerRe
         setOnPreparedListener: () -> Unit,
         setOnCompletionListener: () -> Unit
     ) {
+        try {
         player.setDataSource(url)
         player.prepareAsync()
         player.setOnPreparedListener {
@@ -20,6 +21,9 @@ class MediaPlayerRepositoryImpl(private val player: MediaPlayer) : MediaPlayerRe
         player.setOnCompletionListener {
             playerState = STATE_PREPARED
             setOnCompletionListener.invoke()
+        }
+        }
+        catch (e:Exception){
         }
     }
 

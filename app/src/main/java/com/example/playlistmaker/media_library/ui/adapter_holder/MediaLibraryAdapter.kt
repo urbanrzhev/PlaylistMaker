@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media_library.ui.adapters
+package com.example.playlistmaker.media_library.ui.adapter_holder
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

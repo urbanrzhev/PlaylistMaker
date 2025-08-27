@@ -5,5 +5,5 @@ data class Playlist(
     var name:String = "",
     var description:String = "",
     var idsTrack:MutableList<Int> = mutableListOf(),
-    var count:Int = 0
+    var count:String = ""
 )
