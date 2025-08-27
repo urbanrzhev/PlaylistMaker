@@ -3,6 +3,7 @@ package com.example.playlistmaker.common.domain.impl
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsRepository
 import com.example.playlistmaker.common.domain.models.Playlist
+import com.example.playlistmaker.common.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 class DataBasePlaylistsInteractorImpl(
@@ -16,13 +17,7 @@ class DataBasePlaylistsInteractorImpl(
         return repository.getPlaylists()
     }
 
-    override suspend fun updatePlaylist(playlist: Playlist, trackId: Int): Boolean {
-        playlist.idsTrack.forEach {
-            if (it == trackId)
-                return false
-        }
-        playlist.idsTrack.add(trackId)
-        repository.setPlaylist(playlist)
-        return true
+    override fun setTrackInPlaylist(track: Track): Flow<Boolean> {
+        return repository.setTrackInPlaylist(track)
     }
 }

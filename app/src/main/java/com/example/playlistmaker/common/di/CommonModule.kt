@@ -7,9 +7,11 @@ import com.example.playlistmaker.common.data.repository.DataBasePlaylistReposito
 import com.example.playlistmaker.common.data.repository.DataBaseTracksRepositoryImpl
 import com.example.playlistmaker.common.data.repository.SharedPreferencesManagerImpl
 import com.example.playlistmaker.common.db.AppDatabase
-import com.example.playlistmaker.common.db.converters.TrackDbConverter
+import com.example.playlistmaker.common.db.converters.TrackTrackEntityDbConverter
+import com.example.playlistmaker.common.db.converters.TrackTrackInPlaylistEntityDbConverter
 import com.example.playlistmaker.common.db.dao.PlaylistDao
 import com.example.playlistmaker.common.db.dao.TrackDao
+import com.example.playlistmaker.common.db.dao.TrackInPlaylistsDao
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsRepository
 import com.example.playlistmaker.common.domain.api.DataBaseTracksInteractor
@@ -52,8 +54,11 @@ val commonModule = module {
     factory <DataBaseTracksRepository> {
         DataBaseTracksRepositoryImpl(get(),get())
     }
-    factory <TrackDbConverter> {
-        TrackDbConverter()
+    factory <TrackTrackEntityDbConverter> {
+        TrackTrackEntityDbConverter()
+    }
+    factory <TrackTrackInPlaylistEntityDbConverter> {
+        TrackTrackInPlaylistEntityDbConverter()
     }
     factory <DataBaseTracksInteractor> {
         DataBaseTracksInteractorImpl(get())
@@ -70,10 +75,16 @@ val commonModule = module {
             .build()
             .getPlaylistDao()
     }
+    single<TrackInPlaylistsDao>{
+        Room.databaseBuilder(androidContext(),AppDatabase::class.java,"database.db")
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
+            .getTrackInPlaylistDao()
+    }
     factory<DataBasePlaylistsInteractor>{
         DataBasePlaylistsInteractorImpl(get())
     }
     factory <DataBasePlaylistsRepository> {
-        DataBasePlaylistRepositoryImpl(get(),get(),get())
+        DataBasePlaylistRepositoryImpl(get(),get(),get(),get(),get(),get())
     }
 }

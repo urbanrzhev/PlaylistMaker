@@ -1,6 +1,6 @@
 package com.example.playlistmaker.common.data.repository
 
-import com.example.playlistmaker.common.db.converters.TrackDbConverter
+import com.example.playlistmaker.common.db.converters.TrackTrackEntityDbConverter
 import com.example.playlistmaker.common.db.dao.TrackDao
 import com.example.playlistmaker.common.db.entity.TrackEntity
 import com.example.playlistmaker.common.domain.api.DataBaseTracksRepository
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flow
 
 class DataBaseTracksRepositoryImpl(
     private val db: TrackDao,
-    private val converter: TrackDbConverter
+    private val converter: TrackTrackEntityDbConverter
 ) : DataBaseTracksRepository {
     override suspend fun setFavoriteTrack(track: Track) {
             val trackEntity = converterFromTrack(track)
