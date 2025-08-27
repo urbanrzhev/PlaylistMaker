@@ -19,6 +19,7 @@ import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.common.domain.impl.DataBasePlaylistsInteractorImpl
 import com.example.playlistmaker.common.domain.impl.DataBaseTracksInteractorImpl
 import com.example.playlistmaker.common.domain.impl.GetThemeUseCaseImpl
+import com.example.playlistmaker.common.util.OrthographyCount
 import com.example.playlistmaker.common.util.TimeFormat
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
@@ -29,6 +30,9 @@ import java.util.Locale
 val commonModule = module {
     single<Gson> {
         Gson()
+    }
+    single<OrthographyCount>{
+        OrthographyCount(get())
     }
     single<SharedPreferences> {
         androidContext().getSharedPreferences("my_all_preferences", MODE_PRIVATE)
@@ -70,6 +74,6 @@ val commonModule = module {
         DataBasePlaylistsInteractorImpl(get())
     }
     factory <DataBasePlaylistsRepository> {
-        DataBasePlaylistRepositoryImpl(get(),get())
+        DataBasePlaylistRepositoryImpl(get(),get(),get())
     }
 }
