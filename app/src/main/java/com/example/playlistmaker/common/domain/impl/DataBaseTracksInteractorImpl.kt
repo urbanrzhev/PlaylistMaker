@@ -1,13 +1,13 @@
 package com.example.playlistmaker.common.domain.impl
 
-import com.example.playlistmaker.common.domain.api.DataBaseInteractor
-import com.example.playlistmaker.common.domain.api.DataBaseRepository
+import com.example.playlistmaker.common.domain.api.DataBaseTracksInteractor
+import com.example.playlistmaker.common.domain.api.DataBaseTracksRepository
 import com.example.playlistmaker.common.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-class DataBaseInteractorImpl(
-    private val dbrepository:DataBaseRepository
-) :DataBaseInteractor{
+class DataBaseTracksInteractorImpl(
+    private val dbrepository:DataBaseTracksRepository
+) :DataBaseTracksInteractor{
     override suspend fun setFavoriteTrack(track: Track) {
         dbrepository.setFavoriteTrack(track)
     }
