@@ -32,7 +32,9 @@ class NewPlaylistViewModel(
 
     fun setPhoto(uri:String){
         Log.v("my","Observe setPhoto")
-        _playlist = _playlist.value?.copy(photo = uri)
+        _playlist.apply {
+            photo = uri
+        }
         _photo.value = uri
         updateStatePlaylist()
        // _navigateUp.value = true
@@ -40,32 +42,41 @@ class NewPlaylistViewModel(
 
     fun setName(name:String){
         Log.v("my","Observe setName")
-        _playlist.value = _playlist.value?.copy(name = name)
+        _playlist.apply {
+            this.name = name
+        }
         updateStatePlaylist()
       //  _navigateUp.value = true
     }
 
     fun setDescription(description:String){
         Log.v("my","Observe setDescription")
-        _playlist.value = _playlist.value?.copy(description = description)
+        _playlist.apply {
+            this.description = description
+        }
         updateStatePlaylist()
     }
 
     private fun updateStatePlaylist(){
-        Log.v("my","vM update playlist ${_playlist.value}")
-        if(_playlist.value?.photo?.isNotEmpty() == true && _playlist.value?.name?.isNotEmpty() == true && _playlist.value?.description?.isNotEmpty() == true)
+        Log.v("my","vM update playlist ${_playlist}")
+        if(_playlist.photo.isNotEmpty() || _playlist.name.isNotEmpty() || _playlist.description.isNotEmpty()) {
+            Log.v("my","Empty ")
             _enablePressedCallback.value = true
-        if(_playlist.value?.name != "")
+        }else{
+            Log.v("my","noEmpty ${_playlist.photo}")
+            _enablePressedCallback.value = false
+        }
+        if(_playlist.name.isNotEmpty())
             _buttonCreateEnable.value = true
         else
             _buttonCreateEnable.value = false
     }
 
     fun createPlaylist(){
-        Log.v("my",_playlist.value.toString()+" tempPlaylist")
+        Log.v("my",_playlist.toString()+" tempPlaylist")
         createJob?.cancel()
         createJob = viewModelScope.launch {
-            _playlist.value?.let {
+            _playlist.let {
                 database.setPlaylist(it)
                 createdMessage(it)
                 _enablePressedCallback.postValue(false)
@@ -74,7 +85,7 @@ class NewPlaylistViewModel(
         }
     }
 
-    fun getPlaylist():Playlist = _playlist.value!!
+    fun getPlaylist():Playlist = _playlist
 
     private fun createdMessage(playlist:Playlist){
         Toast.makeText(context,

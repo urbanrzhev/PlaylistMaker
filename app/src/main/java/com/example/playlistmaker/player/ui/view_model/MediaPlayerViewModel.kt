@@ -118,11 +118,12 @@ class MediaPlayerViewModel(
     fun updatePlaylist(playlist: Playlist) {
         updatePlaylistJob?.cancel()
         updatePlaylistJob = viewModelScope.launch {
-            if (databasePlaylistsInteractor.updatePlaylist(playlist, activeTrack.trackId))
+            if (databasePlaylistsInteractor.updatePlaylist(playlist, activeTrack.trackId)) {
                 showToast("${context.getString(R.string.success_add_playlist)} ${playlist.name}")
+                stateBottomSheetBehavior(BottomSheetBehavior.STATE_HIDDEN)
+            }
             else
                 showToast("${context.getString(R.string.before_add_playlist)} ${playlist.name}")
-            stateBottomSheetBehavior(BottomSheetBehavior.STATE_HIDDEN)
         }
     }
 
