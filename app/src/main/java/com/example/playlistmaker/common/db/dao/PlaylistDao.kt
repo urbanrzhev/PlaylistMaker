@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.playlistmaker.common.db.entity.PlaylistEntity
 
 @Dao
@@ -12,8 +13,8 @@ interface PlaylistDao {
     suspend fun setPlaylist(playlist: PlaylistEntity)
     @Query("SELECT * FROM playlist_table")
     suspend fun getPlaylists():List<PlaylistEntity>
-    @Query("UPDATE playlist_table SET idsTracks = :idsTracks WHERE playlist_name = :playlistName")
-    suspend fun updatePlaylist(idsTracks:String,playlistName:String)
+    @Update(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updatePlaylist(playlist: PlaylistEntity)
     @Query("SELECT idsTracks FROM playlist_table")
     suspend fun getItemsId():String
 }

@@ -1,36 +1,33 @@
 package com.example.playlistmaker.player.ui.view_model
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
 import com.example.playlistmaker.common.domain.api.DataBaseTracksInteractor
 import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.domain.models.Track
+import com.example.playlistmaker.common.util.SingleLiveEvent
 import com.example.playlistmaker.common.util.TimeFormat
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.ui.models.PlayerState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MediaPlayerViewModel(
     private val mediaPlayer: MediaPlayerInteractor,
     private val timeFormat: TimeFormat,
     private val databaseTracksInteractor: DataBaseTracksInteractor,
-    private val databasePlaylistsInteractor: DataBasePlaylistsInteractor,
-    private val context: Context
+    private val databasePlaylistsInteractor: DataBasePlaylistsInteractor
 ) : ViewModel() {
     private lateinit var activeTrack: Track
+    private val _showMessage = SingleLiveEvent<Pair<Boolean, String>>()
+    val observeShowMessage: LiveData<Pair<Boolean, String>> = _showMessage
     private val _overlay = MutableLiveData(false)
     val observeOverlay: LiveData<Boolean> = _overlay
     private val _bottomSheetBehaviorState = MutableLiveData(BottomSheetBehavior.STATE_HIDDEN)
@@ -38,7 +35,7 @@ class MediaPlayerViewModel(
     private val _itemsAdapter = MutableLiveData(listOf<Playlist>())
     val observeItemsAdapter: LiveData<List<Playlist>> = _itemsAdapter
     private var job: Job? = null
-    private var updatePlaylistJob: Job? = null
+    private var addTrackInPlaylistJob: Job? = null
     private var jobSetFavorites: Job? = null
     private val _playerProgressFlow = MutableStateFlow(TIME_DEFAULT)
     val playerProgressFlow = _playerProgressFlow.asStateFlow()
@@ -115,21 +112,23 @@ class MediaPlayerViewModel(
         _bottomSheetBehaviorState.value = state
     }
 
-    fun updatePlaylist(playlist: Playlist) {
-        updatePlaylistJob?.cancel()
-        updatePlaylistJob = viewModelScope.launch {
-            if (databasePlaylistsInteractor.updatePlaylist(playlist, activeTrack.trackId)) {
-                showToast("${context.getString(R.string.success_add_playlist)} ${playlist.name}")
-                stateBottomSheetBehavior(BottomSheetBehavior.STATE_HIDDEN)
+    fun addTrackInPlaylist(playlist: Playlist) {
+        playlist.idsTrack.forEach {
+            if (it == activeTrack.trackId) {
+                _showMessage.value = Pair(false, playlist.name)
+                return
             }
-            else
-                showToast("${context.getString(R.string.before_add_playlist)} ${playlist.name}")
         }
-    }
-
-    private suspend fun showToast(message: String) {
-        withContext(Dispatchers.Main) {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        addTrackInPlaylistJob?.cancel()
+        addTrackInPlaylistJob = viewModelScope.launch {
+            databasePlaylistsInteractor.setTrackInPlaylist(activeTrack).collect {
+                if (it) {
+                    _showMessage.value = Pair(true, playlist.name)
+                    stateBottomSheetBehavior(BottomSheetBehavior.STATE_HIDDEN)
+                    playlist.idsTrack.add(activeTrack.trackId)
+                    databasePlaylistsInteractor.updatePlaylist(playlist)
+                }
+            }
         }
     }
 

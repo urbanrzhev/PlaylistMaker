@@ -37,8 +37,7 @@ class PlayerAdapter(
             }
 
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return oldList[oldItemPosition].name == newList[newItemPosition].name &&
-                        oldList[oldItemPosition].count == newList[newItemPosition].count
+                return oldList[oldItemPosition].count == newList[newItemPosition].count
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

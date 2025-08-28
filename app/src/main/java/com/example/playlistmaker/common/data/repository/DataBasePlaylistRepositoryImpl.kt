@@ -41,6 +41,11 @@ class DataBasePlaylistRepositoryImpl(
         }
     }
 
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        val playlistEntity = converterFromPlaylist(playlist)
+        databasePlaylists.updatePlaylist(playlistEntity)
+    }
+
     private fun converterFromPlaylist(playlist: Playlist): PlaylistEntity {
         return with(playlist) {
             PlaylistEntity(
