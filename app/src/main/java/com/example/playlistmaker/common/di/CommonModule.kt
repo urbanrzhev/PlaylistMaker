@@ -7,8 +7,8 @@ import com.example.playlistmaker.common.data.repository.DataBasePlaylistReposito
 import com.example.playlistmaker.common.data.repository.DataBaseTracksRepositoryImpl
 import com.example.playlistmaker.common.data.repository.SharedPreferencesManagerImpl
 import com.example.playlistmaker.common.db.AppDatabase
-import com.example.playlistmaker.common.db.converters.TrackTrackEntityDbConverter
-import com.example.playlistmaker.common.db.converters.TrackTrackInPlaylistEntityDbConverter
+import com.example.playlistmaker.common.db.converters.TrackEntityDbConverter
+import com.example.playlistmaker.common.db.converters.TrackInPlaylistEntityDbConverter
 import com.example.playlistmaker.common.db.dao.PlaylistDao
 import com.example.playlistmaker.common.db.dao.TrackDao
 import com.example.playlistmaker.common.db.dao.TrackInPlaylistsDao
@@ -54,11 +54,11 @@ val commonModule = module {
     factory <DataBaseTracksRepository> {
         DataBaseTracksRepositoryImpl(get(),get())
     }
-    factory <TrackTrackEntityDbConverter> {
-        TrackTrackEntityDbConverter()
+    factory <TrackEntityDbConverter> {
+        TrackEntityDbConverter()
     }
-    factory <TrackTrackInPlaylistEntityDbConverter> {
-        TrackTrackInPlaylistEntityDbConverter()
+    factory <TrackInPlaylistEntityDbConverter> {
+        TrackInPlaylistEntityDbConverter()
     }
     factory <DataBaseTracksInteractor> {
         DataBaseTracksInteractorImpl(get())
@@ -85,6 +85,6 @@ val commonModule = module {
         DataBasePlaylistsInteractorImpl(get())
     }
     factory <DataBasePlaylistsRepository> {
-        DataBasePlaylistRepositoryImpl(get(),get(),get(),get(),get(),get())
+        DataBasePlaylistRepositoryImpl(get(),get(),get(),get(),get())
     }
 }
