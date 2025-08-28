@@ -28,8 +28,6 @@ class MediaPlayerViewModel(
     private lateinit var activeTrack: Track
     private val _showMessage = SingleLiveEvent<Pair<Boolean, String>>()
     val observeShowMessage: LiveData<Pair<Boolean, String>> = _showMessage
-    private val _overlay = MutableLiveData(false)
-    val observeOverlay: LiveData<Boolean> = _overlay
     private val _bottomSheetBehaviorState = MutableLiveData(BottomSheetBehavior.STATE_HIDDEN)
     val observeBottomSheetBehaviorState: LiveData<Int> = _bottomSheetBehaviorState
     private val _itemsAdapter = MutableLiveData(listOf<Playlist>())
@@ -109,7 +107,8 @@ class MediaPlayerViewModel(
     }
 
     fun stateBottomSheetBehavior(state: Int) {
-        _bottomSheetBehaviorState.value = state
+        if(state != BottomSheetBehavior.STATE_SETTLING && state != BottomSheetBehavior.STATE_DRAGGING)
+            _bottomSheetBehaviorState.value = state
     }
 
     fun addTrackInPlaylist(playlist: Playlist) {
@@ -130,10 +129,6 @@ class MediaPlayerViewModel(
                 }
             }
         }
-    }
-
-    fun overlayVisible(value: Boolean) {
-        _overlay.value = value
     }
 
     companion object {

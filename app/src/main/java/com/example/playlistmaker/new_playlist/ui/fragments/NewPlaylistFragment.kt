@@ -54,12 +54,12 @@ class NewPlaylistFragment : BindingFragment<FragmentCreatePlaylistBinding>() {
                 backPressedCallback.isEnabled = false
                 navigateUp()
             }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
         return FragmentCreatePlaylistBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(backPressedCallback)
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {

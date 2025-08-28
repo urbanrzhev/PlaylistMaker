@@ -1,8 +1,8 @@
 package com.example.playlistmaker.common.data.repository
 
-import com.example.playlistmaker.common.db.converters.TrackEntityDbConverter
-import com.example.playlistmaker.common.db.dao.TrackDao
-import com.example.playlistmaker.common.db.entity.TrackEntity
+import com.example.playlistmaker.common.data.db.converters.TrackEntityDbConverter
+import com.example.playlistmaker.common.data.db.dao.TrackDao
+import com.example.playlistmaker.common.data.db.entity.TrackEntity
 import com.example.playlistmaker.common.domain.api.DataBaseTracksRepository
 import com.example.playlistmaker.common.domain.models.Track
 import kotlinx.coroutines.flow.Flow

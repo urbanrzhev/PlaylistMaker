@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.common.db.dao.TrackDao
+import com.example.playlistmaker.common.data.db.dao.TrackDao
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.debounce
 import com.example.playlistmaker.search.domain.api.HistoryInteractor

@@ -1,9 +1,9 @@
 package com.example.playlistmaker.common.data.repository
 
-import com.example.playlistmaker.common.db.converters.TrackInPlaylistEntityDbConverter
-import com.example.playlistmaker.common.db.dao.PlaylistDao
-import com.example.playlistmaker.common.db.dao.TrackInPlaylistsDao
-import com.example.playlistmaker.common.db.entity.PlaylistEntity
+import com.example.playlistmaker.common.data.db.converters.TrackInPlaylistEntityDbConverter
+import com.example.playlistmaker.common.data.db.dao.PlaylistDao
+import com.example.playlistmaker.common.data.db.dao.TrackInPlaylistsDao
+import com.example.playlistmaker.common.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsRepository
 import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.domain.models.Track

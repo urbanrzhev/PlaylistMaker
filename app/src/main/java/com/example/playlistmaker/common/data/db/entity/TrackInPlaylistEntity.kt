@@ -1,12 +1,11 @@
-package com.example.playlistmaker.common.db.entity
+package com.example.playlistmaker.common.data.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.playlistmaker.common.util.TimeFormat
 
-@Entity(tableName = "track_table_favorite")
-data class TrackEntity (
+@Entity(tableName = "track_in_playlist_table")
+data class TrackInPlaylistEntity (
     val trackName: String,
     val artistName: String,
     val trackTimeNormal: String,
@@ -17,6 +16,5 @@ data class TrackEntity (
     val primaryGenreName: String,
     val country: String,
     @PrimaryKey @ColumnInfo(name = "track_id" )
-    val trackId: Int,
-    val timeOfAddition:Long = System.currentTimeMillis()
+    val trackId: Int
 )

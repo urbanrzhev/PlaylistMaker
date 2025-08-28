@@ -23,7 +23,7 @@ class FavoritesTracksFragment : BindingFragment<FragmentFavoritesTracksBinding>(
     private val viewModel: FavoritesTracksViewModel by viewModel()
     private var isClickAllowed = true
     private val adapter = TrackAdapter {
-            goAudioPlayer(it)
+        goAudioPlayer(it)
     }
 
     override fun createBinding(
@@ -43,9 +43,8 @@ class FavoritesTracksFragment : BindingFragment<FragmentFavoritesTracksBinding>(
                     renderUi(false)
                     adapter.updateList(it.data)
                 }
-                is RecyclerState.Idle -> {
-                    renderUi(true)
-                }
+                is RecyclerState.Error -> renderUi(true)
+                is RecyclerState.Idle -> {}
             }
         }
         viewModel.updateFavoritesTracks()
