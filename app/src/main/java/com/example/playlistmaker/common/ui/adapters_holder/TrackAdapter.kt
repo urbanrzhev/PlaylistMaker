@@ -1,18 +1,20 @@
 package com.example.playlistmaker.common.ui.adapters_holder
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.common.domain.models.Track
+import com.example.playlistmaker.databinding.ViewListForSearchBinding
 
 class TrackAdapter(
     private val callback: TrackClickListener
 ) : RecyclerView.Adapter<TrackViewHolder>() {
-
     private var tracks: List<Track> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        return TrackViewHolder(parent)
+        val binding = ViewListForSearchBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return TrackViewHolder(binding = binding)
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {

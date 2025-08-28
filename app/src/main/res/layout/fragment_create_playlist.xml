@@ -61,7 +61,7 @@
         android:background="@drawable/punktir"
         android:contentDescription="@string/default_image"
         android:foregroundGravity="center"
-        android:scaleType="fitXY"
+        android:scaleType="centerInside"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayoutName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

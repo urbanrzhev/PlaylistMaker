@@ -1,7 +1,7 @@
 package com.example.playlistmaker.search.data.network
 
 import com.example.playlistmaker.R
-import com.example.playlistmaker.common.db.dao.TrackDao
+import com.example.playlistmaker.common.data.db.dao.TrackDao
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.data.dto.TracksSearchResponse
 import com.example.playlistmaker.common.util.TimeFormat

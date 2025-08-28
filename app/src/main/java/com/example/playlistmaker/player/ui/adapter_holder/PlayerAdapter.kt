@@ -1,9 +1,11 @@
 package com.example.playlistmaker.player.ui.adapter_holder
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.common.domain.models.Playlist
+import com.example.playlistmaker.databinding.ViewListForPlayerBottomBehaviorBinding
 
 class PlayerAdapter(
     private val callback:BottomListener
@@ -11,7 +13,8 @@ class PlayerAdapter(
     private var playlists:List<Playlist> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayerViewHolder {
-        return PlayerViewHolder(parent)
+        val binding = ViewListForPlayerBottomBehaviorBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return PlayerViewHolder(binding)
     }
 
     override fun getItemCount(): Int {

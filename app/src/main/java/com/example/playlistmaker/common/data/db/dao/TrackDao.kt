@@ -1,15 +1,15 @@
-package com.example.playlistmaker.common.db.dao
+package com.example.playlistmaker.common.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.playlistmaker.common.db.entity.TrackEntity
+import com.example.playlistmaker.common.data.db.entity.TrackEntity
 
 @Dao
 interface TrackDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun setFavoriteTrack(track:TrackEntity)
+    suspend fun setFavoriteTrack(track: TrackEntity)
     @Query("DELETE FROM track_table_favorite WHERE track_id = :trackId")
     suspend fun deleteFavoriteTrack(trackId:Int)
     @Query("SELECT * FROM track_table_favorite")

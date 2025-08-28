@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.util.BindingFragment
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
-import com.example.playlistmaker.media_library.ui.adapter_holder.PlaylistAdapter
+import com.example.playlistmaker.media_library.ui.adapter_holder.MediaLibraryPlaylistAdapter
 import com.example.playlistmaker.media_library.ui.models.RecyclerState
 import com.example.playlistmaker.media_library.ui.view_model.PlaylistsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
     private val viewModel: PlaylistsViewModel by viewModel()
-    private val adapter = PlaylistAdapter {}
+    private val adapter = MediaLibraryPlaylistAdapter {}
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -27,19 +27,18 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.playlistState.observe(viewLifecycleOwner){
-            when(it){
-                is RecyclerState.Success->{
+        viewModel.playlistState.observe(viewLifecycleOwner) {
+            when (it) {
+                is RecyclerState.Success -> {
                     adapter.updateList(it.data)
                     renderUi(false)
                 }
-                else ->{
-                    renderUi(true)
-                }
+                is RecyclerState.Error -> renderUi(true)
+                is RecyclerState.Idle -> {}
             }
         }
         binding.recycler.adapter = adapter
-        binding.recycler.layoutManager = GridLayoutManager(requireContext(),2)
+        binding.recycler.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.button.setOnClickListener {
             findNavController().navigate(
                 R.id.action_mediaLibraryFragment_to_newPlaylistFragment
@@ -48,7 +47,7 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
         viewModel.loadDatabase()
     }
 
-    private fun renderUi(value:Boolean){
+    private fun renderUi(value: Boolean) {
         binding.group.isVisible = value
     }
 

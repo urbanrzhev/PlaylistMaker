@@ -1,6 +1,6 @@
-package com.example.playlistmaker.common.db.converters
+package com.example.playlistmaker.common.data.db.converters
 
-import com.example.playlistmaker.common.db.entity.TrackInPlaylistEntity
+import com.example.playlistmaker.common.data.db.entity.TrackInPlaylistEntity
 import com.example.playlistmaker.common.domain.models.Track
 
 class TrackInPlaylistEntityDbConverter {

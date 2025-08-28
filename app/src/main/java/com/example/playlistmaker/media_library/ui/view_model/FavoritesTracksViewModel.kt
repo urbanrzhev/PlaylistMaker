@@ -23,7 +23,7 @@ class FavoritesTracksViewModel(
             dataBaseTracksInteractor.getAllFavoritesTracks().collect {
                 when {
                     it.isNotEmpty() -> listTracks.postValue(RecyclerState.Success(it))
-                    else -> listTracks.postValue(RecyclerState.Idle())
+                    else -> listTracks.postValue(RecyclerState.Error())
                 }
             }
         }

@@ -1,24 +1,27 @@
 package com.example.playlistmaker.media_library.ui.adapter_holder
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.common.domain.models.Playlist
+import com.example.playlistmaker.databinding.ViewListForPlaylistBinding
 
-class PlaylistAdapter(
+class MediaLibraryPlaylistAdapter(
     private val callback:PlaylistListener
-): RecyclerView.Adapter<PlaylistViewHolder>() {
+): RecyclerView.Adapter<MediaLibraryPlaylistViewHolder>() {
     private var playlists:List<Playlist> = listOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        return PlaylistViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaLibraryPlaylistViewHolder {
+        val binding = ViewListForPlaylistBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return MediaLibraryPlaylistViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
         return playlists.size
     }
 
-    override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MediaLibraryPlaylistViewHolder, position: Int) {
         holder.bind(playlists[position])
         holder.itemView.setOnClickListener {
             callback.click(playlists[position])

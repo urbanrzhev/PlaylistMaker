@@ -1,9 +1,5 @@
 package com.example.playlistmaker.media_library.ui.adapter_holder
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
@@ -12,15 +8,16 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.util.MyDisplayMetrics
+import com.example.playlistmaker.databinding.ViewListForPlaylistBinding
 
-class PlaylistViewHolder(
-    private val parent: ViewGroup
+class MediaLibraryPlaylistViewHolder(
+    binding: ViewListForPlaylistBinding
 ) : RecyclerView.ViewHolder(
-    LayoutInflater.from(parent.context).inflate(R.layout.view_list_for_playlist, parent, false)
+    binding.root
 ) {
-    val name = itemView.findViewById<TextView>(R.id.name)
-    val photo = itemView.findViewById<ImageView>(R.id.image)
-    val count = itemView.findViewById<TextView>(R.id.count)
+    private val name = binding.name
+    private val photo = binding.image
+    private val count = binding.count
 
     fun bind(model: Playlist) {
         name.text = model.name

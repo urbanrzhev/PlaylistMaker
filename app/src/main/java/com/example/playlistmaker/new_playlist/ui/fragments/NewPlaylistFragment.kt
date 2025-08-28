@@ -46,6 +46,15 @@ class NewPlaylistFragment : BindingFragment<FragmentCreatePlaylistBinding>() {
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentCreatePlaylistBinding {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
+        return FragmentCreatePlaylistBinding.inflate(inflater, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         confirmDialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.alert_dialog))
             .setMessage(getString(R.string.alert_dialog_message))
@@ -54,12 +63,6 @@ class NewPlaylistFragment : BindingFragment<FragmentCreatePlaylistBinding>() {
                 backPressedCallback.isEnabled = false
                 navigateUp()
             }
-        return FragmentCreatePlaylistBinding.inflate(inflater, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(backPressedCallback)
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
@@ -125,7 +128,7 @@ class NewPlaylistFragment : BindingFragment<FragmentCreatePlaylistBinding>() {
     private fun saveImageToPrivateStorage(uri: Uri): Uri {
         val filePath = File(
             requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            "playlist_maker"
+            MY_DIRECTORY_PICTURES
         )
         if (!filePath.exists()) {
             filePath.mkdirs()
@@ -162,5 +165,9 @@ class NewPlaylistFragment : BindingFragment<FragmentCreatePlaylistBinding>() {
         textWatcherName?.let { binding.editTextName.removeTextChangedListener(it) }
         textWatcherDescription?.let { binding.editTextDescription.removeTextChangedListener(it) }
         super.onDestroyView()
+    }
+
+    companion object {
+        private const val MY_DIRECTORY_PICTURES = "playlist_maker_pictures"
     }
 }

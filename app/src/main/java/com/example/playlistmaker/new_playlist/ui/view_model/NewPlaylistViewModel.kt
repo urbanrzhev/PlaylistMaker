@@ -1,7 +1,6 @@
 package com.example.playlistmaker.new_playlist.ui.view_model
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,33 +23,26 @@ class NewPlaylistViewModel(
     val observeCloseFragment:LiveData<Boolean> = _closeFragment
     private val _enablePressedCallback = MutableLiveData(false)
     val observeEnablePressedCallback:LiveData<Boolean> = _enablePressedCallback
-    //private val _playlist = MutableLiveData(Playlist())
     private val _playlist = Playlist()
     private val _photo = MutableLiveData("")
     val observePhoto:LiveData<String> = _photo
-    //val observePlaylist:LiveData<Playlist> = _playlist
 
     fun setPhoto(uri:String){
-        Log.v("my","Observe setPhoto")
         _playlist.apply {
             photo = uri
         }
         _photo.value = uri
         updateStatePlaylist()
-       // _navigateUp.value = true
     }
 
     fun setName(name:String){
-        Log.v("my","Observe setName")
         _playlist.apply {
             this.name = name
         }
         updateStatePlaylist()
-      //  _navigateUp.value = true
     }
 
     fun setDescription(description:String){
-        Log.v("my","Observe setDescription")
         _playlist.apply {
             this.description = description
         }
@@ -58,12 +50,9 @@ class NewPlaylistViewModel(
     }
 
     private fun updateStatePlaylist(){
-        Log.v("my","vM update playlist ${_playlist}")
         if(_playlist.photo.isNotEmpty() || _playlist.name.isNotEmpty() || _playlist.description.isNotEmpty()) {
-            Log.v("my","Empty ")
             _enablePressedCallback.value = true
         }else{
-            Log.v("my","noEmpty ${_playlist.photo}")
             _enablePressedCallback.value = false
         }
         if(_playlist.name.isNotEmpty())
@@ -73,7 +62,6 @@ class NewPlaylistViewModel(
     }
 
     fun createPlaylist(){
-        Log.v("my",_playlist.toString()+" tempPlaylist")
         createJob?.cancel()
         createJob = viewModelScope.launch {
             _playlist.let {
@@ -86,6 +74,8 @@ class NewPlaylistViewModel(
     }
 
     fun getPlaylist():Playlist = _playlist
+
+    fun getBackPressedCallback() = _enablePressedCallback.value
 
     private fun createdMessage(playlist:Playlist){
         Toast.makeText(context,

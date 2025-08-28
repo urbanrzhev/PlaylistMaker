@@ -27,7 +27,7 @@ class MediaLibraryFragment : BindingFragment<FragmentMediaLibraryBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.observeStartFragment().observe(viewLifecycleOwner) {
-            binding.pager.setCurrentItem(it)
+            binding.pager.currentItem = it
         }
         viewModel.startFragment()
         adapter = MediaLibraryAdapter(childFragmentManager, lifecycle)

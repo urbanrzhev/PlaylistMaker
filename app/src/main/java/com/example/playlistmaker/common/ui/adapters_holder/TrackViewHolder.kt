@@ -1,9 +1,5 @@
 package com.example.playlistmaker.common.ui.adapters_holder
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -11,16 +7,17 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.MyDisplayMetrics
+import com.example.playlistmaker.databinding.ViewListForSearchBinding
 
 class TrackViewHolder(
-    private val parent: ViewGroup
+    binding: ViewListForSearchBinding
 ) : RecyclerView.ViewHolder(
-    LayoutInflater.from(parent.context).inflate(R.layout.view_list_for_search, parent, false)
+    binding.root
 ) {
-    private val trackName: TextView = itemView.findViewById(R.id.textView1)
-    private val artistName: TextView = itemView.findViewById(R.id.textView2)
-    private val trackTime: TextView = itemView.findViewById(R.id.textView3)
-    private val imageCover: ImageView = itemView.findViewById(R.id.imageViewCover)
+    private val trackName = binding.textView1
+    private val artistName = binding.textView2
+    private val trackTime = binding.textView3
+    private val imageCover = binding.imageViewCover
 
     fun bind(model: Track) {
         trackName.text = model.trackName

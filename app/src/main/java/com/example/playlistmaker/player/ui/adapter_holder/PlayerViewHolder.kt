@@ -12,16 +12,16 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.util.MyDisplayMetrics
+import com.example.playlistmaker.databinding.ViewListForPlayerBottomBehaviorBinding
 
 class PlayerViewHolder(
-    private val parent: ViewGroup
+    binding :ViewListForPlayerBottomBehaviorBinding
 ) : RecyclerView.ViewHolder(
-    LayoutInflater.from(parent.context)
-        .inflate(R.layout.view_list_for_player_bottom_behavior, parent, false)
+    binding.root
 ) {
-    val name = itemView.findViewById<TextView>(R.id.textName)
-    val count = itemView.findViewById<TextView>(R.id.textCount)
-    val photo = itemView.findViewById<ImageView>(R.id.imageCover)
+    val name = binding.textName
+    val count = binding.textCount
+    val photo = binding.imageCover
 
     fun bind(model: Playlist) {
         name.text = model.name

@@ -6,12 +6,12 @@ import androidx.room.Room
 import com.example.playlistmaker.common.data.repository.DataBasePlaylistRepositoryImpl
 import com.example.playlistmaker.common.data.repository.DataBaseTracksRepositoryImpl
 import com.example.playlistmaker.common.data.repository.SharedPreferencesManagerImpl
-import com.example.playlistmaker.common.db.AppDatabase
-import com.example.playlistmaker.common.db.converters.TrackEntityDbConverter
-import com.example.playlistmaker.common.db.converters.TrackInPlaylistEntityDbConverter
-import com.example.playlistmaker.common.db.dao.PlaylistDao
-import com.example.playlistmaker.common.db.dao.TrackDao
-import com.example.playlistmaker.common.db.dao.TrackInPlaylistsDao
+import com.example.playlistmaker.common.data.db.AppDatabase
+import com.example.playlistmaker.common.data.db.converters.TrackEntityDbConverter
+import com.example.playlistmaker.common.data.db.converters.TrackInPlaylistEntityDbConverter
+import com.example.playlistmaker.common.data.db.dao.PlaylistDao
+import com.example.playlistmaker.common.data.db.dao.TrackDao
+import com.example.playlistmaker.common.data.db.dao.TrackInPlaylistsDao
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsRepository
 import com.example.playlistmaker.common.domain.api.DataBaseTracksInteractor
@@ -64,19 +64,19 @@ val commonModule = module {
         DataBaseTracksInteractorImpl(get())
     }
     single<TrackDao>{
-        Room.databaseBuilder(androidContext(),AppDatabase::class.java,"database.db")
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java,"database.db")
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
             .getTrackDao()
     }
     single<PlaylistDao>{
-        Room.databaseBuilder(androidContext(),AppDatabase::class.java,"database.db")
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java,"database.db")
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
             .getPlaylistDao()
     }
     single<TrackInPlaylistsDao>{
-        Room.databaseBuilder(androidContext(),AppDatabase::class.java,"database.db")
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java,"database.db")
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
             .getTrackInPlaylistDao()

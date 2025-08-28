@@ -21,6 +21,7 @@ class PlaylistsViewModel(
             database.getPlaylists().collect { list->
                 when{
                     list.isNotEmpty() -> _playlistsState.postValue(RecyclerState.Success(list))
+                    else -> _playlistsState.postValue(RecyclerState.Error())
                 }
             }
         }
