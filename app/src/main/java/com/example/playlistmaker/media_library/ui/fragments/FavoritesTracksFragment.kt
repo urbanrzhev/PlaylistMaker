@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Track
-import com.example.playlistmaker.common.ui.adapter_holder.TracksAdapter
+import com.example.playlistmaker.common.ui.adapters_holder.TrackAdapter
 import com.example.playlistmaker.common.util.BindingFragment
 import com.example.playlistmaker.databinding.FragmentFavoritesTracksBinding
 import com.example.playlistmaker.media_library.ui.models.RecyclerState
@@ -22,8 +22,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FavoritesTracksFragment : BindingFragment<FragmentFavoritesTracksBinding>() {
     private val viewModel: FavoritesTracksViewModel by viewModel()
     private var isClickAllowed = true
-    private val adapter = TracksAdapter {
-            goAudioPlayer(it)
+    private val adapter = TrackAdapter {
+        goAudioPlayer(it)
     }
 
     override fun createBinding(
@@ -37,17 +37,17 @@ class FavoritesTracksFragment : BindingFragment<FragmentFavoritesTracksBinding>(
         super.onViewCreated(view, savedInstanceState)
         isClickAllowed = true
         binding.recycler.adapter = adapter
-        viewModel.updateFavoritesTracks()
         viewModel.observeState().observe(viewLifecycleOwner) {
             when (it) {
-                is RecyclerState.Empty -> renderUi(true)
                 is RecyclerState.Success -> {
                     renderUi(false)
                     adapter.updateList(it.data)
                 }
+                is RecyclerState.Error -> renderUi(true)
                 is RecyclerState.Idle -> {}
             }
         }
+        viewModel.updateFavoritesTracks()
     }
 
     private fun goAudioPlayer(track: Track) {
@@ -70,8 +70,7 @@ class FavoritesTracksFragment : BindingFragment<FragmentFavoritesTracksBinding>(
     }
 
     private fun renderUi(value: Boolean) {
-        binding.imageView3.isVisible = value
-        binding.text.isVisible = value
+        binding.group.isVisible = value
         binding.recycler.isVisible = !value
     }
 

@@ -52,7 +52,7 @@ class ShowActiveTrack(
                 .load(getCoverArtwork(model.artworkUrl100))
                 .transform(RoundedCorners(MyDisplayMetrics().dpToPx(2f, context)))
                 .fitCenter()
-                .placeholder(R.drawable.placeholder_search)
+                .placeholder(R.drawable.placeholder)
                 .into(binding.imageCover)
         } catch (e: Exception) {
             Toast.makeText(

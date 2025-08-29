@@ -13,6 +13,11 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAppearance">@style/textAppearanceRegular13sp400w</item>
     </style>
+    <style name="text_recycler">
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:lines">1</item>
+    </style>
     <style name="title_and_group" parent="base_text_oneline_ellipsize_gravityvertical">
         <item name="android:textColor">?attr/title_and_group_color</item>
     </style>
@@ -27,6 +32,10 @@
     <string name="lengthTrack">Длительность  </string>
     <string name="album">Альбом  </string>
     <string name="year">Год  </string>
+    <string name="tracks_recycler">треков</string>
+    <string name="track_recycler">трек</string>
+    <string name="tracka_recycler">трека</string>
+    <string name="not_tracks_recycler">нет треков</string>
     <string name="crash_error">Внутренняя ошибка приложения. Обратитесь к разработчику</string>
     <string name="clear_search" translatable="false">Очистить</string>
 </resources>

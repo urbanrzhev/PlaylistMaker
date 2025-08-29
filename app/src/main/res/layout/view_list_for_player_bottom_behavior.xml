@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="61dp">
+
+    <ImageView
+        android:id="@+id/imageCover"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:contentDescription="@string/default_image"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/textName"
+        style="@style/text_recycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Название"
+        android:layout_marginTop="14dp"
+        android:textAppearance="@style/textAppearanceRegular16sp400w"
+        app:layout_constraintStart_toEndOf="@+id/imageCover"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textCount"
+        style="@style/text_recycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        tools:text="треков"
+        android:textAppearance="@style/textAppearanceRegular11sp400w"
+        android:textColor="?attr/text_color_white_aeafb4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageCover" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,10 @@
 package com.example.playlistmaker.media_library.ui.fragments
 
 import com.example.playlistmaker.databinding.FragmentMediaLibraryBinding
-import com.example.playlistmaker.media_library.ui.adapters.MediaLibraryAdapter
+import com.example.playlistmaker.media_library.ui.adapter_holder.MediaLibraryAdapter
 import com.example.playlistmaker.media_library.ui.view_model.MediaLibraryViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +27,7 @@ class MediaLibraryFragment : BindingFragment<FragmentMediaLibraryBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.observeStartFragment().observe(viewLifecycleOwner) {
-            binding.pager.setCurrentItem(it)
+            binding.pager.currentItem = it
         }
         viewModel.startFragment()
         adapter = MediaLibraryAdapter(childFragmentManager, lifecycle)

@@ -1,5 +1,6 @@
 package com.example.playlistmaker.media_library.di
 
+import com.example.playlistmaker.common.util.OrthographyCount
 import com.example.playlistmaker.media_library.domain.api.GetStartFragmentUseCase
 import com.example.playlistmaker.media_library.domain.api.SetStartFragmentUseCase
 import com.example.playlistmaker.media_library.domain.use_case.GetStartFragmentUseCaseImpl
@@ -18,7 +19,7 @@ val mediaLibraryModule = module{
         FavoritesTracksViewModel(get())
     }
     viewModel<PlaylistsViewModel>{
-        PlaylistsViewModel()
+        PlaylistsViewModel(get())
     }
     factory<SetStartFragmentUseCase>{
         SetStartFragmentUseCaseImpl(get())

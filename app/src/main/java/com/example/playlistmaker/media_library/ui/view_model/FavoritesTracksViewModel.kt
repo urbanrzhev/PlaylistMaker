@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.common.domain.api.DataBaseInteractor
+import com.example.playlistmaker.common.domain.api.DataBaseTracksInteractor
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.media_library.ui.models.RecyclerState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class FavoritesTracksViewModel(
-    private val dataBaseInteractor: DataBaseInteractor
+    private val dataBaseTracksInteractor: DataBaseTracksInteractor
 ): ViewModel() {
     private var job: Job? = null
     private val listTracks = MutableLiveData<RecyclerState<List<Track>>>(RecyclerState.Idle())
@@ -20,10 +20,10 @@ class FavoritesTracksViewModel(
     fun updateFavoritesTracks(){
         job?.cancel()
         job = viewModelScope.launch {
-            dataBaseInteractor.getAllFavoritesTracks().collect {
+            dataBaseTracksInteractor.getAllFavoritesTracks().collect {
                 when {
                     it.isNotEmpty() -> listTracks.postValue(RecyclerState.Success(it))
-                    else -> listTracks.postValue(RecyclerState.Empty())
+                    else -> listTracks.postValue(RecyclerState.Error())
                 }
             }
         }

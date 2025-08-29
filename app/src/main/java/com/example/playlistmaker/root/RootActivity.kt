@@ -26,13 +26,15 @@ class RootActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
         val navController = navHostFragment.navController
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val borderBorderNavigation = findViewById<View>(R.id.view)
         bottomNavigationView.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.mediaPlayerFragment -> bottomNavigationView.isVisible = false
+                R.id.newPlaylistFragment -> bottomNavigationView.isVisible = false
                 else -> bottomNavigationView.isVisible = true
             }
-            findViewById<View>(R.id.view).isVisible = bottomNavigationView.isVisible
+            borderBorderNavigation.isVisible = bottomNavigationView.isVisible
         }
     }
 }
