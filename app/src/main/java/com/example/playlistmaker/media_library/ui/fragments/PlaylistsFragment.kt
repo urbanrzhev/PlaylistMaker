@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.util.BindingFragment
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.example.playlistmaker.info_playlist.ui.fragment.InfoPlaylistFragment
 import com.example.playlistmaker.media_library.ui.adapter_holder.MediaLibraryPlaylistAdapter
 import com.example.playlistmaker.media_library.ui.models.RecyclerState
 import com.example.playlistmaker.media_library.ui.view_model.PlaylistsViewModel
@@ -17,7 +18,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
     private val viewModel: PlaylistsViewModel by viewModel()
-    private val adapter = MediaLibraryPlaylistAdapter {}
+    private val adapter = MediaLibraryPlaylistAdapter { playlist ->
+        findNavController().navigate(
+            R.id.action_mediaLibraryFragment_to_infoFragment,
+            InfoPlaylistFragment.createArgs(playlist)
+        )
+    }
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
