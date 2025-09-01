@@ -4,7 +4,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.playlistmaker.common.data.repository.DataBasePlaylistRepositoryImpl
-import com.example.playlistmaker.common.data.repository.DataBaseTracksRepositoryImpl
+import com.example.playlistmaker.common.data.repository.DataBaseFavoritesTracksRepositoryImpl
 import com.example.playlistmaker.common.data.repository.SharedPreferencesManagerImpl
 import com.example.playlistmaker.common.data.db.AppDatabase
 import com.example.playlistmaker.common.data.db.converters.TrackEntityDbConverter
@@ -14,12 +14,12 @@ import com.example.playlistmaker.common.data.db.dao.TrackDao
 import com.example.playlistmaker.common.data.db.dao.TrackInPlaylistsDao
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsRepository
-import com.example.playlistmaker.common.domain.api.DataBaseTracksInteractor
-import com.example.playlistmaker.common.domain.api.DataBaseTracksRepository
+import com.example.playlistmaker.common.domain.api.DataBaseFavoritesTracksInteractor
+import com.example.playlistmaker.common.domain.api.DataBaseFavoritesTracksRepository
 import com.example.playlistmaker.common.domain.api.GetThemeUseCase
 import com.example.playlistmaker.common.domain.api.SharedPreferencesManager
 import com.example.playlistmaker.common.domain.impl.DataBasePlaylistsInteractorImpl
-import com.example.playlistmaker.common.domain.impl.DataBaseTracksInteractorImpl
+import com.example.playlistmaker.common.domain.impl.DataBaseFavoritesTracksInteractorImpl
 import com.example.playlistmaker.common.domain.impl.GetThemeUseCaseImpl
 import com.example.playlistmaker.common.util.OrthographyCount
 import com.example.playlistmaker.common.util.TimeFormat
@@ -51,8 +51,8 @@ val commonModule = module {
     factory<GetThemeUseCase>{
         GetThemeUseCaseImpl(get())
     }
-    factory <DataBaseTracksRepository> {
-        DataBaseTracksRepositoryImpl(get(),get())
+    factory <DataBaseFavoritesTracksRepository> {
+        DataBaseFavoritesTracksRepositoryImpl(get(),get())
     }
     factory <TrackEntityDbConverter> {
         TrackEntityDbConverter()
@@ -60,8 +60,8 @@ val commonModule = module {
     factory <TrackInPlaylistEntityDbConverter> {
         TrackInPlaylistEntityDbConverter()
     }
-    factory <DataBaseTracksInteractor> {
-        DataBaseTracksInteractorImpl(get())
+    factory <DataBaseFavoritesTracksInteractor> {
+        DataBaseFavoritesTracksInteractorImpl(get())
     }
     single<TrackDao>{
         Room.databaseBuilder(androidContext(), AppDatabase::class.java,"database.db")
@@ -85,6 +85,6 @@ val commonModule = module {
         DataBasePlaylistsInteractorImpl(get())
     }
     factory <DataBasePlaylistsRepository> {
-        DataBasePlaylistRepositoryImpl(get(),get(),get(),get(),get())
+        DataBasePlaylistRepositoryImpl(get(),get(),get(),get(),get(),get())
     }
 }

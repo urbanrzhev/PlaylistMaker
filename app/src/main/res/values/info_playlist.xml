@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not">Нет</string>
+    <string name="yes">Да</string>
+    <string name="delete_track">Хотите удалить трек?</string>
+    <style name="textInfoPlaylist">
+        <item name="android:textColor">@color/color_1a1b22</item>
+    </style>
+</resources>

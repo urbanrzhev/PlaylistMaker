@@ -1,5 +1,6 @@
 package com.example.playlistmaker.common.data.repository
 
+import com.example.playlistmaker.common.data.db.converters.ListTrackEntityDbConverter
 import com.example.playlistmaker.common.data.db.converters.TrackInPlaylistEntityDbConverter
 import com.example.playlistmaker.common.data.db.dao.PlaylistDao
 import com.example.playlistmaker.common.data.db.dao.TrackInPlaylistsDao
@@ -18,7 +19,8 @@ class DataBasePlaylistRepositoryImpl(
     private val databasePlaylists: PlaylistDao,
     private val gson: Gson,
     private val orthography: OrthographyCount,
-    private val converterTrackInPlaylistEntity: TrackInPlaylistEntityDbConverter
+    private val converterTrackInPlaylistEntity: TrackInPlaylistEntityDbConverter,
+    private val converterListTrackEntity: ListTrackEntityDbConverter
 ) : DataBasePlaylistsRepository {
     private val gsonList = object : TypeToken<List<Int>>() {}.getType()
     override suspend fun setPlaylist(playlist: Playlist) {
@@ -38,6 +40,14 @@ class DataBasePlaylistRepositoryImpl(
             val trackEntity = converterTrackInPlaylistEntity.map(track)
             databaseTracks.setTrack(trackEntity)
             emit(true)
+        }
+    }
+
+    override fun getTrackListInPlaylist(trackId: Int): Flow<List<Track>> {
+        return flow {
+            val tracks = databaseTracks.getTracks()
+            val newTracks = converterListTrackEntity.map(tracks)
+            emit(newTracks)
         }
     }
 

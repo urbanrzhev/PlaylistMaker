@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
-import com.example.playlistmaker.common.domain.api.DataBaseTracksInteractor
+import com.example.playlistmaker.common.domain.api.DataBaseFavoritesTracksInteractor
 import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.SingleLiveEvent
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class MediaPlayerViewModel(
     private val mediaPlayer: MediaPlayerInteractor,
     private val timeFormat: TimeFormat,
-    private val databaseTracksInteractor: DataBaseTracksInteractor,
+    private val databaseFavoritesTracksInteractor: DataBaseFavoritesTracksInteractor,
     private val databasePlaylistsInteractor: DataBasePlaylistsInteractor
 ) : ViewModel() {
     private lateinit var activeTrack: Track
@@ -90,9 +90,9 @@ class MediaPlayerViewModel(
         jobSetFavorites?.cancel()
         jobSetFavorites = viewModelScope.launch {
             if (value == true) {
-                databaseTracksInteractor.deleteFavoriteTrack(activeTrack.trackId)
+                databaseFavoritesTracksInteractor.deleteFavoriteTrack(activeTrack.trackId)
             } else {
-                databaseTracksInteractor.setFavoriteTrack(activeTrack)
+                databaseFavoritesTracksInteractor.setFavoriteTrack(activeTrack)
             }
         }
     }

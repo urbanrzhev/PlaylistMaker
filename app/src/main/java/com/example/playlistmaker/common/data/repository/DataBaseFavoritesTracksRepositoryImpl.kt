@@ -3,15 +3,15 @@ package com.example.playlistmaker.common.data.repository
 import com.example.playlistmaker.common.data.db.converters.TrackEntityDbConverter
 import com.example.playlistmaker.common.data.db.dao.TrackDao
 import com.example.playlistmaker.common.data.db.entity.TrackEntity
-import com.example.playlistmaker.common.domain.api.DataBaseTracksRepository
+import com.example.playlistmaker.common.domain.api.DataBaseFavoritesTracksRepository
 import com.example.playlistmaker.common.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class DataBaseTracksRepositoryImpl(
+class DataBaseFavoritesTracksRepositoryImpl(
     private val db: TrackDao,
     private val converter: TrackEntityDbConverter
-) : DataBaseTracksRepository {
+) : DataBaseFavoritesTracksRepository {
     override suspend fun setFavoriteTrack(track: Track) {
             val trackEntity = converterFromTrack(track)
             db.setFavoriteTrack(trackEntity)

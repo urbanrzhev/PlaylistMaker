@@ -20,7 +20,7 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
     private val viewModel: PlaylistsViewModel by viewModel()
     private val adapter = MediaLibraryPlaylistAdapter { playlist ->
         findNavController().navigate(
-            R.id.action_mediaLibraryFragment_to_infoFragment,
+            R.id.action_mediaLibraryFragment_to_infoPlaylistFragment,
             InfoPlaylistFragment.createArgs(playlist)
         )
     }

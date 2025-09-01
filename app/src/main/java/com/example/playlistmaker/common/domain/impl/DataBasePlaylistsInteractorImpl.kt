@@ -21,6 +21,10 @@ class DataBasePlaylistsInteractorImpl(
         return repository.setTrackInPlaylist(track)
     }
 
+    override fun getTrackListInPlaylist(trackId: Int): Flow<List<Track>> {
+        return repository.getTrackListInPlaylist(trackId)
+    }
+
     override suspend fun updatePlaylist(playlist: Playlist) {
         repository.updatePlaylist(playlist)
     }
