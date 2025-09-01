@@ -20,6 +20,7 @@ object TrackBundleUtil {
                             "primaryGenreName" to primaryGenreName,
                             "country" to country,
                             "trackId" to trackId,
+                            "trackTimeMillis" to trackTimeMillis,
                             "isFavorite" to isFavorite
                         )
             )
@@ -40,6 +41,7 @@ object TrackBundleUtil {
                     primaryGenreName = getString("primaryGenreName") ?: "",
                     country = getString("country") ?: "",
                     trackId = getInt("trackId"),
+                    trackTimeMillis = getString("trackTimeMillis") ?: "",
                     isFavorite = getBoolean("isFavorite")
                 )
             }

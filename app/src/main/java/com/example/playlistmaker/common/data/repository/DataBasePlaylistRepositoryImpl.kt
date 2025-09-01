@@ -42,6 +42,23 @@ class DataBasePlaylistRepositoryImpl(
         }
     }
 
+    override fun getTracks(playlistName: String): Flow<List<Track>> {
+        return flow {
+            val listDb = databasePlaylists.getTracksFromPlaylist(playlistName)
+            val newList = converterTrackEntityForPlaylist.map(listDb)
+            emit(newList)
+        }
+    }
+
+    override suspend fun deleteTrackFromPlaylist(track: Track, playlistName: String) {
+        val newTrack = converterTrackEntityForPlaylist.map(track)
+        databasePlaylists.deleteTrackFromPlaylistTransaction(track = newTrack, playlistName)
+    }
+
+    private suspend fun getIdsTrackFromPlaylist(playlistName: String): List<Int> {
+        return databasePlaylists.getIdsTrackFromPlaylist(playlistName = playlistName)
+    }
+
     private fun converterFromPlaylist(playlist: Playlist): PlaylistEntity {
         return with(playlist) {
             PlaylistEntity(
@@ -55,14 +72,14 @@ class DataBasePlaylistRepositoryImpl(
     private suspend fun converterAllFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map {
             with(it) {
-                val idsTrack = databasePlaylists.getIdsTrackFromPlaylist(it.name).toMutableList()
+                val idsTrack = getIdsTrackFromPlaylist(it.name).toMutableList()
                 Playlist(
                     name = name,
                     photo = photo,
                     description = description,
                     idsTrack = idsTrack
                 ).apply {
-                    count = orthography.orthographyCount(idsTrack.size)
+                    count = orthography.orthographyCountTracks(idsTrack.size)
                 }
             }
         }

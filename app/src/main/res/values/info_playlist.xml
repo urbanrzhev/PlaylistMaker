@@ -2,8 +2,14 @@
 <resources>
     <string name="not">Нет</string>
     <string name="yes">Да</string>
+    <string name="minut">минут</string>
+    <string name="minuta">минута</string>
+    <string name="minuts">минуты</string>
+    <string name="error_message_toast">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="delete_track">Хотите удалить трек?</string>
     <style name="textInfoPlaylist">
         <item name="android:textColor">@color/color_1a1b22</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:lines">1</item>
     </style>
 </resources>

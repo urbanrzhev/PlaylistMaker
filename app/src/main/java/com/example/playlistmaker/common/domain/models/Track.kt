@@ -11,5 +11,6 @@ data class Track(
     val primaryGenreName: String = "",
     val country: String = "",
     val trackId: Int = 0,
+    val trackTimeMillis:String ,
     val isFavorite: Boolean = false
 )

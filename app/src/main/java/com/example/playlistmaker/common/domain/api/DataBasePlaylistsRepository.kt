@@ -8,4 +8,6 @@ interface DataBasePlaylistsRepository {
     suspend fun setPlaylist(playlist: Playlist)
     fun getPlaylists():Flow<List<Playlist>>
     fun addTrackInPlaylist(track:Track, playlistName:String):Flow<Boolean>
+    fun getTracks(playlistName: String):Flow<List<Track>>
+    suspend fun deleteTrackFromPlaylist(track:Track, playlistName:String)
 }

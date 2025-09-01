@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val infoPlaylistModule = module{
     viewModel {
-        InfoPlaylistViewModel(get())
+        InfoPlaylistViewModel(get(),get(),get())
     }
 }

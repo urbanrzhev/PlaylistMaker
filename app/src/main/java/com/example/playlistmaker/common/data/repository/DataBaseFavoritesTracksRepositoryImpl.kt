@@ -2,7 +2,7 @@ package com.example.playlistmaker.common.data.repository
 
 import com.example.playlistmaker.common.data.db.converters.TrackEntityDbConverter
 import com.example.playlistmaker.common.data.db.dao.TrackDao
-import com.example.playlistmaker.common.data.db.entity.TrackEntity
+import com.example.playlistmaker.common.data.db.entity.TrackFavoriteEntity
 import com.example.playlistmaker.common.domain.api.DataBaseFavoritesTracksRepository
 import com.example.playlistmaker.common.domain.models.Track
 import kotlinx.coroutines.flow.Flow
@@ -28,11 +28,11 @@ class DataBaseFavoritesTracksRepositoryImpl(
         }
     }
 
-    private fun converterFromTrack(track: Track): TrackEntity {
+    private fun converterFromTrack(track: Track): TrackFavoriteEntity {
         return converter.map(track)
     }
 
-    private fun converterAllFromTrackEntity(tracks: List<TrackEntity>): List<Track> {
+    private fun converterAllFromTrackEntity(tracks: List<TrackFavoriteEntity>): List<Track> {
         return tracks.sortedBy { track ->
             track.timeOfAddition
         }.map {

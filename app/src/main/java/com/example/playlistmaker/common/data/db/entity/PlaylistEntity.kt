@@ -9,6 +9,5 @@ data class PlaylistEntity(
     val photo:String,
     @PrimaryKey @ColumnInfo(name = "playlist_name")
     val name:String,
-    val description:String,
-    val idsTracks:String
+    val description:String
 )

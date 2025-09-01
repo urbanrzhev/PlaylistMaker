@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.ViewListForSearchBinding
+import kotlinx.coroutines.Job
 
 class TrackAdapter(
+    private val longCallback: LongTrackClickListener? = null,
     private val callback: TrackClickListener
 ) : RecyclerView.Adapter<TrackViewHolder>() {
     private var tracks: List<Track> = listOf()
@@ -18,9 +20,14 @@ class TrackAdapter(
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
+        var job: Job? = null
         holder.bind(tracks[position])
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnClickListener { view->
             callback.onClick(tracks[position])
+        }
+        holder.itemView.setOnLongClickListener {
+            longCallback?.onClick(tracks[position])
+            true
         }
     }
 
@@ -54,5 +61,8 @@ class TrackAdapter(
 
     fun interface TrackClickListener {
         fun onClick(track: Track)
+    }
+    fun interface LongTrackClickListener {
+        fun onClick(track:Track)
     }
 }

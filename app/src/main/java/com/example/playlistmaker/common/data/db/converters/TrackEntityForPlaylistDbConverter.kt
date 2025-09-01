@@ -16,6 +16,7 @@ class TrackEntityForPlaylistDbConverter {
                 releaseDate,
                 primaryGenreName,
                 country,
+                trackTimeMillis,
                 trackId
             )
         }
@@ -33,8 +34,29 @@ class TrackEntityForPlaylistDbConverter {
                 releaseDate,
                 primaryGenreName,
                 country,
-                trackId
+                trackId,
+                trackTimeMillis
             )
+        }
+    }
+
+    fun map(trackList: List<TrackEntityForPlaylist>): List<Track> {
+        return trackList.map {
+            with(it) {
+                Track(
+                    trackName,
+                    artistName,
+                    trackTimeNormal,
+                    artworkUrl100,
+                    previewUrl,
+                    collectionName,
+                    releaseDate,
+                    primaryGenreName,
+                    country,
+                    trackId,
+                    trackTimeMillis
+                )
+            }
         }
     }
 }

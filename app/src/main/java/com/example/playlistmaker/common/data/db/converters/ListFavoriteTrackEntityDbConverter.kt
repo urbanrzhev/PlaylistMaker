@@ -1,10 +1,10 @@
 package com.example.playlistmaker.common.data.db.converters
 
-import com.example.playlistmaker.common.data.db.entity.TrackEntity
+import com.example.playlistmaker.common.data.db.entity.TrackFavoriteEntity
 import com.example.playlistmaker.common.domain.models.Track
 
-class ListTrackEntityDbConverter {
-    fun map(list:List<TrackEntity>):List<Track>{
+class ListFavoriteTrackEntityDbConverter {
+    fun map(list:List<TrackFavoriteEntity>):List<Track>{
         return list.map {
             with(it){
                 Track(
@@ -17,7 +17,8 @@ class ListTrackEntityDbConverter {
                     releaseDate,
                     primaryGenreName,
                     country,
-                    trackId
+                    trackId,
+                    trackTimeMillis
                 )
             }
         }
