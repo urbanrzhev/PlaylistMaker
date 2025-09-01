@@ -107,7 +107,7 @@ class MediaPlayerViewModel(
     }
 
     fun stateBottomSheetBehavior(state: Int) {
-        if(state != BottomSheetBehavior.STATE_SETTLING && state != BottomSheetBehavior.STATE_DRAGGING)
+        if (state != BottomSheetBehavior.STATE_SETTLING && state != BottomSheetBehavior.STATE_DRAGGING)
             _bottomSheetBehaviorState.value = state
     }
 
@@ -120,12 +120,14 @@ class MediaPlayerViewModel(
         }
         addTrackInPlaylistJob?.cancel()
         addTrackInPlaylistJob = viewModelScope.launch {
-            databasePlaylistsInteractor.setTrackInPlaylist(activeTrack).collect {
+            databasePlaylistsInteractor.addTrackInPlaylist(
+                track = activeTrack,
+                playlistName = playlist.name
+            ).collect {
                 if (it) {
                     _showMessage.value = Pair(true, playlist.name)
                     stateBottomSheetBehavior(BottomSheetBehavior.STATE_HIDDEN)
                     playlist.idsTrack.add(activeTrack.trackId)
-                    databasePlaylistsInteractor.updatePlaylist(playlist)
                 }
             }
         }

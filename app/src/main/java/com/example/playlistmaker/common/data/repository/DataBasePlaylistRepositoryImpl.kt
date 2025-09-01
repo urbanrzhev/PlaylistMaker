@@ -1,28 +1,21 @@
 package com.example.playlistmaker.common.data.repository
 
-import com.example.playlistmaker.common.data.db.converters.ListTrackEntityDbConverter
-import com.example.playlistmaker.common.data.db.converters.TrackInPlaylistEntityDbConverter
+import com.example.playlistmaker.common.data.db.converters.TrackEntityForPlaylistDbConverter
 import com.example.playlistmaker.common.data.db.dao.PlaylistDao
-import com.example.playlistmaker.common.data.db.dao.TrackInPlaylistsDao
+import com.example.playlistmaker.common.data.db.entity.CrossTrackAndPlaylistEntity
 import com.example.playlistmaker.common.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsRepository
 import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.OrthographyCount
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class DataBasePlaylistRepositoryImpl(
-    private val databaseTracks: TrackInPlaylistsDao,
     private val databasePlaylists: PlaylistDao,
-    private val gson: Gson,
     private val orthography: OrthographyCount,
-    private val converterTrackInPlaylistEntity: TrackInPlaylistEntityDbConverter,
-    private val converterListTrackEntity: ListTrackEntityDbConverter
+    private val converterTrackEntityForPlaylist: TrackEntityForPlaylistDbConverter
 ) : DataBasePlaylistsRepository {
-    private val gsonList = object : TypeToken<List<Int>>() {}.getType()
     override suspend fun setPlaylist(playlist: Playlist) {
         val playlistEntity = converterFromPlaylist(playlist)
         databasePlaylists.setPlaylist(playlistEntity)
@@ -35,25 +28,18 @@ class DataBasePlaylistRepositoryImpl(
         }
     }
 
-    override fun setTrackInPlaylist(track: Track): Flow<Boolean> {
+    override fun addTrackInPlaylist(track: Track, playlistName: String): Flow<Boolean> {
         return flow {
-            val trackEntity = converterTrackInPlaylistEntity.map(track)
-            databaseTracks.setTrack(trackEntity)
+            val trackEntityForPlaylist = converterTrackEntityForPlaylist.map(track)
+            databasePlaylists.addTrackInPlaylist(
+                track = trackEntityForPlaylist,
+                crossEntity = CrossTrackAndPlaylistEntity(
+                    trackId = track.trackId,
+                    playlistName = playlistName
+                )
+            )
             emit(true)
         }
-    }
-
-    override fun getTrackListInPlaylist(trackId: Int): Flow<List<Track>> {
-        return flow {
-            val tracks = databaseTracks.getTracks()
-            val newTracks = converterListTrackEntity.map(tracks)
-            emit(newTracks)
-        }
-    }
-
-    override suspend fun updatePlaylist(playlist: Playlist) {
-        val playlistEntity = converterFromPlaylist(playlist)
-        databasePlaylists.updatePlaylist(playlistEntity)
     }
 
     private fun converterFromPlaylist(playlist: Playlist): PlaylistEntity {
@@ -61,20 +47,20 @@ class DataBasePlaylistRepositoryImpl(
             PlaylistEntity(
                 name = name,
                 photo = photo,
-                description = description,
-                idsTracks = gson.toJson(idsTrack)
+                description = description
             )
         }
     }
 
-    private fun converterAllFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
+    private suspend fun converterAllFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map {
             with(it) {
+                val idsTrack = databasePlaylists.getIdsTrackFromPlaylist(it.name).toMutableList()
                 Playlist(
                     name = name,
                     photo = photo,
                     description = description,
-                    idsTrack = gson.fromJson(idsTracks, gsonList)
+                    idsTrack = idsTrack
                 ).apply {
                     count = orthography.orthographyCount(idsTrack.size)
                 }

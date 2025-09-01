@@ -7,7 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface DataBasePlaylistsInteractor {
     suspend fun setPlaylist(playlist:Playlist)
     fun getPlaylists():Flow<List<Playlist>>
-    fun setTrackInPlaylist(track: Track):Flow<Boolean>
-    fun getTrackListInPlaylist(trackId: Int):Flow<List<Track>>
-    suspend fun updatePlaylist(playlist: Playlist)
+    fun addTrackInPlaylist(track: Track, playlistName:String):Flow<Boolean>
 }

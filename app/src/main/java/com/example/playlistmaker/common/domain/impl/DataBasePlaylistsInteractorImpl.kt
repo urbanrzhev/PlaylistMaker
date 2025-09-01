@@ -17,15 +17,7 @@ class DataBasePlaylistsInteractorImpl(
         return repository.getPlaylists()
     }
 
-    override fun setTrackInPlaylist(track: Track): Flow<Boolean> {
-        return repository.setTrackInPlaylist(track)
-    }
-
-    override fun getTrackListInPlaylist(trackId: Int): Flow<List<Track>> {
-        return repository.getTrackListInPlaylist(trackId)
-    }
-
-    override suspend fun updatePlaylist(playlist: Playlist) {
-        repository.updatePlaylist(playlist)
+    override fun addTrackInPlaylist(track: Track, playlistName:String): Flow<Boolean> {
+        return repository.addTrackInPlaylist(track, playlistName)
     }
 }
