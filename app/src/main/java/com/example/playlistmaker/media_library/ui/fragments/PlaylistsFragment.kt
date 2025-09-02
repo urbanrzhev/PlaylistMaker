@@ -21,7 +21,7 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
     private val adapter = MediaLibraryPlaylistAdapter { playlist ->
         findNavController().navigate(
             R.id.action_mediaLibraryFragment_to_infoPlaylistFragment,
-            InfoPlaylistFragment.createArgs(playlist)
+            InfoPlaylistFragment.createArgs(playlist.name)
         )
     }
     override fun createBinding(
@@ -39,7 +39,9 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
                     adapter.updateList(it.data)
                     renderUi(false)
                 }
-                is RecyclerState.Error -> renderUi(true)
+                is RecyclerState.Error -> {
+                    renderUi(true)
+                }
                 is RecyclerState.Idle -> {}
             }
         }
@@ -55,6 +57,7 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
 
     private fun renderUi(value: Boolean) {
         binding.group.isVisible = value
+        binding.recycler.isVisible = !value
     }
 
     companion object {

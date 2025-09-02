@@ -48,5 +48,12 @@
         <action
             android:id="@+id/action_infoPlaylistFragment_to_mediaPlayerFragment"
             app:destination="@id/mediaPlayerFragment" />
+        <action
+            android:id="@+id/action_infoPlaylistFragment_to_modifyPlaylistFragment"
+            app:destination="@id/modifyPlaylistFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/modifyPlaylistFragment"
+        android:name="com.example.playlistmaker.modify_playlist.ui.fragments.ModifyPlaylistFragment"
+        android:label="ModifyPlaylistFragment" />
 </navigation>

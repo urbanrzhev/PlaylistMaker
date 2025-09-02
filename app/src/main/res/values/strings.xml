@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="not">Нет</string>
+    <string name="yes">Да</string>
+    <string name="modify">Редактировать</string>
+    <string name="save">Сохранить</string>
     <string name="settings" translatable="false">Настройки</string>
     <string name="secret_code">myCode</string>
     <string name="illegal_state_exception">no my holder</string>

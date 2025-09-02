@@ -23,7 +23,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.util.BindingFragment
 import com.example.playlistmaker.common.util.MyDisplayMetrics
-import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
+import com.example.playlistmaker.databinding.FragmentCreateAndModifyPlaylistBinding
 import com.example.playlistmaker.new_playlist.ui.view_model.NewPlaylistViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,7 +31,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.UUID
 
-class NewPlaylistFragment : BindingFragment<FragmentCreatePlaylistBinding>() {
+class NewPlaylistFragment : BindingFragment<FragmentCreateAndModifyPlaylistBinding>() {
     private val viewModel by viewModel<NewPlaylistViewModel>()
     private var textWatcherName: TextWatcher? = null
     private var textWatcherDescription: TextWatcher? = null
@@ -45,12 +45,12 @@ class NewPlaylistFragment : BindingFragment<FragmentCreatePlaylistBinding>() {
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentCreatePlaylistBinding {
+    ): FragmentCreateAndModifyPlaylistBinding {
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             backPressedCallback
         )
-        return FragmentCreatePlaylistBinding.inflate(inflater, container, false)
+        return FragmentCreateAndModifyPlaylistBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

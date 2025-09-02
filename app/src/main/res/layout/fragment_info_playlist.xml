@@ -105,7 +105,7 @@
             android:id="@+id/view4"
             android:layout_width="24dp"
             android:layout_height="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/view3"
+            app:layout_constraintBottom_toTopOf="@+id/button_modify_playlist"
             app:layout_constraintStart_toStartOf="parent" />
 
         <View
@@ -120,7 +120,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <View
-            android:id="@+id/view3"
+            android:id="@+id/button_modify_playlist"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="16dp"
@@ -139,7 +139,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/playlists_bottom_sheet"
+        android:id="@+id/tracksBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_behavior"
@@ -156,6 +156,88 @@
             android:layout_marginTop="24dp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/menuBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_behavior"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="383dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageBehavior"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="32dp"
+                android:contentDescription="@string/default_image"
+                tools:src="@drawable/placeholder" />
+
+            <TextView
+                android:id="@+id/behavior_playlist_name"
+                style="@style/econom_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="66dp"
+                android:layout_marginTop="38dp"
+                android:textAppearance="@style/textAppearanceRegular16sp400w"
+                android:textColor="?attr/text_color_white_1a1b22"
+                tools:text="playlist_name" />
+
+            <TextView
+                android:id="@+id/behavior_tracks_count"
+                style="@style/econom_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="66dp"
+                android:layout_marginTop="55dp"
+                android:textAppearance="@style/textAppearanceRegular11sp400w"
+                android:textColor="?attr/text_color_white_aeafb4"
+                tools:text="playlist_name" />
+        </FrameLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/shared_behavior2"
+            style="@style/behavior_2_text_button"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:text="@string/share_playlist" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/modify_behavior2"
+            style="@style/behavior_2_text_button"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:text="@string/modify_playlist" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/delete_behavior2"
+            style="@style/behavior_2_text_button"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:text="@string/delete_playlist" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

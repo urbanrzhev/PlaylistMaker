@@ -42,7 +42,7 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val bottomSheetContainer = binding.playlistsBottomSheet
+        val bottomSheetContainer = binding.tracksBottomSheet
         val overlay  = binding.overlay
         bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback(){
             override fun onStateChanged(bottomSheet: View, newState: Int) {

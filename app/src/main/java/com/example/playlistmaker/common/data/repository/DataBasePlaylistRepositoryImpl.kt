@@ -28,10 +28,30 @@ class DataBasePlaylistRepositoryImpl(
         }
     }
 
+    override fun getPlaylist(playlistName: String): Flow<Playlist> {
+        return flow {
+            val playlist = converterFromPlaylistEntity(databasePlaylists.getPlaylist(playlistName = playlistName))
+            emit(playlist)
+        }
+    }
+
+    override fun deletePlaylistFirstStage(playlist: Playlist): Flow<List<Int>> {
+        return flow {
+            val playlistEntity = converterFromPlaylist(playlist)
+            val deleteIdsList =
+                databasePlaylists.deletePlaylistFirstStageTransaction(playlist = playlistEntity)
+            emit(deleteIdsList)
+        }
+    }
+
+    override suspend fun deletePlaylistSecondStage(deleteList: List<Int>) {
+        databasePlaylists.deletePlaylistSecondStageTransaction(deleteIdsList = deleteList)
+    }
+
     override fun addTrackInPlaylist(track: Track, playlistName: String): Flow<Boolean> {
         return flow {
             val trackEntityForPlaylist = converterTrackEntityForPlaylist.map(track)
-            databasePlaylists.addTrackInPlaylist(
+            databasePlaylists.addTrackInPlaylistTransaction(
                 track = trackEntityForPlaylist,
                 crossEntity = CrossTrackAndPlaylistEntity(
                     trackId = track.trackId,
@@ -62,6 +82,16 @@ class DataBasePlaylistRepositoryImpl(
     private fun converterFromPlaylist(playlist: Playlist): PlaylistEntity {
         return with(playlist) {
             PlaylistEntity(
+                name = name,
+                photo = photo,
+                description = description
+            )
+        }
+    }
+
+    private fun converterFromPlaylistEntity(playlist: PlaylistEntity): Playlist {
+        return with(playlist) {
+            Playlist(
                 name = name,
                 photo = photo,
                 description = description
