@@ -14,8 +14,8 @@ import androidx.room.PrimaryKey
     ),
     ForeignKey(
         entity = PlaylistEntity::class,
-        parentColumns = ["playlist_name"],
-        childColumns = ["playlist"],
+        parentColumns = ["playlist_id"],
+        childColumns = ["playlist_id_cross"],
         onDelete = ForeignKey.CASCADE
     )
 ]
@@ -25,6 +25,6 @@ data class CrossTrackAndPlaylistEntity(
     val crossReferencesId:Long = 0,
     @ColumnInfo(name = "track")
     val trackId:Int,
-    @ColumnInfo(name = "playlist")
-    val playlistName:String
+    @ColumnInfo(name = "playlist_id_cross")
+    val playlistId:Long
 )

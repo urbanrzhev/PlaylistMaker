@@ -68,7 +68,7 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
         confirmDialog = MaterialAlertDialogBuilder(requireContext())
             .setNegativeButton(getString(R.string.not)) { _, _ -> }
         //thisPlaylist = PlaylistBundleUtil.rewriteBundle(arguments?.getBundle(ARGS_PLAYLIST)!!)
-        viewModel.createPlaylist(arguments?.getString(ARGS_PLAYLIST_NAME)!!)
+        viewModel.createPlaylist(arguments?.getLong(ARGS_PLAYLIST_ID)!!)
         setupObservers()
         setupClickListeners()
     }
@@ -140,7 +140,7 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
         }
         binding.modifyBehavior2.setOnClickListener {
             findNavController().navigate(R.id.action_infoPlaylistFragment_to_modifyPlaylistFragment,
-                ModifyPlaylistFragment.createArgs(thisPlaylist.name))
+                ModifyPlaylistFragment.createArgs(thisPlaylist.playlistId))
         }
         binding.deleteBehavior2.setOnClickListener {
             //viewModel.setMBehaviorControllerState(BehaviorControllerState.BehaviorTracks)
@@ -199,10 +199,10 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
     }
 
     companion object {
-        private const val ARGS_PLAYLIST_NAME = "args_playlist_name"
-        fun createArgs(playlistName: String): Bundle =
+        private const val ARGS_PLAYLIST_ID = "args_playlist_id"
+        fun createArgs(playlistId:Long): Bundle =
             bundleOf(
-                ARGS_PLAYLIST_NAME to playlistName
+                ARGS_PLAYLIST_ID to playlistId
             )
     }
 }

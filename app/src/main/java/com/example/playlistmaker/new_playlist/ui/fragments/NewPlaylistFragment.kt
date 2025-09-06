@@ -31,8 +31,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.UUID
 
-class NewPlaylistFragment : BindingFragment<FragmentCreateAndModifyPlaylistBinding>() {
-    private val viewModel by viewModel<NewPlaylistViewModel>()
+open class NewPlaylistFragment : BindingFragment<FragmentCreateAndModifyPlaylistBinding>() {
+    internal open val viewModel by viewModel<NewPlaylistViewModel>()
     private var textWatcherName: TextWatcher? = null
     private var textWatcherDescription: TextWatcher? = null
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
@@ -46,11 +46,15 @@ class NewPlaylistFragment : BindingFragment<FragmentCreateAndModifyPlaylistBindi
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentCreateAndModifyPlaylistBinding {
+        attachBackPressedDispatcher()
+        return FragmentCreateAndModifyPlaylistBinding.inflate(inflater, container, false)
+    }
+
+    open fun attachBackPressedDispatcher() {
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             backPressedCallback
         )
-        return FragmentCreateAndModifyPlaylistBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

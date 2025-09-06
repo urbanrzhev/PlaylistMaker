@@ -21,6 +21,11 @@ class DataBasePlaylistRepositoryImpl(
         databasePlaylists.setPlaylist(playlistEntity)
     }
 
+    override suspend fun updatePlaylist(playlist:Playlist) {
+        val playlistEntity = converterFromPlaylist(playlist)
+        databasePlaylists.updatePlaylist(playlist = playlistEntity)
+    }
+
     override fun getPlaylists(): Flow<List<Playlist>> {
         return flow {
             val list = converterAllFromPlaylistEntity(databasePlaylists.getPlaylists())
@@ -28,9 +33,9 @@ class DataBasePlaylistRepositoryImpl(
         }
     }
 
-    override fun getPlaylist(playlistName: String): Flow<Playlist> {
+    override fun getPlaylist(playlistId:Long): Flow<Playlist> {
         return flow {
-            val playlist = converterFromPlaylistEntity(databasePlaylists.getPlaylist(playlistName = playlistName))
+            val playlist = converterFromPlaylistEntity(databasePlaylists.getPlaylist(playlistId = playlistId))
             emit(playlist)
         }
     }
@@ -48,40 +53,41 @@ class DataBasePlaylistRepositoryImpl(
         databasePlaylists.deletePlaylistSecondStageTransaction(deleteIdsList = deleteList)
     }
 
-    override fun addTrackInPlaylist(track: Track, playlistName: String): Flow<Boolean> {
+    override fun addTrackInPlaylist(track: Track, playlistId: Long): Flow<Boolean> {
         return flow {
             val trackEntityForPlaylist = converterTrackEntityForPlaylist.map(track)
             databasePlaylists.addTrackInPlaylistTransaction(
                 track = trackEntityForPlaylist,
                 crossEntity = CrossTrackAndPlaylistEntity(
                     trackId = track.trackId,
-                    playlistName = playlistName
+                    playlistId = playlistId
                 )
             )
             emit(true)
         }
     }
 
-    override fun getTracks(playlistName: String): Flow<List<Track>> {
+    override fun getTracks(playlistId:Long): Flow<List<Track>> {
         return flow {
-            val listDb = databasePlaylists.getTracksFromPlaylist(playlistName)
+            val listDb = databasePlaylists.getTracksFromPlaylist(playlistId)
             val newList = converterTrackEntityForPlaylist.map(listDb)
             emit(newList)
         }
     }
 
-    override suspend fun deleteTrackFromPlaylist(track: Track, playlistName: String) {
+    override suspend fun deleteTrackFromPlaylist(track: Track, playlistId:Long) {
         val newTrack = converterTrackEntityForPlaylist.map(track)
-        databasePlaylists.deleteTrackFromPlaylistTransaction(track = newTrack, playlistName)
+        databasePlaylists.deleteTrackFromPlaylistTransaction(track = newTrack, playlistId)
     }
 
-    private suspend fun getIdsTrackFromPlaylist(playlistName: String): List<Int> {
-        return databasePlaylists.getIdsTrackFromPlaylist(playlistName = playlistName)
+    private suspend fun getIdsTrackFromPlaylist(playlistId: Long): List<Int> {
+        return databasePlaylists.getIdsTrackFromPlaylist(playlistId = playlistId)
     }
 
     private fun converterFromPlaylist(playlist: Playlist): PlaylistEntity {
         return with(playlist) {
             PlaylistEntity(
+                playlistId = playlistId,
                 name = name,
                 photo = photo,
                 description = description
@@ -92,6 +98,7 @@ class DataBasePlaylistRepositoryImpl(
     private fun converterFromPlaylistEntity(playlist: PlaylistEntity): Playlist {
         return with(playlist) {
             Playlist(
+                playlistId = playlistId,
                 name = name,
                 photo = photo,
                 description = description
@@ -102,8 +109,9 @@ class DataBasePlaylistRepositoryImpl(
     private suspend fun converterAllFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map {
             with(it) {
-                val idsTrack = getIdsTrackFromPlaylist(it.name).toMutableList()
+                val idsTrack = getIdsTrackFromPlaylist(it.playlistId).toMutableList()
                 Playlist(
+                    playlistId = playlistId,
                     name = name,
                     photo = photo,
                     description = description,

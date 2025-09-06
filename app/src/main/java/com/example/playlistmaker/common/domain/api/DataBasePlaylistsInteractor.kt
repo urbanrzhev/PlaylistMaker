@@ -6,11 +6,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface DataBasePlaylistsInteractor {
     suspend fun setPlaylist(playlist:Playlist)
+    suspend fun updatePlaylist(playlist:Playlist)
     fun getPlaylists():Flow<List<Playlist>>
-    fun getPlaylist(playlistName: String):Flow<Playlist>
+    fun getPlaylist(playlistId:Long):Flow<Playlist>
     fun deletePlaylistFirstStage(playlist: Playlist):Flow<List<Int>>
     suspend fun deletePlaylistSecondStage(deleteList:List<Int>)
-    fun addTrackInPlaylist(track: Track, playlistName:String):Flow<Boolean>
-    fun getTracks(playlistName: String):Flow<List<Track>>
-    suspend fun deleteTrackFromPlaylist(track: Track, playlistName: String)
+    fun addTrackInPlaylist(track: Track, playlistId:Long):Flow<Boolean>
+    fun getTracks(playlistId:Long):Flow<List<Track>>
+    suspend fun deleteTrackFromPlaylist(track: Track, playlistId:Long)
 }

@@ -13,12 +13,16 @@ class DataBasePlaylistsInteractorImpl(
         repository.setPlaylist(playlist = playlist)
     }
 
+    override suspend fun updatePlaylist(playlist:Playlist) {
+        repository.updatePlaylist(playlist = playlist)
+    }
+
     override fun getPlaylists(): Flow<List<Playlist>> {
         return repository.getPlaylists()
     }
 
-    override fun getPlaylist(playlistName: String): Flow<Playlist> {
-        return repository.getPlaylist(playlistName)
+    override fun getPlaylist(playlistId:Long): Flow<Playlist> {
+        return repository.getPlaylist(playlistId = playlistId)
     }
 
     override fun deletePlaylistFirstStage(playlist: Playlist): Flow<List<Int>> {
@@ -29,15 +33,15 @@ class DataBasePlaylistsInteractorImpl(
         repository.deletePlaylistSecondStage(deleteList = deleteList)
     }
 
-    override fun addTrackInPlaylist(track: Track, playlistName:String): Flow<Boolean> {
-        return repository.addTrackInPlaylist(track, playlistName)
+    override fun addTrackInPlaylist(track: Track, playlistId:Long): Flow<Boolean> {
+        return repository.addTrackInPlaylist(track, playlistId)
     }
 
-    override fun getTracks(playlistName: String): Flow<List<Track>> {
-        return repository.getTracks(playlistName)
+    override fun getTracks(playlistId:Long): Flow<List<Track>> {
+        return repository.getTracks(playlistId)
     }
 
-    override suspend fun deleteTrackFromPlaylist(track: Track, playlistName: String) {
-        repository.deleteTrackFromPlaylist(track, playlistName)
+    override suspend fun deleteTrackFromPlaylist(track: Track, playlistId:Long) {
+        repository.deleteTrackFromPlaylist(track, playlistId)
     }
 }

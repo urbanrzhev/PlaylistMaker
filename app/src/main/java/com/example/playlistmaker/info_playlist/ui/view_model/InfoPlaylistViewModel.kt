@@ -42,22 +42,23 @@ class InfoPlaylistViewModel(
     private val _tracks = MutableLiveData(listOf<Track>())
     val observeTracks: LiveData<List<Track>> = _tracks
 
-    fun createPlaylist(playlistName: String) {
+    fun createPlaylist(playlistId:Long) {
         createPlaylistJob?.cancel()
         createPlaylistJob = viewModelScope.launch {
-            databasePlaylistInteractor.getPlaylist(playlistName).collect{ playlist ->
+            databasePlaylistInteractor.getPlaylist(playlistId).collect{ playlist ->
                 _playlist.value = playlist
             }
         }
-        updateTracks(playlistName)
+        Log.v("my", "updateTrack")
+        updateTracks(playlistId)
     }
 
     fun deleteTrack(track: Track) {
         deleteTrackJob?.cancel()
         deleteTrackJob = viewModelScope.launch {
-            databasePlaylistInteractor.deleteTrackFromPlaylist(track, _playlist.value?.name ?: "")
+            databasePlaylistInteractor.deleteTrackFromPlaylist(track, _playlist.value?.playlistId ?: 0)
             //createPlaylist(_playlist.value?.name)
-            updateTracks(_playlist.value?.name!!)
+            updateTracks(_playlist.value?.playlistId!!)
         }
     }
 
@@ -84,10 +85,10 @@ class InfoPlaylistViewModel(
             _menuBehaviorState.value = state
     }
 
-    private fun updateTracks(playlistName: String) {
+    private fun updateTracks(playlistId:Long) {
         getTracksJob?.cancel()
         getTracksJob = viewModelScope.launch {
-            databasePlaylistInteractor.getTracks(playlistName = playlistName).collect { tracks ->
+            databasePlaylistInteractor.getTracks(playlistId = playlistId).collect { tracks ->
                 _tracks.postValue(tracks)
                 totalTimeOrthography(tracks)
             }

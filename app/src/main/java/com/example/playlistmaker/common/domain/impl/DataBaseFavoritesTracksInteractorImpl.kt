@@ -16,6 +16,10 @@ class DataBaseFavoritesTracksInteractorImpl(
         dbrepository.deleteFavoriteTrack(trackId)
     }
 
+    override fun checkTrackInFavorites(trackId: Int): Flow<Boolean> {
+        return dbrepository.checkTrackInFavorites(trackId)
+    }
+
     override fun getAllFavoritesTracks(): Flow<List<Track>> {
         return dbrepository.getAllFavoritesTracks()
     }

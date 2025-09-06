@@ -3,7 +3,6 @@ package com.example.playlistmaker.common.data.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.koin.core.time.TimeInMillis
 
 @Entity(tableName = "track_table_favorite")
 data class TrackFavoriteEntity (

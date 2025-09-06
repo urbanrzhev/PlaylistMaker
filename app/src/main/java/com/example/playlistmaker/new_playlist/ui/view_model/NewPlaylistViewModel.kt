@@ -12,20 +12,20 @@ import com.example.playlistmaker.common.domain.models.Playlist
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(
+open class NewPlaylistViewModel(
     private val context:Context,
     private val database:DataBasePlaylistsInteractor
 ):ViewModel() {
     private var createJob: Job? = null
     private val _buttonCreateEnable = MutableLiveData(false)
-    val observeButtonCreateEnable:LiveData<Boolean> = _buttonCreateEnable
-    private val _closeFragment = MutableLiveData(false)
-    val observeCloseFragment:LiveData<Boolean> = _closeFragment
+    internal val observeButtonCreateEnable:LiveData<Boolean> = _buttonCreateEnable
+    internal val _closeFragment = MutableLiveData(false)
+    internal val observeCloseFragment:LiveData<Boolean> = _closeFragment
     private val _enablePressedCallback = MutableLiveData(false)
-    val observeEnablePressedCallback:LiveData<Boolean> = _enablePressedCallback
-    private val _playlist = Playlist()
+    internal val observeEnablePressedCallback:LiveData<Boolean> = _enablePressedCallback
+    internal var _playlist = Playlist()
     private val _photo = MutableLiveData("")
-    val observePhoto:LiveData<String> = _photo
+    internal val observePhoto:LiveData<String> = _photo
 
     fun setPhoto(uri:String){
         _playlist.apply {

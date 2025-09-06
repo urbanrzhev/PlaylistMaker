@@ -155,7 +155,36 @@
             android:layout_marginHorizontal="13dp"
             android:layout_marginTop="24dp"
             android:orientation="vertical"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <ImageView
+            android:id="@+id/imageNotTracks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:contentDescription="@string/default_image"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/not_track"
+            tools:layout_editor_absoluteY="530dp" />
+
+        <TextView
+            android:id="@+id/textNotTracks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:text="@string/not_tracks_recycler"
+            android:textAppearance="@style/textAppearanceMedium19sp400w"
+            android:visibility="gone" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupNotTracks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="imageNotTracks,textNotTracks" />
     </LinearLayout>
 
     <View

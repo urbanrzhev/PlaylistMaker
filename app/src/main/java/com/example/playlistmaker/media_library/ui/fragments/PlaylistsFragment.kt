@@ -21,7 +21,7 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
     private val adapter = MediaLibraryPlaylistAdapter { playlist ->
         findNavController().navigate(
             R.id.action_mediaLibraryFragment_to_infoPlaylistFragment,
-            InfoPlaylistFragment.createArgs(playlist.name)
+            InfoPlaylistFragment.createArgs(playlist.playlistId)
         )
     }
     override fun createBinding(

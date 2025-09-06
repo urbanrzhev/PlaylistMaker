@@ -10,7 +10,7 @@ import com.example.playlistmaker.common.data.db.entity.TrackFavoriteEntity
 import com.example.playlistmaker.common.data.db.entity.TrackEntityForPlaylist
 
 @Database(
-    version = 3,
+    version = 2,
     entities = [
         TrackFavoriteEntity::class,
         PlaylistEntity::class,

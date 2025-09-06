@@ -1,54 +1,41 @@
 package com.example.playlistmaker.modify_playlist.ui.view_models
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
 import com.example.playlistmaker.common.domain.models.Playlist
+import com.example.playlistmaker.new_playlist.ui.view_model.NewPlaylistViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ModifyPlaylistViewModel(
+    private val context: Context,
     private val databasePlaylistInteractor: DataBasePlaylistsInteractor,
-):ViewModel() {
-    private var createPlaylistJob: Job? = null
-    private var saveModifyPlaylistJob: Job? = null
-    private lateinit var legacyName:String
-    private val _buttonSaveEnabled = MutableLiveData(true)
-    val observeButtonSaveEnabled:LiveData<Boolean> = _buttonSaveEnabled
-    private val _close = MutableLiveData(false)
-    val observeClose:LiveData<Boolean> = _close
-    private val _playlist = MutableLiveData<Playlist>()
-    val observePlaylist:LiveData<Playlist> = _playlist
-    fun setPlaylist(playlistName: String){
-        legacyName = playlistName
-        createPlaylistJob?.cancel()
-        createPlaylistJob = viewModelScope.launch {
-            databasePlaylistInteractor.getPlaylist(playlistName).collect{ playlist ->
-                _playlist.value = playlist
+) : NewPlaylistViewModel(context, databasePlaylistInteractor) {
+    private var setPlaylistJob: Job? = null
+    private var updatePlaylistJob: Job? = null
+    private val _showPlaylist = MutableLiveData<Playlist>(_playlist)
+    val observeShowPlaylist: LiveData<Playlist> = _showPlaylist
+    fun setPlaylist(playlistId: Long) {
+        setPlaylistJob?.cancel()
+        setPlaylistJob = viewModelScope.launch {
+            databasePlaylistInteractor.getPlaylist(playlistId).collect { playlist ->
+                _playlist = playlist
+                setPhoto(playlist.photo)
+                setName(playlist.name)
+                setDescription(playlist.description)
+                _showPlaylist.postValue(playlist)
             }
         }
     }
 
-    fun setName(name:String){
-        if(name.isEmpty())
-            _buttonSaveEnabled.value = false
-        else{
-            _buttonSaveEnabled.value = true
-            _playlist.value?.name = name
-        }
-    }
-
-    fun setDescription(description:String){
-        _playlist.value?.description = description
-    }
-
-    fun saveModifyPlaylist(){
-        saveModifyPlaylistJob?.cancel()
-        saveModifyPlaylistJob = viewModelScope.launch {
-            databasePlaylistInteractor.setPlaylist(_playlist.value!!)
-            _close.postValue(true)
+    fun updatePlaylist() {
+        updatePlaylistJob?.cancel()
+        updatePlaylistJob = viewModelScope.launch {
+            databasePlaylistInteractor.updatePlaylist(_playlist)
+            _closeFragment.postValue(true)
         }
     }
 }

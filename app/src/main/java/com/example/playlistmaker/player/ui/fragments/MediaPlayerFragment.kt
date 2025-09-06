@@ -90,6 +90,9 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
         viewModel.observePlayerState().observe(viewLifecycleOwner) { state ->
             renderUI(state)
         }
+        viewModel.observeIsFavorite.observe(viewLifecycleOwner){isFavorite->
+            binding.buttonLikeYes.isVisible = isFavorite
+        }
         binding.recycler.adapter = adapter
         binding.buttonNewPlaylist.setOnClickListener {
             bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)

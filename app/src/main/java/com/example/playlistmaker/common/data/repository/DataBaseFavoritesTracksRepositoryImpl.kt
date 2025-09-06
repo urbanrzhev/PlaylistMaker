@@ -21,6 +21,12 @@ class DataBaseFavoritesTracksRepositoryImpl(
             db.deleteFavoriteTrack(trackId)
     }
 
+    override fun checkTrackInFavorites(trackId: Int): Flow<Boolean> {
+        return flow{
+            emit(db.checkTrackInFavorites(trackId))
+        }
+    }
+
     override fun getAllFavoritesTracks(): Flow<List<Track>> {
         return flow {
             val list = db.getAllFavoritesTracks()

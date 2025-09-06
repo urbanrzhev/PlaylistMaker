@@ -35,6 +35,9 @@ class MediaPlayerViewModel(
     private var job: Job? = null
     private var addTrackInPlaylistJob: Job? = null
     private var jobSetFavorites: Job? = null
+    private var isFavoritesJob: Job? = null
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val observeIsFavorite:LiveData<Boolean> = _isFavorite
     private val _playerProgressFlow = MutableStateFlow(TIME_DEFAULT)
     val playerProgressFlow = _playerProgressFlow.asStateFlow()
     private var playerState = MutableLiveData<PlayerState>(PlayerState.Default())
@@ -51,6 +54,12 @@ class MediaPlayerViewModel(
                 _playerProgressFlow.value = TIME_DEFAULT
                 playerState.value = PlayerState.Prepared()
             })
+        }
+        isFavoritesJob?.cancel()
+        isFavoritesJob = viewModelScope.launch {
+            databaseFavoritesTracksInteractor.checkTrackInFavorites(activeTrack.trackId).collect{ value->
+                _isFavorite.postValue(value)
+            }
         }
     }
 
@@ -81,6 +90,8 @@ class MediaPlayerViewModel(
     override fun onCleared() {
         mediaPlayer.release()
     }
+
+
 
     private fun getCurrentPosition(): String {
         return timeFormat.getTimeMM_SS(mediaPlayer.currentPosition())
@@ -122,7 +133,7 @@ class MediaPlayerViewModel(
         addTrackInPlaylistJob = viewModelScope.launch {
             databasePlaylistsInteractor.addTrackInPlaylist(
                 track = activeTrack,
-                playlistName = playlist.name
+                playlistId = playlist.playlistId
             ).collect {
                 if (it) {
                     _showMessage.value = Pair(true, playlist.name)
