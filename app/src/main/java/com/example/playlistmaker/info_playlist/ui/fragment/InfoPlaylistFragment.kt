@@ -19,6 +19,7 @@ import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.ui.adapters_holder.TrackAdapter
 import com.example.playlistmaker.common.util.BindingFragment
 import com.example.playlistmaker.databinding.FragmentInfoPlaylistBinding
+import com.example.playlistmaker.info_playlist.ui.models.InfoTracksState
 import com.example.playlistmaker.info_playlist.ui.view_model.InfoPlaylistViewModel
 import com.example.playlistmaker.modify_playlist.ui.fragments.ModifyPlaylistFragment
 import com.example.playlistmaker.player.ui.fragments.MediaPlayerFragment
@@ -30,12 +31,23 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
     private val viewModel by viewModel<InfoPlaylistViewModel>()
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
-    private var clickedTrackSheetBehavior:Boolean = true
-    private lateinit var thisPlaylist:Playlist
+    private var clickedTrackSheetBehavior: Boolean = true
+    private lateinit var thisPlaylist: Playlist
     private lateinit var menuSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var menuSheetCallback: BottomSheetCallback
+    private val sharedClickListener = View.OnClickListener {
+        if (viewModel.getSizeTrackList() == 0)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.error_message_toast),
+                Toast.LENGTH_SHORT
+            ).show()
+        else {
+            viewModel.executeSharing()
+        }
+    }
     private val adapter = TrackAdapter(longCallback = { track ->
-        if(checkClickedTrackSheetBehavior()) {
+        if (checkClickedTrackSheetBehavior()) {
             confirmDialog
                 .setTitle(getString(R.string.delete_track))
                 .setPositiveButton(getString(R.string.yes)) { _, _ ->
@@ -45,7 +57,7 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
         }
     },
         callback = { track ->
-            if(checkClickedTrackSheetBehavior()) {
+            if (checkClickedTrackSheetBehavior()) {
                 findNavController().navigate(
                     R.id.action_infoPlaylistFragment_to_mediaPlayerFragment,
                     MediaPlayerFragment.createArgs(track)
@@ -67,7 +79,6 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
         binding.recycler.adapter = adapter
         confirmDialog = MaterialAlertDialogBuilder(requireContext())
             .setNegativeButton(getString(R.string.not)) { _, _ -> }
-        //thisPlaylist = PlaylistBundleUtil.rewriteBundle(arguments?.getBundle(ARGS_PLAYLIST)!!)
         viewModel.createPlaylist(arguments?.getLong(ARGS_PLAYLIST_ID)!!)
         setupObservers()
         setupClickListeners()
@@ -78,7 +89,7 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
         viewModel.setMenuBehaviorState(menuSheetBehavior.state)
     }
 
-    private fun setupBottomSheetBehavior(){
+    private fun setupBottomSheetBehavior() {
         val overlay = binding.overlay
         val menuSheetContainer = binding.menuBottomSheet
         menuSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -86,12 +97,12 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     overlay.isVisible = false
                     clickedTrackSheetBehavior = true
-                }
-                else {
+                } else {
                     overlay.isVisible = true
                     clickedTrackSheetBehavior = false
                 }
             }
+
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
             }
         }
@@ -99,13 +110,20 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
         menuSheetBehavior.addBottomSheetCallback(menuSheetCallback)
     }
 
-    private fun setupObservers(){
+    private fun setupObservers() {
+        viewModel.observeRecyclerState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                InfoTracksState.Tracks -> renderRecyclerState(false)
+                InfoTracksState.NotTracks -> renderRecyclerState(true)
+                else -> renderRecyclerState(false, true)
+            }
+        }
         viewModel.observePlaylist.observe(viewLifecycleOwner) { playlist ->
             thisPlaylist = playlist
             showPlaylist(playlist)
         }
         viewModel.observeClose.observe(viewLifecycleOwner) { close ->
-            if(close)
+            if (close)
                 navigateUp()
         }
         viewModel.observeTracks.observe(viewLifecycleOwner) { list ->
@@ -116,34 +134,28 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
         }
         viewModel.observeTotalTracks.observe(viewLifecycleOwner) { totalTracks ->
             binding.behaviorTracksCount.text = totalTracks
-            if (totalTracks.isNotEmpty()) {
-                binding.groupTexts.isVisible = true
-                binding.textTracks.text = totalTracks
-            } else
-                binding.groupTexts.isVisible = false
+            binding.textTracks.text = totalTracks
         }
         viewModel.observeMenuBehaviorState.observe(viewLifecycleOwner) { state ->
             menuSheetBehavior.state = state
-            if(state != BottomSheetBehavior.STATE_HIDDEN)
+            if (state != BottomSheetBehavior.STATE_HIDDEN)
                 binding.overlay.isVisible = true
         }
     }
 
-    private fun setupClickListeners(){
+    private fun setupClickListeners() {
         binding.buttonModifyPlaylist.setOnClickListener {
-            //viewModel.setBehaviorControllerState(BehaviorControllerState.BehaviorMenu)
             menuSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            //renderBehavior(false)
         }
-        binding.sharedBehavior2.setOnClickListener {
-
-        }
+        binding.sharedBehavior2.setOnClickListener(sharedClickListener)
         binding.modifyBehavior2.setOnClickListener {
-            findNavController().navigate(R.id.action_infoPlaylistFragment_to_modifyPlaylistFragment,
-                ModifyPlaylistFragment.createArgs(thisPlaylist.playlistId))
+            findNavController().navigate(
+                R.id.action_infoPlaylistFragment_to_modifyPlaylistFragment,
+                ModifyPlaylistFragment.createArgs(thisPlaylist.playlistId)
+            )
         }
         binding.deleteBehavior2.setOnClickListener {
-            //viewModel.setMBehaviorControllerState(BehaviorControllerState.BehaviorTracks)
+            menuSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             confirmDialog
                 .setTitle(getString(R.string.are_you_delete_playlist))
                 .setPositiveButton(getString(R.string.yes)) { _, _ ->
@@ -151,17 +163,7 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
                 }
                 .show()
         }
-        binding.shared.setOnClickListener {
-            if (viewModel.getSizeTrackList() == 0)
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.error_message_toast),
-                    Toast.LENGTH_SHORT
-                ).show()
-            else {
-            }
-
-        }
+        binding.shared.setOnClickListener(sharedClickListener)
         binding.vectorBack.setOnClickListener {
             navigateUp()
         }
@@ -171,13 +173,19 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
         requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
-    private fun checkClickedTrackSheetBehavior() = clickedTrackSheetBehavior
+    private fun renderRecyclerState(value: Boolean, all: Boolean = false) {
+        if (all) {
+            binding.imageNotTracks.isVisible = false
+            binding.textNotTracks.isVisible = false
+            return
+        }
+        binding.recycler.isVisible = !value
+        binding.imageNotTracks.isVisible = value
+        binding.textNotTracks.isVisible = value
+        binding.groupTexts.isVisible = !value
+    }
 
-    /*private fun renderBehavior(value: Boolean) {
-        binding.tracksBottomSheet.isVisible = value
-        binding.menuBottomSheet.isVisible = !value
-        binding.overlay.isVisible = !value
-    }*/
+    private fun checkClickedTrackSheetBehavior() = clickedTrackSheetBehavior
 
     private fun showPlaylist(playlist: Playlist) {
         binding.textName.text = playlist.name
@@ -200,7 +208,7 @@ class InfoPlaylistFragment : BindingFragment<FragmentInfoPlaylistBinding>() {
 
     companion object {
         private const val ARGS_PLAYLIST_ID = "args_playlist_id"
-        fun createArgs(playlistId:Long): Bundle =
+        fun createArgs(playlistId: Long): Bundle =
             bundleOf(
                 ARGS_PLAYLIST_ID to playlistId
             )

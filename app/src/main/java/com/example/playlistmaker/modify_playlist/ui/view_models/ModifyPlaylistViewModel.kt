@@ -6,14 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
 import com.example.playlistmaker.common.domain.models.Playlist
+import com.example.playlistmaker.new_playlist.domain.api.FileUseCase
 import com.example.playlistmaker.new_playlist.ui.view_model.NewPlaylistViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ModifyPlaylistViewModel(
     private val context: Context,
+    private val fileUseCase: FileUseCase,
     private val databasePlaylistInteractor: DataBasePlaylistsInteractor,
-) : NewPlaylistViewModel(context, databasePlaylistInteractor) {
+) : NewPlaylistViewModel(context,fileUseCase, databasePlaylistInteractor) {
     private var setPlaylistJob: Job? = null
     private var updatePlaylistJob: Job? = null
     private val _showPlaylist = MutableLiveData<Playlist>(_playlist)

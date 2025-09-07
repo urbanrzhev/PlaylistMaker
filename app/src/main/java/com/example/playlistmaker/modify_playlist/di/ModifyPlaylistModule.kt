@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val modifyPlaylistModule = module{
     viewModel<ModifyPlaylistViewModel> {
-        ModifyPlaylistViewModel(get(),get())
+        ModifyPlaylistViewModel(get(),get(),get())
     }
 }
