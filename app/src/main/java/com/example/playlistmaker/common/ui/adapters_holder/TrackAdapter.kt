@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.databinding.ViewListForSearchBinding
-import kotlinx.coroutines.Job
 
 class TrackAdapter(
     private val longCallback: LongTrackClickListener? = null,
@@ -15,18 +14,26 @@ class TrackAdapter(
     private var tracks: List<Track> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val binding = ViewListForSearchBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding =
+            ViewListForSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TrackViewHolder(binding = binding)
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        var job: Job? = null
         holder.bind(tracks[position])
-        holder.itemView.setOnClickListener { view->
-            callback.onClick(tracks[position])
+        holder.itemView.setOnClickListener { view ->
+            try {
+                callback.onClick(tracks[position])
+            } catch (e: Exception) {
+                longCallback?.onClick(tracks[0])
+            }
         }
         holder.itemView.setOnLongClickListener {
-            longCallback?.onClick(tracks[position])
+            try {
+                longCallback?.onClick(tracks[position])
+            } catch (e: Exception) {
+                longCallback?.onClick(tracks[0])
+            }
             true
         }
     }
@@ -35,9 +42,9 @@ class TrackAdapter(
         return tracks.size
     }
 
-    fun updateList(newList:List<Track>){
+    fun updateList(newList: List<Track>) {
         val oldList = tracks
-        val difResult = DiffUtil.calculateDiff(object :DiffUtil.Callback(){
+        val difResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun getOldListSize(): Int {
                 return oldList.size
             }
@@ -62,7 +69,8 @@ class TrackAdapter(
     fun interface TrackClickListener {
         fun onClick(track: Track)
     }
+
     fun interface LongTrackClickListener {
-        fun onClick(track:Track)
+        fun onClick(track: Track)
     }
 }

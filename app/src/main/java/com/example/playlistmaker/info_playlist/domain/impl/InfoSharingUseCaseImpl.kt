@@ -18,8 +18,7 @@ class InfoSharingUseCaseImpl(
     }
 
     private fun createString(playlist: Playlist, tracks: List<Track>): String {
-        var string = "${appContext.getString(R.string.playlist)} \n" +
-                "${playlist.name} \n" +
+        var string = "${playlist.name} \n" +
                 if (playlist.description.isNotEmpty()) {
                     "${playlist.description} \n"
                 } else ""
@@ -29,7 +28,7 @@ class InfoSharingUseCaseImpl(
             tracks.size
         )
         tracks.forEachIndexed { i, v ->
-            string += "\n${i + 1}. ${v.artistName} - ${v.trackName} ${v.trackTimeNormal}"
+            string += "\n${i + 1}. ${v.artistName} - ${v.trackName} (${v.trackTimeNormal})"
         }
         return string
     }

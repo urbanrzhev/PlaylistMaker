@@ -65,9 +65,7 @@ class InfoPlaylistViewModel(
     }
 
     fun executeSharing() {
-        val response = sharingUseCase.execute(_playlist.value!!, _tracks.value!!)
-        if(response == null)
-            _close.value = true
+        sharingUseCase.execute(_playlist.value!!, _tracks.value!!)
     }
 
     fun deletePlaylist() {

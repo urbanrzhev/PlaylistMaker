@@ -23,8 +23,8 @@ interface PlaylistDao {
     suspend fun getPlaylist(playlistId:Long):PlaylistEntity
     @Query("SELECT * FROM track_table_for_playlist WHERE track_id IN(:listId)")
     suspend fun getTracksFromPlaylistById(listId: List<Int>):List<TrackEntityForPlaylist>
-    @Query("SELECT track FROM cross_table WHERE playlist_id_cross =:playlistId")
-    suspend fun getIdsTrackFromPlaylist(playlistId: Long):List<Int>
+    @Query("SELECT * FROM cross_table WHERE playlist_id_cross =:playlistId")
+    suspend fun getIdsTrackFromPlaylist(playlistId: Long):List<CrossTrackAndPlaylistEntity>
     @Insert(TrackEntityForPlaylist::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun addTrackEntityForPlaylist(track:TrackEntityForPlaylist)
     @Insert(CrossTrackAndPlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
@@ -47,22 +47,10 @@ interface PlaylistDao {
         if (!deleteTrack)
             deleteTrackEntityForPlaylist(track)
     }
-    @Transaction
-    suspend fun getTracksFromPlaylist(playlistId: Long):List<TrackEntityForPlaylist>{
-        val idsList = getIdsTrackFromPlaylist(playlistId = playlistId)
-        val tracks = getTracksFromPlaylistById(idsList)
-        return tracks
-    }
     @Delete
     suspend fun deletePlaylist(playlist:PlaylistEntity)
     @Query("DELETE FROM track_table_for_playlist WHERE track_id IN(:idsTrack)")
     suspend fun deleteTracksByIdsListInTrackTableForPlaylist(idsTrack:List<Int>)
-    @Transaction
-    suspend fun deletePlaylistFirstStageTransaction(playlist: PlaylistEntity):List<Int>{
-            val idsList = getIdsTrackFromPlaylist(playlistId = playlist.playlistId)
-            deletePlaylist(playlist)
-        return idsList
-    }
     @Transaction
     suspend fun deletePlaylistSecondStageTransaction(deleteIdsList: List<Int>){
         val deleteList = mutableListOf<Int>()

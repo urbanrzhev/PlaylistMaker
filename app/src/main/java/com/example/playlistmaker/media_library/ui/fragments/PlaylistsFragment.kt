@@ -42,7 +42,10 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
                 is RecyclerState.Error -> {
                     renderUi(true)
                 }
-                is RecyclerState.Idle -> {}
+                is RecyclerState.Idle -> {
+                    binding.group.isVisible = false
+                    binding.recycler.isVisible = false
+                }
             }
         }
         binding.recycler.adapter = adapter

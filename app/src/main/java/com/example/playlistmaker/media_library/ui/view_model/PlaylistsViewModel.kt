@@ -16,6 +16,7 @@ class PlaylistsViewModel(
     val playlistState:LiveData<RecyclerState<List<Playlist>>> = _playlistsState
 
     fun loadDatabase(){
+        _playlistsState.value = RecyclerState.Idle()
         viewModelScope.launch {
             database.getPlaylists().collect { list->
                 when{

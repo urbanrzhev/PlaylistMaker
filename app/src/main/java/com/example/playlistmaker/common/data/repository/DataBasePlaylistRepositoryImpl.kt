@@ -4,6 +4,7 @@ import com.example.playlistmaker.common.data.db.converters.TrackEntityForPlaylis
 import com.example.playlistmaker.common.data.db.dao.PlaylistDao
 import com.example.playlistmaker.common.data.db.entity.CrossTrackAndPlaylistEntity
 import com.example.playlistmaker.common.data.db.entity.PlaylistEntity
+import com.example.playlistmaker.common.data.db.entity.TrackEntityForPlaylist
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsRepository
 import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.domain.models.Track
@@ -21,7 +22,7 @@ class DataBasePlaylistRepositoryImpl(
         databasePlaylists.setPlaylist(playlistEntity)
     }
 
-    override suspend fun updatePlaylist(playlist:Playlist) {
+    override suspend fun updatePlaylist(playlist: Playlist) {
         val playlistEntity = converterFromPlaylist(playlist)
         databasePlaylists.updatePlaylist(playlist = playlistEntity)
     }
@@ -33,9 +34,10 @@ class DataBasePlaylistRepositoryImpl(
         }
     }
 
-    override fun getPlaylist(playlistId:Long): Flow<Playlist> {
+    override fun getPlaylist(playlistId: Long): Flow<Playlist> {
         return flow {
-            val playlist = converterFromPlaylistEntity(databasePlaylists.getPlaylist(playlistId = playlistId))
+            val playlist =
+                converterFromPlaylistEntity(databasePlaylists.getPlaylist(playlistId = playlistId))
             emit(playlist)
         }
     }
@@ -43,9 +45,11 @@ class DataBasePlaylistRepositoryImpl(
     override fun deletePlaylistFirstStage(playlist: Playlist): Flow<List<Int>> {
         return flow {
             val playlistEntity = converterFromPlaylist(playlist)
-            val deleteIdsList =
-                databasePlaylists.deletePlaylistFirstStageTransaction(playlist = playlistEntity)
-            emit(deleteIdsList)
+            val idsList =
+                databasePlaylists.getIdsTrackFromPlaylist(playlistId = playlist.playlistId)
+            databasePlaylists.deletePlaylist(playlistEntity)
+            val resultList = getSortedMapIdList(idsList)
+            emit(resultList)
         }
     }
 
@@ -67,21 +71,54 @@ class DataBasePlaylistRepositoryImpl(
         }
     }
 
-    override fun getTracks(playlistId:Long): Flow<List<Track>> {
+    override fun getTracks(playlistId: Long): Flow<List<Track>> {
         return flow {
-            val listDb = databasePlaylists.getTracksFromPlaylist(playlistId)
-            val newList = converterTrackEntityForPlaylist.map(listDb)
-            emit(newList)
+            val crossList = databasePlaylists.getIdsTrackFromPlaylist(playlistId = playlistId)
+            val idsList = getSortedMapIdList(crossList)
+            val tracks = databasePlaylists.getTracksFromPlaylistById(idsList)
+            val sortedTracks = reversedTracks(idsList, tracks)
+            val resultList = converterTrackEntityForPlaylist.map(sortedTracks)
+            emit(resultList)
         }
     }
 
-    override suspend fun deleteTrackFromPlaylist(track: Track, playlistId:Long) {
+    override suspend fun deleteTrackFromPlaylist(track: Track, playlistId: Long) {
         val newTrack = converterTrackEntityForPlaylist.map(track)
         databasePlaylists.deleteTrackFromPlaylistTransaction(track = newTrack, playlistId)
     }
 
     private suspend fun getIdsTrackFromPlaylist(playlistId: Long): List<Int> {
-        return databasePlaylists.getIdsTrackFromPlaylist(playlistId = playlistId)
+        val idsList = databasePlaylists.getIdsTrackFromPlaylist(playlistId = playlistId)
+        return getSortedMapIdList(idsList)
+    }
+
+    private fun getSortedMapIdList(idsList: List<CrossTrackAndPlaylistEntity>): List<Int> {
+        if (idsList.isNotEmpty()) {
+            val newIdsList = idsList.sortedBy {
+                it.crossReferencesId
+            }.map {
+                it.trackId
+            }
+            return newIdsList
+        }
+        return listOf()
+    }
+
+    private fun reversedTracks(
+        idsList: List<Int>,
+        tracksEntityList: List<TrackEntityForPlaylist>
+    ): List<TrackEntityForPlaylist> {
+        if (idsList.isNotEmpty()) {
+            val resultList = idsList.map { id ->
+                tracksEntityList.forEach {
+                    if (it.trackId == id)
+                        return@map it
+                }
+                return@map tracksEntityList[0]
+            }
+            return resultList.reversed()
+        }
+        return listOf()
     }
 
     private fun converterFromPlaylist(playlist: Playlist): PlaylistEntity {
