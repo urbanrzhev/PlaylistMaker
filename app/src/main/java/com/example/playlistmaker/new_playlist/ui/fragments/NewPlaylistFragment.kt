@@ -1,10 +1,7 @@
 package com.example.playlistmaker.new_playlist.ui.fragments
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -27,9 +24,6 @@ import com.example.playlistmaker.databinding.FragmentCreateAndModifyPlaylistBind
 import com.example.playlistmaker.new_playlist.ui.view_model.NewPlaylistViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
-import java.util.UUID
 
 open class NewPlaylistFragment : BindingFragment<FragmentCreateAndModifyPlaylistBinding>() {
     internal open val viewModel by viewModel<NewPlaylistViewModel>()
@@ -71,8 +65,7 @@ open class NewPlaylistFragment : BindingFragment<FragmentCreateAndModifyPlaylist
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     binding.imageCover.setImageURI(uri)
-                    val newUri = saveImageToPrivateStorage(uri)
-                    viewModel.setPhoto(newUri.toString())
+                    viewModel.saveImageToPrivateStorage(uri)
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -129,23 +122,6 @@ open class NewPlaylistFragment : BindingFragment<FragmentCreateAndModifyPlaylist
         findNavController().navigateUp()
     }
 
-    private fun saveImageToPrivateStorage(uri: Uri): Uri {
-        val filePath = File(
-            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            MY_DIRECTORY_PICTURES
-        )
-        if (!filePath.exists()) {
-            filePath.mkdirs()
-        }
-        val file = File(filePath, UUID.randomUUID().toString())
-        val inputStream = requireContext().contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-        BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-        return file.toUri()
-    }
-
     private fun changeConfiguration(playlist: Playlist) {
         if (playlist.name.isNotEmpty())
             binding.editTextName.setText(playlist.name)
@@ -169,9 +145,5 @@ open class NewPlaylistFragment : BindingFragment<FragmentCreateAndModifyPlaylist
         textWatcherName?.let { binding.editTextName.removeTextChangedListener(it) }
         textWatcherDescription?.let { binding.editTextDescription.removeTextChangedListener(it) }
         super.onDestroyView()
-    }
-
-    companion object {
-        private const val MY_DIRECTORY_PICTURES = "playlist_maker_pictures"
     }
 }

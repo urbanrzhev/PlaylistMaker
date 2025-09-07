@@ -1,33 +1,34 @@
 package com.example.playlistmaker.info_playlist.ui.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.common.data.db.dao.PlaylistDao
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
 import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.OrthographyCount
 import com.example.playlistmaker.common.util.TimeFormat
+import com.example.playlistmaker.info_playlist.domain.api.InfoSharingUseCase
+import com.example.playlistmaker.info_playlist.ui.models.InfoTracksState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 
 class InfoPlaylistViewModel(
     private val databasePlaylistInteractor: DataBasePlaylistsInteractor,
     private val orthographyCount: OrthographyCount,
-    private val timeFormat: TimeFormat
+    private val timeFormat: TimeFormat,
+    private val sharingUseCase: InfoSharingUseCase
 ) : ViewModel() {
     private var getTracksJob: Job? = null
     private var deleteTrackJob: Job? = null
     private var createPlaylistJob: Job? = null
     private var deletePlaylistFirstStageJob: Job? = null
+    private val _recyclerState = MutableLiveData<InfoTracksState>(InfoTracksState.Idle)
+    internal val observeRecyclerState: LiveData<InfoTracksState> = _recyclerState
     private val _menuBehaviorState =
         MutableLiveData(BottomSheetBehavior.STATE_HIDDEN)
     val observeMenuBehaviorState: LiveData<Int> = _menuBehaviorState
@@ -42,24 +43,31 @@ class InfoPlaylistViewModel(
     private val _tracks = MutableLiveData(listOf<Track>())
     val observeTracks: LiveData<List<Track>> = _tracks
 
-    fun createPlaylist(playlistId:Long) {
+    fun createPlaylist(playlistId: Long) {
         createPlaylistJob?.cancel()
         createPlaylistJob = viewModelScope.launch {
-            databasePlaylistInteractor.getPlaylist(playlistId).collect{ playlist ->
+            databasePlaylistInteractor.getPlaylist(playlistId).collect { playlist ->
                 _playlist.value = playlist
             }
         }
-        Log.v("my", "updateTrack")
         updateTracks(playlistId)
     }
 
     fun deleteTrack(track: Track) {
         deleteTrackJob?.cancel()
         deleteTrackJob = viewModelScope.launch {
-            databasePlaylistInteractor.deleteTrackFromPlaylist(track, _playlist.value?.playlistId ?: 0)
-            //createPlaylist(_playlist.value?.name)
+            databasePlaylistInteractor.deleteTrackFromPlaylist(
+                track,
+                _playlist.value?.playlistId ?: 0
+            )
             updateTracks(_playlist.value?.playlistId!!)
         }
+    }
+
+    fun executeSharing() {
+        val response = sharingUseCase.execute(_playlist.value!!, _tracks.value!!)
+        if(response == null)
+            _close.value = true
     }
 
     fun deletePlaylist() {
@@ -82,15 +90,19 @@ class InfoPlaylistViewModel(
     }
 
     fun setMenuBehaviorState(state: Int) {
-            _menuBehaviorState.value = state
+        _menuBehaviorState.value = state
     }
 
-    private fun updateTracks(playlistId:Long) {
+    private fun updateTracks(playlistId: Long) {
         getTracksJob?.cancel()
         getTracksJob = viewModelScope.launch {
             databasePlaylistInteractor.getTracks(playlistId = playlistId).collect { tracks ->
                 _tracks.postValue(tracks)
                 totalTimeOrthography(tracks)
+                if (tracks.isNotEmpty())
+                    _recyclerState.postValue(InfoTracksState.Tracks)
+                else
+                    _recyclerState.postValue(InfoTracksState.NotTracks)
             }
         }
     }

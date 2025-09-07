@@ -1,6 +1,5 @@
 package com.example.playlistmaker.common.data.db.dao
 
-import android.util.Log
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,12 +10,6 @@ import androidx.room.Update
 import com.example.playlistmaker.common.data.db.entity.CrossTrackAndPlaylistEntity
 import com.example.playlistmaker.common.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.common.data.db.entity.TrackEntityForPlaylist
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 
 @Dao
 interface PlaylistDao {
@@ -68,7 +61,6 @@ interface PlaylistDao {
     suspend fun deletePlaylistFirstStageTransaction(playlist: PlaylistEntity):List<Int>{
             val idsList = getIdsTrackFromPlaylist(playlistId = playlist.playlistId)
             deletePlaylist(playlist)
-        Log.v("my", "deletePlaylistFirstDAO")
         return idsList
     }
     @Transaction
@@ -80,8 +72,5 @@ interface PlaylistDao {
             }
         }
         deleteTracksByIdsListInTrackTableForPlaylist(deleteList)
-        delay(5000L)
-
-        Log.v("my", "deletePlaylistSecondDAO")
     }
 }

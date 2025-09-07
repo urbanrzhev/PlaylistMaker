@@ -12,9 +12,9 @@ class InfoSharingUseCaseImpl(
     private val appContext: Context
 ) : InfoSharingUseCase {
 
-    override fun execute(playlist: Playlist, tracks: List<Track>) {
+    override fun execute(playlist: Playlist, tracks: List<Track>):String? {
         val message = createString(playlist, tracks)
-        extNavigator.shareLink(message)
+        return extNavigator.shareLink(message)
     }
 
     private fun createString(playlist: Playlist, tracks: List<Track>): String {
