@@ -52,8 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="8dp"
             android:layout_marginStart="16dp"
-            android:textAppearance="@style/textAppearanceRegular18sp400w"
             android:visibility="gone"
+            android:textAppearance="@style/textAppearanceRegular18sp400w"
             app:layout_constraintBottom_toTopOf="@+id/textCommonLength"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Description" />
@@ -62,7 +62,7 @@
             android:id="@+id/groupTexts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="gone"
             app:constraint_referenced_ids="textCommonLength,punkt,textTracks" />
 
         <TextView
@@ -70,10 +70,10 @@
             style="@style/textInfoPlaylist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
             android:textAppearance="@style/textAppearanceRegular18sp400w"
-            app:layout_constraintBottom_toTopOf="@+id/view4"
+            app:layout_constraintBottom_toTopOf="@+id/shared"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Common length" />
 
@@ -85,7 +85,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/punkt_search_list"
             android:backgroundTint="@color/color_1a1b22"
-            app:layout_constraintBottom_toTopOf="@+id/view4"
+            app:layout_constraintBottom_toTopOf="@+id/button_modify_playlist"
             app:layout_constraintStart_toEndOf="@+id/textCommonLength" />
 
         <TextView
@@ -94,38 +94,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
-            android:layout_marginStart="5dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginStart="5dp"
             android:textAppearance="@style/textAppearanceRegular18sp400w"
-            app:layout_constraintBottom_toTopOf="@+id/view4"
+            app:layout_constraintBottom_toTopOf="@+id/button_modify_playlist"
             app:layout_constraintStart_toEndOf="@+id/punkt"
             tools:text="tracks" />
 
-        <View
-            android:id="@+id/view4"
-            android:layout_width="24dp"
-            android:layout_height="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/button_modify_playlist"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <View
+        <ImageView
             android:id="@+id/shared"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/share_icon_1a1b22"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/share_icon_1a1b22"
+            android:foreground="?attr/selectableItemBackground"
             app:layout_constraintBottom_toTopOf="@+id/guideline5"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <View
+        <ImageView
             android:id="@+id/button_modify_playlist"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/punkt_3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="@string/default_image"
+            android:foreground="?attr/selectableItemBackground"
+            android:scaleType="centerInside"
+            android:src="@drawable/punkt_3"
             app:layout_constraintBottom_toTopOf="@+id/guideline5"
             app:layout_constraintStart_toEndOf="@+id/shared" />
 

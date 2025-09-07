@@ -1,4 +1,4 @@
-package com.example.playlistmaker.sharing.data
+package com.example.playlistmaker.common.data.sharing
 
 import android.annotation.SuppressLint
 import android.content.Context

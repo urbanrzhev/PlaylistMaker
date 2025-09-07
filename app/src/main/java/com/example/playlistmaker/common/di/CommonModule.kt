@@ -1,6 +1,7 @@
 package com.example.playlistmaker.common.di
 
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.playlistmaker.common.data.repository.DataBasePlaylistRepositoryImpl
@@ -12,6 +13,7 @@ import com.example.playlistmaker.common.data.db.converters.TrackEntityDbConverte
 import com.example.playlistmaker.common.data.db.converters.TrackEntityForPlaylistDbConverter
 import com.example.playlistmaker.common.data.db.dao.PlaylistDao
 import com.example.playlistmaker.common.data.db.dao.TrackDao
+import com.example.playlistmaker.common.data.sharing.ExternalNavigator
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsRepository
 import com.example.playlistmaker.common.domain.api.DataBaseFavoritesTracksInteractor
@@ -30,6 +32,12 @@ import org.koin.dsl.module
 val commonModule = module {
     single<Gson> {
         Gson()
+    }
+    factory<ExternalNavigator> {
+        ExternalNavigator(get(),get())
+    }
+    factory<Intent> {
+        Intent()
     }
     single<OrthographyCount>{
         OrthographyCount(get())
