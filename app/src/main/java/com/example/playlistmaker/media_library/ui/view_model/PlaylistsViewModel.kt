@@ -1,6 +1,5 @@
 package com.example.playlistmaker.media_library.ui.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +16,7 @@ class PlaylistsViewModel(
     val playlistState:LiveData<RecyclerState<List<Playlist>>> = _playlistsState
 
     fun loadDatabase(){
+        _playlistsState.value = RecyclerState.Idle()
         viewModelScope.launch {
             database.getPlaylists().collect { list->
                 when{

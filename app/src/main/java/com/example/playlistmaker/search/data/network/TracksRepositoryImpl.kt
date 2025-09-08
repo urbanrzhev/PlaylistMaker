@@ -51,6 +51,7 @@ class TracksRepositoryImpl(
                 primaryGenreName = primaryGenreName,
                 country = country,
                 trackId = trackId,
+                trackTimeMillis = trackTimeMillis,
                 isFavorite = isFavorite(trackId)
             )
         }

@@ -23,7 +23,7 @@
         android:id="@+id/buttonTextShareTheApp"
         style="@style/textSettingActivity"
         android:text="@string/share"
-        android:drawableEnd="@drawable/share_icon"/>
+        android:drawableEnd="@drawable/share_icon_aeafb4"/>
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/buttonTextWriteToSupport"
         style="@style/textSettingActivity"

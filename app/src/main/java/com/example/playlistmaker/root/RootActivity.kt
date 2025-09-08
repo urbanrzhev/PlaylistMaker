@@ -32,6 +32,8 @@ class RootActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.mediaPlayerFragment -> bottomNavigationView.isVisible = false
                 R.id.newPlaylistFragment -> bottomNavigationView.isVisible = false
+                R.id.infoPlaylistFragment -> bottomNavigationView.isVisible = false
+                R.id.modifyPlaylistFragment -> bottomNavigationView.isVisible = false
                 else -> bottomNavigationView.isVisible = true
             }
             borderBorderNavigation.isVisible = bottomNavigationView.isVisible

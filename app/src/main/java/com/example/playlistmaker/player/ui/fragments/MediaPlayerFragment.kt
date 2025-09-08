@@ -42,7 +42,7 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val bottomSheetContainer = binding.playlistsBottomSheet
+        val bottomSheetContainer = binding.tracksBottomSheet
         val overlay  = binding.overlay
         bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback(){
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -89,6 +89,9 @@ class MediaPlayerFragment : BindingFragment<FragmentAudioPlayerBinding>() {
         }
         viewModel.observePlayerState().observe(viewLifecycleOwner) { state ->
             renderUI(state)
+        }
+        viewModel.observeIsFavorite.observe(viewLifecycleOwner){isFavorite->
+            binding.buttonLikeYes.isVisible = isFavorite
         }
         binding.recycler.adapter = adapter
         binding.buttonNewPlaylist.setOnClickListener {

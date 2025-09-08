@@ -1,6 +1,7 @@
 package com.example.playlistmaker.new_playlist.ui.view_model
 
 import android.content.Context
+import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,23 +10,26 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
 import com.example.playlistmaker.common.domain.models.Playlist
+import com.example.playlistmaker.new_playlist.domain.api.FileUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(
+open class NewPlaylistViewModel(
     private val context:Context,
+    private val fileUseCase: FileUseCase,
     private val database:DataBasePlaylistsInteractor
 ):ViewModel() {
     private var createJob: Job? = null
+    private var saveFileJob: Job? = null
     private val _buttonCreateEnable = MutableLiveData(false)
-    val observeButtonCreateEnable:LiveData<Boolean> = _buttonCreateEnable
-    private val _closeFragment = MutableLiveData(false)
-    val observeCloseFragment:LiveData<Boolean> = _closeFragment
+    internal val observeButtonCreateEnable:LiveData<Boolean> = _buttonCreateEnable
+    internal val _closeFragment = MutableLiveData(false)
+    internal val observeCloseFragment:LiveData<Boolean> = _closeFragment
     private val _enablePressedCallback = MutableLiveData(false)
-    val observeEnablePressedCallback:LiveData<Boolean> = _enablePressedCallback
-    private val _playlist = Playlist()
+    internal val observeEnablePressedCallback:LiveData<Boolean> = _enablePressedCallback
+    internal var _playlist = Playlist()
     private val _photo = MutableLiveData("")
-    val observePhoto:LiveData<String> = _photo
+    internal val observePhoto:LiveData<String> = _photo
 
     fun setPhoto(uri:String){
         _playlist.apply {
@@ -69,6 +73,15 @@ class NewPlaylistViewModel(
                 createdMessage(it)
                 _enablePressedCallback.postValue(false)
                 _closeFragment.postValue(true)
+            }
+        }
+    }
+
+    fun saveImageToPrivateStorage(uri: Uri){
+        saveFileJob?.cancel()
+        saveFileJob = viewModelScope.launch {
+            fileUseCase.execute(uri).collect{ uri->
+                setPhoto(uri.toString())
             }
         }
     }

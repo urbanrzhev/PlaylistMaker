@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="numberForTracks">
+        <item quantity="one">%d трек</item>
+        <item quantity="few">%d трека</item>
+        <item quantity="other">%d треков</item>
+    </plurals>
+    <string name="not">Нет</string>
+    <string name="yes">Да</string>
+    <string name="modify">Редактировать</string>
+    <string name="save">Сохранить</string>
     <string name="settings" translatable="false">Настройки</string>
     <string name="secret_code">myCode</string>
     <string name="illegal_state_exception">no my holder</string>
     <string name="app_name" translatable="false">Playlist maker</string>
     <string name="default_image" translatable="false">картинка</string>
+    <string name="playlist">Плейлист</string>
     <string name="new_playlist">Новый плейлист</string>
     <string name="add_playlist">Добавить в плейлист</string>
     <string name="success_add_playlist">Добавлено в плейлист</string>

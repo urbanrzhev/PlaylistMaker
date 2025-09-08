@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.api.DataBasePlaylistsInteractor
-import com.example.playlistmaker.common.domain.api.DataBaseTracksInteractor
+import com.example.playlistmaker.common.domain.api.DataBaseFavoritesTracksInteractor
 import com.example.playlistmaker.common.domain.models.Playlist
 import com.example.playlistmaker.common.domain.models.Track
 import com.example.playlistmaker.common.util.SingleLiveEvent
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class MediaPlayerViewModel(
     private val mediaPlayer: MediaPlayerInteractor,
     private val timeFormat: TimeFormat,
-    private val databaseTracksInteractor: DataBaseTracksInteractor,
+    private val databaseFavoritesTracksInteractor: DataBaseFavoritesTracksInteractor,
     private val databasePlaylistsInteractor: DataBasePlaylistsInteractor
 ) : ViewModel() {
     private lateinit var activeTrack: Track
@@ -35,6 +35,9 @@ class MediaPlayerViewModel(
     private var job: Job? = null
     private var addTrackInPlaylistJob: Job? = null
     private var jobSetFavorites: Job? = null
+    private var isFavoritesJob: Job? = null
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val observeIsFavorite:LiveData<Boolean> = _isFavorite
     private val _playerProgressFlow = MutableStateFlow(TIME_DEFAULT)
     val playerProgressFlow = _playerProgressFlow.asStateFlow()
     private var playerState = MutableLiveData<PlayerState>(PlayerState.Default())
@@ -51,6 +54,12 @@ class MediaPlayerViewModel(
                 _playerProgressFlow.value = TIME_DEFAULT
                 playerState.value = PlayerState.Prepared()
             })
+        }
+        isFavoritesJob?.cancel()
+        isFavoritesJob = viewModelScope.launch {
+            databaseFavoritesTracksInteractor.checkTrackInFavorites(activeTrack.trackId).collect{ value->
+                _isFavorite.postValue(value)
+            }
         }
     }
 
@@ -82,6 +91,8 @@ class MediaPlayerViewModel(
         mediaPlayer.release()
     }
 
+
+
     private fun getCurrentPosition(): String {
         return timeFormat.getTimeMM_SS(mediaPlayer.currentPosition())
     }
@@ -90,9 +101,9 @@ class MediaPlayerViewModel(
         jobSetFavorites?.cancel()
         jobSetFavorites = viewModelScope.launch {
             if (value == true) {
-                databaseTracksInteractor.deleteFavoriteTrack(activeTrack.trackId)
+                databaseFavoritesTracksInteractor.deleteFavoriteTrack(activeTrack.trackId)
             } else {
-                databaseTracksInteractor.setFavoriteTrack(activeTrack)
+                databaseFavoritesTracksInteractor.setFavoriteTrack(activeTrack)
             }
         }
     }
@@ -107,7 +118,7 @@ class MediaPlayerViewModel(
     }
 
     fun stateBottomSheetBehavior(state: Int) {
-        if(state != BottomSheetBehavior.STATE_SETTLING && state != BottomSheetBehavior.STATE_DRAGGING)
+        if (state != BottomSheetBehavior.STATE_SETTLING && state != BottomSheetBehavior.STATE_DRAGGING)
             _bottomSheetBehaviorState.value = state
     }
 
@@ -120,12 +131,14 @@ class MediaPlayerViewModel(
         }
         addTrackInPlaylistJob?.cancel()
         addTrackInPlaylistJob = viewModelScope.launch {
-            databasePlaylistsInteractor.setTrackInPlaylist(activeTrack).collect {
+            databasePlaylistsInteractor.addTrackInPlaylist(
+                track = activeTrack,
+                playlistId = playlist.playlistId
+            ).collect {
                 if (it) {
                     _showMessage.value = Pair(true, playlist.name)
                     stateBottomSheetBehavior(BottomSheetBehavior.STATE_HIDDEN)
                     playlist.idsTrack.add(activeTrack.trackId)
-                    databasePlaylistsInteractor.updatePlaylist(playlist)
                 }
             }
         }

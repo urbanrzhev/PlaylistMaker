@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="share_playlist">Поделиться</string>
+    <string name="modify_playlist">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="are_you_delete_playlist">Хотите удалить плейлист?</string>
+    <string name="minut">минут</string>
+    <string name="minuta">минута</string>
+    <string name="minuts">минуты</string>
+    <string name="error_message_toast">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="delete_track">Хотите удалить трек?</string>
+    <style name="textInfoPlaylist">
+        <item name="android:textColor">@color/color_1a1b22</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:lines">1</item>
+    </style>
+    <style name="econom_text">
+        <item name="android:ellipsize">end</item>
+        <item name="android:lines">1</item>
+    </style>
+    <style name="behavior_2_text_button" parent="econom_text">
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:textColor">?attr/text_color_white_1a1b22</item>
+        <item name="android:textAppearance">@style/textAppearanceRegular16sp400w</item>
+    </style>
+</resources>
